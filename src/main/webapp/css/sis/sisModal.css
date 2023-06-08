@@ -1,0 +1,102 @@
+.modalWrap {
+    right: 355px;
+    top: 125px;
+    position: absolute;
+    z-index: 9999;
+    background: #fff;
+    box-shadow: 0 0 7px 0 grey;
+    min-width: 200px;
+    min-height: 320px;
+    display: none;
+}
+
+.modalTransparent {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 99;
+}
+
+.modalTitleWrap {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    color: #fff;
+    background: #1a6dd2;
+    line-height: 50px;
+    font-size: 12pt;
+    display: -ms-inline-flexbox;
+    z-index: 100;
+}
+
+.modalTitleWrap > span {
+    display: inline-block;
+    padding-left: 20px;
+    font-size: 12pt;
+    font-weight: normal;
+}
+
+.modalTitleWrap > div {
+    float: right;
+    padding: 14.5px 15px;
+    cursor: pointer;
+}
+
+.modalTitleWrap > div i {
+    font-size: 16pt;
+}
+
+.modalBody {
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    padding: 12px 12px;
+    background: #fff;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.modalWrap .close {
+    cursor: pointer;
+}
+
+
+
+.modalTitle {
+    background: #1a6dd2;
+    color: #fff;
+    font-size: 12pt;
+    height: 45px;
+    line-height: 45px;
+    padding-left: 20px;
+}
+
+.modalClose {
+    float: right;
+    cursor: pointer;
+    padding: 14px;
+    line-height: 1;
+    font-size: 14pt;
+}
+
+.modalBody {
+    background: #fff;
+    /*width: 400px;*/
+    padding: 15px;
+}
+
+.modalWrap .btn {
+    width: 120px;
+    padding: 8px;
+    border-radius: 0;
+    border: 1px solid #d3d3d3;
+    margin-bottom: 15px;
+}
+
+.modalWrap .btn.active, .modalWrap .btn:hover {
+    background: #1a6dd2;
+    color: #fff;
+}

@@ -1,0 +1,236 @@
+.layerTree {
+    position: absolute;
+    right: 15px;
+    top: 64px;
+    width: 300px;
+    z-index: 1000;
+    background: #fff;
+    border-radius: 10px;
+    bottom: 10px;
+    display: none;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    overflow:auto;
+}
+
+ul.tree {
+    margin-bottom: 0 !important;
+}
+
+.tree ul {
+    padding-left: 1rem;
+}
+
+.tree ul, .tree li {
+    list-style: none;
+}
+
+.tree i {
+    margin: 0 !important;
+    font-size: 1.2em !important;
+}
+
+.tree .checkbox {
+    margin-left: -5px !important;
+}
+.tree .layer {
+    padding-left: 9px !important;
+}
+
+.tree a {
+    font-size: 10pt;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 70%;
+    vertical-align: bottom;
+    padding-bottom: 1px;
+    color: #555;
+}
+
+.tree .node {
+    display: block;
+    padding: 1px 0 1px 8px;
+    position: relative;
+    border-left: 1px solid lightgrey;
+    margin-left: -5px;
+}
+
+.tree .layerName {
+    cursor: pointer;
+
+}
+
+.tree .node ul li:last-child {
+    border-left: 0;
+}
+
+.tree .node ul li:last-child:before {
+    border-left: 1px solid lightgrey;
+}
+
+#root > .node {
+    border: 0;
+    padding: 0;
+}
+
+#root > .node:before {
+    display: none;
+}
+
+.tree .node:before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 10px;
+    height: 13px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.tree .node i {
+    cursor: pointer;
+}
+
+.tree .legend {
+    float: right;
+    right: 15px;
+    position: relative;
+    cursor: pointer;
+}
+
+.tree .node.expandOff > .expander {
+    background: url(../../images/map/tree/checkbox_off.png) 50% no-repeat;
+    vertical-align: text-bottom;
+}
+
+.tree .node.expandOn > .expander {
+    background: url(../../images/map/tree/checkbox_on.png) 50% no-repeat;
+    vertical-align: text-bottom;
+}
+
+.tree .node > .expander:before {
+    content: "" !important;
+}
+
+.tree .node.expandOn > .plus {
+    /*display: none;*/
+}
+
+.tree .node.expandOff > .itemsWrap{
+    display: none;
+}
+
+.tree .legend.checked {
+    color: #1a6dd2;
+}
+
+.tree .treeSlider {
+    margin: 7px;
+    margin-left: 4px;
+    width: 60%;
+}
+
+.tree .group > a {
+    font-weight: bold;
+}
+
+.ui-slider .ui-slider-handle {
+    background: #1a6dd2;
+    padding: 0 !important;
+}
+
+
+/* 최상위 root 스타일 */
+.tree {
+    padding-left: 0;
+}
+
+.tree .root.node {
+    margin-left: 0;
+}
+
+.tree .root > .layerName {
+    display: block;
+    font-weight: bold;
+    width: 100%;
+    padding: 12px 0 12px 25px;
+    background: #1a6dd2;
+    color: #fff;
+    margin-top: 2px;
+    cursor: pointer;
+    position: relative;
+    top: -2px;
+    border-radius: 10px 10px 0 0;
+}
+
+.tree .root > .layerName:before {
+    content: " ";
+    position: absolute;
+    background-color: white;
+    left: 1px;
+    width: 4px;
+    height: 4px;
+    margin: 9px 10px 5px 10px;
+}
+
+.tree .root.expandOff > .layerName {
+    background: #fff;
+    color: #555;
+}
+
+.tree .root.expandOff > .layerName:before {
+    background: #555;
+}
+
+.tree .root > .checkbox {
+    display: none;
+}
+
+.tree .root > i.expander {
+    background: url(../../images/map/ico_accordion_on.png) 50% no-repeat;
+    background-size: contain;
+    float: right;
+    font-size: 0;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 10px;
+    top: 13px;
+    z-index: 1;
+}
+
+.tree .root.expandOn > i.expander {
+    background: url(../../images/map/ico_accordion_on.png) 50% no-repeat;
+    background-size: contain;
+}
+
+.tree .root.expandOff > i.expander {
+    background: url(../../images/map/ico_accordion_off.png) 50% no-repeat;
+    background-size: contain;
+}
+
+.tree .root > i.expander:before {
+    content: "" !important;
+}
+
+.tree .root > .itemsWrap > .node,
+.tree .root > .itemsWrap > .node:before {
+    border: 0;
+}
+
+.tree .root > .itemsWrap > .node:first-child {
+    /*margin-top: -10px;*/
+}
+
+.tree .legendTitle {
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+.tree .legendImage {
+    display: inline-block;
+    width: 25px;
+    height: 15px;
+    margin: 3px 0 0 3px;
+}

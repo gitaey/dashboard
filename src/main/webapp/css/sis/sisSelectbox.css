@@ -1,0 +1,88 @@
+div.sisSelectbox {
+    position: relative;
+    cursor: pointer;
+    word-wrap: break-word;
+    line-height: 1em;
+    white-space: normal;
+    outline: 0;
+    min-width: 14em;
+    min-height: 2.71428571em;
+    background: #fff;
+    display: inline-block;
+    padding: .78571429em 2.1em .78571429em 1em;
+    color: rgba(0, 0, 0, 0.87);
+    box-shadow: none;
+    border: 1px solid rgba(34,36,38,.15);
+    transform: rotateZ(0);
+    width: 100%;
+}
+
+div.sisSelectbox:after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    width: 5px;
+    height: 5px;
+    margin: 5px;
+
+    border-top: 4px solid #2b2b2b;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+div.sisSelectbox:hover {
+    border-color: rgba(34,36,38,.35);
+}
+
+div.sisSelectbox.active {
+    z-index: 9999;
+    visibility: visible !important;
+    border-color: #96c8da;
+}
+
+div.sisSelectbox select {
+    display: none;
+}
+
+div.sisSelectbox > .text {
+    display: inline-block;
+    -webkit-transition: none;
+    transition: none;
+}
+
+div.sisSelectbox .items.hidden {
+    display: none !important;
+}
+
+div.sisSelectbox .items.active {
+    border-color: #96c8da;
+}
+
+div.sisSelectbox .items {
+    position: absolute;
+    top: 100%;
+    border: 1px solid rgba(34,36,38,.15);
+    z-index: 9999;
+    background: #fff;
+    left: -1px;
+    right: -1px;
+    border-top: 0;
+    overflow: auto;
+    max-height: 250px;
+}
+
+div.sisSelectbox .items .item {
+    z-index: 9999;
+    position: relative;
+    padding: .78571429rem 1.14285714rem !important;
+    border: 0 !important;
+}
+
+div.sisSelectbox .items .item:hover {
+    z-index: 9999;
+    position: relative;
+    padding: .78571429rem 1.14285714rem !important;
+    border: 0 !important;
+    background: rgba(0,0,0,.03);
+}

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sis.com.map.service.MapMapper">
+
+    <select id="selectSido" resultType="egovMap">
+        select ctprvn_cd, ctp_kor_nm from origin.lsmd_adm_sect_sido
+    </select>
+
+    <select id="selectSgg" resultType="egovMap">
+        select sig_cd, sig_kor_nm from origin.lsmd_adm_sect_sgg
+        where sig_cd like #{code} || '%'
+    </select>
+
+    <select id="selectEmd" resultType="egovMap">
+        select emd_cd, emd_kor_nm from origin.lsmd_adm_sect_emd
+        where emd_cd like #{code} || '%'
+    </select>
+
+    <select id="selectLi" resultType="egovMap">
+        select li_cd, li_kor_nm from origin.lsmd_adm_sect_li
+        where li_cd like #{code} || '%'
+    </select>
+
+    <select id="selectLayers" resultType="egovMap">
+        select * from map.tbl_layers
+        order by lyr_num asc
+    </select>
+
+    <select id="selectSect" resultType="egovMap">
+        select *
+        from (
+                 select ctprvn_cd as code, ctp_kor_nm as name, st_astext(geom) as geom
+                 from origin.lsmd_adm_sect_sido
+                 union all
+                 select sig_cd as code, sig_kor_nm as name, st_astext(geom) as geom
+                 from origin.lsmd_adm_sect_sgg
+                 union all
+                 select emd_cd as code, emd_kor_nm as name, st_astext(geom) as geom
+                 from origin.lsmd_adm_sect_emd
+                 union all
+                 select li_cd as code, li_kor_nm as name, st_astext(geom) as geom
+                 from origin.lsmd_adm_sect_li
+             ) a
+        where code = #{code}
+    </select>
+
+    <select id="selectJijuk" resultType="egovMap">
+        select *
+        from (
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_11_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_26_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_27_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_28_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_29_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_30_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_31_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_36_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_41_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_42_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_43_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_44_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_45_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_46_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_47_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_48_202301 union all
+                 select pnu, jibun, st_astext(geom) as geom from origin.lsmd_cont_ldreg_50_202301
+             ) a
+        where pnu = #{code}
+    </select>
+
+</mapper>

@@ -1,0 +1,72 @@
+/* ================================================================= */
+
+.ol-zoom {
+    height: 172px !important;
+    top: 4em !important;
+    right: 1em !important;
+    left: auto !important;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ol-zoom .ol-zoom-in {
+    color: black !important;
+    border-bottom: 2px solid #bbb !important;
+}
+
+.ol-zoom .ol-zoom-out {
+    margin-top: 129px !important;
+    color: black !important;
+    border-top: 2px solid #bbb !important;
+}
+
+.ol-zoomslider {
+    right: 1em !important;
+    left: auto !important;
+    top: 5.5em !important;
+    background: url('../../images/map/bg_gage_wrap.png') no-repeat !important;
+    border-radius: 0 !important;
+    height: 131px !important;
+    width: 30px !important;
+}
+
+.ol-control {
+    background-color: rgba(255, 255, 255, 0) !important;
+    padding: 0 !important;
+    color: black !important;
+}
+
+.ol-control button {
+    margin: 0 !important;
+    background-color: white !important;
+    width: 30px !important;
+    cursor: pointer;
+    font-weight: 400 !important;
+}
+
+.ol-control button:hover {
+    background-color: #1a6dd2 !important;
+    color: #fff !important;
+}
+
+.ol-control button.ol-zoomslider-thumb {
+    background-color: #1a6dd2 !important;
+    margin: 0px 8px !important;
+    width: 13px !important;
+    height: 13px !important;
+    border-radius: 50% !important;
+}
+
+.ol-scale-line {
+    left: 8px !important;
+    right: auto !important;
+    bottom: 30px !important;
+}
+
+.ol-scale-line-inner {
+    width: 80px !important;
+}
+
+.ol-dragbox {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-color: rgba(100, 150, 0, 1);
+}
