@@ -33,7 +33,7 @@ $(window).on("load", function () {
     // $('.ui.dropdown').dropdown();
     $('.ui.checkbox').checkbox();
 
-    var selectSido = new SisSelectbox("#sido", {
+    var selectSido = new SisSelectbox("#m001_sido", {
         url: "/selectSido.do",
         allField: false,
         fields: {
@@ -42,7 +42,7 @@ $(window).on("load", function () {
         }
     });
 
-    var selectSgg = new SisSelectbox("#sgg", {
+    var selectSgg = new SisSelectbox("#m001_sgg", {
         url: "/selectSgg.do",
         allField: true,
         fields: {
@@ -51,7 +51,7 @@ $(window).on("load", function () {
         }
     });
 
-    var selectEmd = new SisSelectbox("#emd", {
+    var selectEmd = new SisSelectbox("#m001_emd", {
         url: "/selectEmd.do",
         allField: true,
         fields: {
@@ -60,7 +60,7 @@ $(window).on("load", function () {
         }
     });
 
-    var selectLi = new SisSelectbox("#li", {
+    var selectLi = new SisSelectbox("#m001_li", {
         url: "/selectLi.do",
         allField: true,
         fields: {
@@ -72,7 +72,7 @@ $(window).on("load", function () {
     selectSido.setConn({
         onChange: function () {
             var val = $(this).val();
-            var element = selectSgg.getElementById("sgg");
+            var element = selectSgg.getElementById("m001_sgg");
             selectSgg.setUrlParams({code: val});
             selectSgg.getDataByUrl(element, true);
         }
@@ -81,7 +81,7 @@ $(window).on("load", function () {
     selectSgg.setConn({
         onChange: function () {
             var val = $(this).val();
-            var element = selectEmd.getElementById("emd");
+            var element = selectEmd.getElementById("m001_emd");
             selectEmd.setUrlParams({code: val});
             selectEmd.getDataByUrl(element, true);
         }
@@ -90,16 +90,11 @@ $(window).on("load", function () {
     selectEmd.setConn({
         onChange: function () {
             var val = $(this).val();
-            var element = selectLi.getElementById("li");
+            var element = selectLi.getElementById("m001_li");
             selectLi.setUrlParams({code: val});
             selectLi.getDataByUrl(element, true);
         }
     });
-
-    new SisSelectbox("#ue101", {
-        allField: true,
-    });
-
 
     // 위치이동 버튼 클릭
     $("#btnMovePos").on("click", () => {

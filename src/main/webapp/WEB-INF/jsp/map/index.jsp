@@ -62,43 +62,67 @@
 
 </head>
 <body>
-    <div id="headerWrap">
-        <div id="centerWrap">
-            <div id="logoWrap">
-                농업진흥지역 DB구축 현황판
-            </div>
-        </div>
-    </div>
+<%--    <div id="headerWrap">--%>
+<%--        <div id="centerWrap">--%>
+<%--            <div id="logoWrap">--%>
+<%--                농업진흥지역 DB구축 현황판--%>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
 
     <div id="mapWrap">
-        <div id="leftWrap">
-            <div class="menuWrap">
-                일반검색
-            </div>
-
-            <div class="menuWrap">
-                관리번호
-            </div>
-        </div>
         <div id="searchWrap">
-            <h3>검색</h3>
+            <h3>농업진흥지역 DB구축 현황판</h3>
+
+            <div class="itemGroup">
+                <div class="ui form" style="padding: 10px 0 0 10px;">
+                    <div class="inline fields" style="display: inline-flex;">
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input id="m001" type="radio" name="m001" checked="checked">
+                                <label>일반검색</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input id="m002" type="radio" name="m002">
+                                <label>관리번호</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields" style="display: inline-flex;">
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input id="m003" type="radio" name="m003">
+                                <label>현황조회</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input id="m004" type="radio" name="m004">
+                                <label>추가</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="itemGroup">
                 <span class="title">행정구역</span>
                 <div class="selectWrap">
-                    <select id="sido" style="display: none;"></select>
+                    <select id="m001_sido" class="selectSido" style="display: none;"></select>
                 </div>
 
                 <div class="selectWrap">
-                    <select id="sgg" style="display: none;"></select>
+                    <select id="m001_sgg" class="selectSgg" style="display: none;"></select>
                 </div>
 
                 <div class="selectWrap">
-                    <select id="emd" style="display: none;"></select>
+                    <select id="m001_emd" style="display: none;"></select>
                 </div>
 
                 <div class="selectWrap">
-                    <select id="li" style="display: none;"></select>
+                    <select id="m001_li" style="display: none;"></select>
                 </div>
 
                 <div class="selectWrap" style="text-align: center;">
@@ -108,13 +132,13 @@
                     </div>
 
                     <div class="ui input">
-                        <input id="bon" class="jibun numberOnly" type="text" placeholder="본번">
+                        <input id="bon" class="w80 numberOnly" type="text" placeholder="본번">
                     </div>
 
                     -
 
                     <div class="ui input">
-                        <input id="bu" class="jibun numberOnly" type="text" placeholder="부번">
+                        <input id="bu" class="w80 numberOnly" type="text" placeholder="부번">
                     </div>
 
                     <button id="btnMovePos" class="ui blue button">위치이동</button>
@@ -122,26 +146,60 @@
             </div>
 
             <div class="itemGroup">
-                <span class="title">관리번호</span>
+                <span class="title">농업진흥지역</span>
 
-                <div class="ui input">
-                    <input id="mngNo" class="numberOnly" type="text" placeholder="관리번호" style="margin-top:5px; width: 156px;">
+                <div class="ui form" style="padding: 10px 0 0 10px;">
+                    <div class="inline fields" style="display: inline-flex; margin: 0;">
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input id="m001" type="checkbox" name="m001" checked="checked">
+                                <label>진흥구역</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input id="m002" type="checkbox" name="m002">
+                                <label>보호구역</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <button id="btnMngNo" class="ui blue button" style="margin: 5px 0 0 0;">검색</button>
             </div>
 
             <div class="itemGroup">
-                <span class="title">농업진흥지역</span>
+                <span class="title">면적(ha)</span>
 
-                <div class="selectWrap" style="width: 156px; display: inline-flex;">
-                    <select id="ue101" style="display: none;">
-                        <option value="1">진흥구역</option>
-                        <option value="2">보호구역</option>
-                    </select>
+                <div class="ui input">
+                    <input id="minArea" class="tm5 w108 numberOnly" type="text" placeholder="최소">
                 </div>
+                ~
+                <div class="ui input">
+                    <input id="maxArea" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                </div>
+            </div>
 
-                <button id="btnUe101" class="ui blue button" style="margin: 5px 0 0 0;">검색</button>
+            <div class="itemGroup">
+                <span class="title">경지정리비율(%)</span>
+
+                <div class="ui input">
+                    <input id="min1" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                </div>
+                ~
+                <div class="ui input">
+                    <input id="max1" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                </div>
+            </div>
+
+            <div class="itemGroup">
+                <span class="title">생산기반율(%)</span>
+
+                <div class="ui input">
+                    <input id="min2" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                </div>
+                ~
+                <div class="ui input">
+                    <input id="max2" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                </div>
             </div>
         </div>
 

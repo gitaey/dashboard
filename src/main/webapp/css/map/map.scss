@@ -1,6 +1,7 @@
-$header-height: 40px;
+$header-height: 0px;
 $logo-width: 105px;
 $header-menu-width: 340px;
+$search-wrap-width: 272px;
 
 * {
     box-sizing: border-box;
@@ -112,32 +113,13 @@ button.blue {
         z-index: 999;
     }
 
-    #leftWrap {
-        position: absolute;
-        z-index: 999;
-        left: 0;
-        bottom: 0;
-        top: 0;
-        width: 60px;
-        background: #f5f5f5;
-
-        .menuWrap {
-            height: 70px;
-            line-height: 70px;
-            border-bottom: 1px solid lightgrey;
-            vertical-align: middle;
-            cursor: pointer;
-            background: #0057a6;
-            color: #fff;
-        }
-    }
-
     #searchWrap {
         position: absolute;
         z-index: 999;
         background: #fff;
+        width: $search-wrap-width;
         top: 0px;
-        left: 60px;
+        left: 0px;
         bottom: 0px;
         box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
         padding: 10px;
@@ -177,8 +159,16 @@ button.blue {
                 font-size: 13px;
             }
 
-            .jibun {
+            .w80 {
                 width: 80px;
+            }
+
+            .w108 {
+                width: 108px;
+            }
+
+            .tm5 {
+                margin-top:5px;
             }
         }
 
@@ -599,4 +589,8 @@ button.blue {
 .ui.menu.three.item .item {
     padding-left: 10px !important;
     padding-right: 10px !important;
+}
+
+.inline.fields .field {
+    width: 120px;
 }
