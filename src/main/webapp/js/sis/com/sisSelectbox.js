@@ -153,7 +153,7 @@
                             _this.props.onChange(val, text);
                         }
 
-                        // $(ele).change();
+                        $(ele).change();
                     });
                 }
 

@@ -65,12 +65,21 @@
     <div id="headerWrap">
         <div id="centerWrap">
             <div id="logoWrap">
-                SISNET
+                농업진흥지역 DB구축 현황판
             </div>
         </div>
     </div>
 
     <div id="mapWrap">
+        <div id="leftWrap">
+            <div class="menuWrap">
+                일반검색
+            </div>
+
+            <div class="menuWrap">
+                관리번호
+            </div>
+        </div>
         <div id="searchWrap">
             <h3>검색</h3>
 
@@ -107,10 +116,33 @@
                     <div class="ui input">
                         <input id="bu" class="jibun numberOnly" type="text" placeholder="부번">
                     </div>
+
+                    <button id="btnMovePos" class="ui blue button">위치이동</button>
                 </div>
             </div>
 
-            <button id="btnMovePos" class="ui blue button">위치이동</button>
+            <div class="itemGroup">
+                <span class="title">관리번호</span>
+
+                <div class="ui input">
+                    <input id="mngNo" class="numberOnly" type="text" placeholder="관리번호" style="margin-top:5px; width: 156px;">
+                </div>
+
+                <button id="btnMngNo" class="ui blue button" style="margin: 5px 0 0 0;">검색</button>
+            </div>
+
+            <div class="itemGroup">
+                <span class="title">농업진흥지역</span>
+
+                <div class="selectWrap" style="width: 156px; display: inline-flex;">
+                    <select id="ue101" style="display: none;">
+                        <option value="1">진흥구역</option>
+                        <option value="2">보호구역</option>
+                    </select>
+                </div>
+
+                <button id="btnUe101" class="ui blue button" style="margin: 5px 0 0 0;">검색</button>
+            </div>
         </div>
 
         <div id="mapMenuWrap">

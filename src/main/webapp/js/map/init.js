@@ -96,6 +96,12 @@ $(window).on("load", function () {
         }
     });
 
+    new SisSelectbox("#ue101", {
+        allField: true,
+    });
+
+
+    // 위치이동 버튼 클릭
     $("#btnMovePos").on("click", () => {
         var code = "";
 
@@ -130,6 +136,7 @@ $(window).on("load", function () {
         getJijuk(code);
     });
 
+    // pnu로 지적도 가져오기
     var getJijuk = (code) => {
         $.ajax({
             url: "/selectJijuk.do",
@@ -157,6 +164,7 @@ $(window).on("load", function () {
         });
     };
 
+    // 코드로 행정구역 가져오기
     var getSect = (code) => {
         $.ajax({
             url: "/selectSect.do",
