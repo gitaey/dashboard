@@ -22,16 +22,71 @@ $(window).on("load", function () {
     // 체크박스
     $('.ui.checkbox').checkbox();
 
+    // 모달
+    $(".modalWrap .close").on("click", (evt) => {
+        var modal = $(evt.target).closest(".modalWrap");
+
+        modal.attr("style", "");
+        modal.hide();
+    });
+
+    // 모달 zIndex 설정
+    $(".modalWrap").on("mousedown", function () {
+        $(".modalWrap").css("zIndex", 9999);
+        $(this).css("zIndex", 99999);
+    }).on("show", function () {
+        $(".modalWrap").css("zIndex", 9999);
+        $(this).css("zIndex", 99999);
+    })
+
+    $(".modalWrap").draggable({
+        handle: ".modalTitleWrap",
+        containment : 'parent'
+        // drag: function (evt, ui) {
+        //     $(this).css({
+        //         left: "auto",
+        //         right: window.innerWidth - ui.position.left - $(this).width()
+        //     })
+        // },
+        // stop: function (evt, ui) {
+        //     $(this).css({
+        //         left: "auto",
+        //         right: window.innerWidth - ui.position.left - $(this).width()
+        //     })
+        // }
+    });
+
+    // 메뉴 선택 이벤트
     $(".btnMenu").on("click", (evt) => {
         var id = evt.target.id;
 
         $(".btnMenu").removeClass("primary");
         $(evt.target).addClass("primary");
 
-        $(".menuWrap").hide();
-
-        $(`#${id}_wrap`).show();
+        if(id == "m001") {
+            $(".itemGroup.m002").hide();
+        }
+        else if(id == "m002") {
+            $(".itemGroup.m002").show();
+        }
+        else if(id == "m003") {
+            $(".itemGroup.m002").hide();
+        } else {
+            $(".itemGroup.m002").hide();
+        }
     });
+
+    // 보호구역 선택 이벤트
+    $("#m001_uea120").on("change", (evt) => {
+        var checked = evt.target.checked;
+
+        if(checked) {
+            $("[name=includeWater]").attr("disabled", false);
+        } else {
+            $("[name=includeWater]").attr("disabled", true);
+        }
+
+    })
 
     // 레이어 불러오기
     $.ajax({

@@ -5,8 +5,27 @@ function numberWithCommas(num) {
 }
 
 $.fn.numberOnly = function() {
+	var val = "";
+
 	$(this).on("keypress", (event) => {
-		if(event.key >= 0 && event.key <= 9) {
+		if((event.key >= 0 && event.key <= 9) || event.key == ".") {
+
+			return true;
+		}
+
+		return false;
+	});
+
+	$(this).on("keyup", (event) => {
+		if((event.key >= 0 && event.key <= 9) || event.key == ".") {
+			let regexp = /^\d*.?\d{0,2}$/;
+			if (!regexp.test(event.target.value)) {
+				event.target.value = val;
+
+				return false;
+			}
+
+			val = event.target.value;
 			return true;
 		}
 

@@ -137,11 +137,15 @@ button.blue {
             line-height: 50px;
         }
 
-        #btnMovePos {
-            width: 100%;
-            margin: 10px 0 0 0;
-            background: #5eb2ff;
+        #btnSearch {
+            width: 90%;
+            background: #2185d0;
             display: block;
+            bottom: 15px;
+            left: 14px;
+            position: absolute;
+            margin-top: 5px;
+            color: #fff;
         }
 
         #nonScrollWrap {
@@ -153,8 +157,11 @@ button.blue {
         #scrollWrap {
             position: absolute;
             top: 176px;
-            bottom: 0;
+            bottom: 65px;
             overflow: auto;
+            right: 0;
+            left: 0;
+            overflow-x: hidden;
 
             &::-webkit-scrollbar-thumb{
                 background-color: gray;
@@ -167,9 +174,7 @@ button.blue {
 
             &::-webkit-scrollbar{
                 width: 5px;
-                position: absolute;
-                right: 0;
-                margin-right: 5px;
+                margin-right: -5px;
             }
         }
 
@@ -191,6 +196,7 @@ button.blue {
                 border-bottom: 1px solid #e1e1e1;
                 font-family: 'NotoSansKR-Medium';
                 font-size: 13px;
+                margin-right: 5px;
             }
 
             .btnMenu {

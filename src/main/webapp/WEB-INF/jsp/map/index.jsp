@@ -20,16 +20,19 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/map/map.css?ver=1" type="text/css">
 
     <!-- jQuery -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/plugins/jQuery-ui-1.13.2/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/plugins/jQuery-ui-1.13.2/jquery-ui.min.css"
+          type="text/css">
     <script src="${pageContext.request.contextPath}/js/plugins/jquery-3.6.0/jquery-3.6.0.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/plugins/jQuery-ui-1.13.2/jquery-ui.min.js"></script>
 
     <!-- semantic-ui -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/plugins/Semantic-UI-CSS-master/semantic.min.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/plugins/Semantic-UI-CSS-master/semantic.min.css"
+          type="text/css">
     <script src="${pageContext.request.contextPath}/js/plugins/Semantic-UI-CSS-master/semantic.min.js"></script>
 
     <!-- font awesome -->
-    <link href="${pageContext.request.contextPath}/js/plugins/fontawesome-free-6.4.0-web/css/all.min.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/js/plugins/fontawesome-free-6.4.0-web/css/all.min.css"
+          rel="stylesheet"/>
     <script src="${pageContext.request.contextPath}/js/plugins/fontawesome-free-6.4.0-web/js/all.min.js"></script>
 
     <!-- Openlayers -->
@@ -44,6 +47,8 @@
     <link href="${pageContext.request.contextPath}/css/sis/sisMeasure.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/sis/sisTree.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/sis/sisSelectbox.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/sis/sisModal.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/sis/sisPagination.css" rel="stylesheet">
 
     <script src="${pageContext.request.contextPath}/js/sis/com/sisCommon.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/2D/sisMap.js"></script>
@@ -70,304 +75,327 @@
 <%--        </div>--%>
 <%--    </div>--%>
 
-    <div id="mapWrap">
-        <div id="searchWrap">
-            <div id="nonScrollWrap">
-                <h3>농업진흥지역 DB구축 현황판</h3>
+<div id="mapWrap">
+    <div id="searchWrap">
+        <div id="nonScrollWrap">
+            <h3>농업진흥지역 DB구축 현황판</h3>
+
+            <div class="itemGroup">
+                <button id="m001" class="btnMenu ui primary button">
+                    구획현황
+                </button>
+                <button id="m002" class="btnMenu ui button">
+                    관리번호
+                </button>
+                <button id="m003" class="btnMenu ui button">
+                    일반현황
+                </button>
+                <button class="btnMenu ui button">
+                    추가
+                </button>
+            </div>
+        </div>
+
+
+        <div id="scrollWrap">
+            <!-- ####### -->
+            <!-- 구획현황 -->
+            <!-- ####### -->
+            <div id="m001_wrap" class="menuWrap" style="display: block;">
+                <div class="itemGroup">
+                    <span class="title">행정구역</span>
+                    <div class="selectWrap">
+                        <select id="m001_sido" class="selectSido" parent="m001" style="display: none;"></select>
+                    </div>
+
+                    <div class="selectWrap">
+                        <select id="m001_sgg" class="selectSgg" parent="m001" style="display: none;"></select>
+                    </div>
+
+                    <div class="selectWrap">
+                        <select id="m001_emd" class="selectEmd" parent="m001" style="display: none;"></select>
+                    </div>
+
+                    <div class="selectWrap">
+                        <select id="m001_li" class="selectLi" parent="m001" style="display: none;"></select>
+                    </div>
+                </div>
 
                 <div class="itemGroup">
-                    <button id="m001" class="btnMenu ui primary button">
-                        구획현황
-                    </button>
-                    <button id="m002" class="btnMenu ui button">
-                        관리번호
-                    </button>
+                    <span class="title">진흥구분</span>
 
-                    <button id="m003" class="btnMenu ui button">
-                        일반현황
-                    </button>
-    <%--                <button class="btnMenu ui button">--%>
-    <%--                    추가--%>
-    <%--                </button>--%>
-                </div>
-            </div>
-
-
-            <div id="scrollWrap">
-                <!-- ####### -->
-                <!-- 구획현황 -->
-                <!-- ####### -->
-                <div id="m001_wrap" class="menuWrap" style="display: block;">
-                    <div class="itemGroup">
-                        <span class="title">행정구역</span>
-                        <div class="selectWrap">
-                            <select id="m001_sido" class="selectSido" parent="m001" style="display: none;"></select>
-                        </div>
-
-                        <div class="selectWrap">
-                            <select id="m001_sgg" class="selectSgg" parent="m001" style="display: none;"></select>
-                        </div>
-
-                        <div class="selectWrap">
-                            <select id="m001_emd" class="selectEmd" parent="m001" style="display: none;"></select>
-                        </div>
-
-                        <div class="selectWrap">
-                            <select id="m001_li" class="selectLi" parent="m001" style="display: none;"></select>
-                        </div>
-                    </div>
-
-                    <div class="itemGroup">
-                        <span class="title">진흥구분</span>
-
-                        <div class="ui form" style="padding: 10px 0 0 0px;">
-                            <div class="inline fields" style="display: inline-flex; margin: 0 -1em 1em 0;">
-                                <div class="field">
-                                    <div class="ui checkbox">
-                                        <input id="m001_uea110" type="checkbox" name="m001_uea110" checked="checked">
-                                        <label>진흥구역</label>
-                                    </div>
+                    <div class="ui form" style="padding: 10px 0 0 0px;">
+                        <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input id="m001_uea110" type="checkbox" name="m001_uea110" checked="checked">
+                                    <label>진흥구역</label>
                                 </div>
-                                <div class="field">
-                                    <div class="ui checkbox">
-                                        <input id="m001_uea120" type="checkbox" name="m001_uea120" checked="checked">
-                                        <label>보호구역</label>
-                                    </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input id="m001_uea120" type="checkbox" name="m001_uea120" checked="checked">
+                                    <label>보호구역</label>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="itemGroup">
-                        <span class="title">구획면적(ha)</span>
+                <div class="itemGroup">
+                    <span class="title">구획면적(ha)</span>
 
-                        <div class="ui input">
-                            <input id="minArea" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                        </div>
-                        ~
-                        <div class="ui input">
-                            <input id="maxArea" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                        </div>
+                    <div class="ui input">
+                        <input id="minArea" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                     </div>
-
-                    <div class="itemGroup">
-                        <span class="title">수원공</span>
-
-                        <div class="ui input">
-                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                        </div>
-                        ~
-                        <div class="ui input">
-                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                        </div>
+                    ~
+                    <div class="ui input">
+                        <input id="maxArea" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
+                </div>
 
-                    <div class="itemGroup">
-                        <span class="title">농지비율(%)</span>
+                <div class="itemGroup">
+                        <span class="title">
+                            수원공
+                            <span style="color: red">※보호구역 선택시 활성화</span>
+                        </span>
 
-                        <div class="ui input">
-                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                        </div>
-                        ~
-                        <div class="ui input">
-                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                        </div>
-                    </div>
-
-                    <div class="itemGroup">
-                        <span class="title">비농지비율(%)</span>
-
-                        <div class="ui input">
-                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                        </div>
-                        ~
-                        <div class="ui input">
-                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    <div class="ui form" style="padding: 10px 0 0 0px;">
+                        <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="includeWater" type="radio" name="includeWater" checked="checked">
+                                    <label>포함</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="nonIncludeWater" type="radio" name="includeWater">
+                                    <label>미포함</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ####### -->
-                <!-- 관리번호 -->
-                <!-- ####### -->
-                <div id="m002_wrap" class="menuWrap">
-                    <div class="itemGroup">
-                        <span class="title">행정구역</span>
-                        <div class="selectWrap">
-                            <select id="m002_sido" class="selectSido" parent="m002" style="display: none;"></select>
-                        </div>
+                <div class="itemGroup">
+                    <span class="title">농지비율(%)</span>
 
-                        <div class="selectWrap">
-                            <select id="m002_sgg" class="selectSgg" parent="m002" style="display: none;"></select>
-                        </div>
-
-                        <div class="selectWrap">
-                            <select id="m002_emd" class="selectEmd" parent="m002" style="display: none;"></select>
-                        </div>
-
-                        <div class="selectWrap">
-                            <select id="m002_li" class="selectLi" parent="m002" style="display: none;"></select>
-                        </div>
-
-                        <div class="selectWrap" style="text-align: center;">
-                            <div class="ui checkbox right" style="margin-right: 20px;">
-                                <label>산</label>
-                                <input id="san" type="checkbox" name="san">
-                            </div>
-
-                            <div class="ui input">
-                                <input id="bon" class="w80 numberOnly" type="text" placeholder="본번">
-                            </div>
-
-                            -
-
-                            <div class="ui input">
-                                <input id="bu" class="w80 numberOnly" type="text" placeholder="부번">
-                            </div>
-
-                            <button id="btnMovePos" class="ui blue button">위치이동</button>
-                        </div>
+                    <div class="ui input">
+                        <input id="minFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                     </div>
-
-                    <div class="itemGroup">
-                        <span class="title">경지정리비율(%)</span>
-
-                        <div class="ui input">
-                            <input id="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                        </div>
-                        ~
-                        <div class="ui input">
-                            <input id="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                        </div>
-                    </div>
-
-                    <div class="itemGroup">
-                        <span class="title">생산기반율(%)</span>
-
-                        <div class="ui input">
-                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                        </div>
-                        ~
-                        <div class="ui input">
-                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                        </div>
+                    ~
+                    <div class="ui input">
+                        <input id="maxFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
                 </div>
 
-                <!-- ####### -->
-                <!-- 일반현황 -->
-                <!-- ####### -->
-                <div id="m003_wrap" class="menuWrap">
-                    <div class="itemGroup">
-                        <span class="title">행정구역</span>
-                        <div class="selectWrap">
-                            <select id="m003_sido" class="selectSido" parent="m003" style="display: none;"></select>
-                        </div>
+                <div class="itemGroup">
+                    <span class="title">비농지비율(%)</span>
 
-                        <div class="selectWrap">
-                            <select id="m003_sgg" class="selectSgg" parent="m003" style="display: none;"></select>
-                        </div>
+                    <div class="ui input">
+                        <input id="minUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="maxUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
+                </div>
 
-                        <div class="selectWrap">
-                            <select id="m003_emd" class="selectEmd" parent="m003" style="display: none;"></select>
-                        </div>
+                <div class="itemGroup m002" style="display: none;">
+                    <span class="title">경지정리비율(%)</span>
 
-                        <div class="selectWrap">
-                            <select id="m003_li" class="selectLi" parent="m003" style="display: none;"></select>
-                        </div>
+                    <div class="ui input">
+                        <input id="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
+                </div>
 
-                        <div class="selectWrap" style="text-align: center;">
-                            <div class="ui checkbox right" style="margin-right: 20px;">
-                                <label>산</label>
-                                <input id="san" type="checkbox" name="san">
-                            </div>
+                <div class="itemGroup m002" style="display: none;">
+                    <span class="title">생산기반율(%)</span>
 
-                            <div class="ui input">
-                                <input id="bon" class="w80 numberOnly" type="text" placeholder="본번">
-                            </div>
-
-                            -
-
-                            <div class="ui input">
-                                <input id="bu" class="w80 numberOnly" type="text" placeholder="부번">
-                            </div>
-
-                            <button id="btnMovePos" class="ui blue button">위치이동</button>
-                        </div>
+                    <div class="ui input">
+                        <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="mapMenuWrap">
-            <div class="btn">
-                <div id="baseMapWrap" class="ui blue three item menu">
-                    <a id="baseMap" class="item">
-                        브이월드
-                    </a>
-                    <a id="hybridMap" class="active item">
-                        항공영상
-                    </a>
-                    <a id="noMap" class="item">
-                        배경없음
-                    </a>
-                </div>
-            </div>
-
-            <div id="lyrWrap" class="btn">
-                <i class="fa-solid fa-layer-group icon"></i>
-                <span class="txt">레이어</span>
-            </div>
-        </div>
-
-        <div id="tree"></div>
-
-        <div id="mapControlWrap">
-            <span class="split"></span>
-
-            <div class="iconWrap" id="calDis">
-                <span>거리측정</span>
-                <i class="fa-solid fa-ruler-horizontal icon top"></i>
-            </div>
-<%--            <div class="iconWrap" id="calHeight">--%>
-<%--                <span>표고측정</span>--%>
-<%--                <i class="fa-solid fa-ruler-vertical icon center"></i>--%>
-<%--            </div>--%>
-            <div class="iconWrap" id="calArea">
-                <span>면적측정</span>
-                <i class="fa-solid fa-vector-square icon center"></i>
-            </div>
-            <div class="iconWrap" id="clearMap">
-                <span>초기화</span>
-                <i class="fa-solid fa-rotate-right icon bottom"></i>
-            </div>
-            <span class="split"></span>
-
-            <div class="iconWrap" id="saveScreen">
-                <span>화면저장</span>
-                <i class="fa-solid fa-floppy-disk icon top"></i>
-            </div>
-            <div class="iconWrap" id="shareScreen">
-                <span>화면공유</span>
-                <i class="fa-solid fa-share-nodes icon bottom"></i>
-            </div>
-            <span class="split" style="height: 100px;"></span>
-
-<%--            <i class="fa-solid fa-crosshairs icon"></i>--%>
-            <span class="split"></span>
-
-            <div class="iconWrap">
-                <i class="fa-solid fa-plus icon top" id="zoomIn"></i>
-            </div>
-            <div class="iconWrap">
-                <i class="fa-solid fa-minus icon bottom" id="zoomOut"></i>
-            </div>
-            <span class="split"></span>
-
-        </div>
-        <div id="map" class=""></div>
-        <div id="centerPos"></div>
+        <button id="btnSearch" class="btnMenu ui primary button">
+            검색
+        </button>
     </div>
+
+    <div id="mapMenuWrap">
+        <div class="btn">
+            <div id="baseMapWrap" class="ui blue three item menu">
+                <a id="baseMap" class="item">
+                    브이월드
+                </a>
+                <a id="hybridMap" class="active item">
+                    항공영상
+                </a>
+                <a id="noMap" class="item">
+                    배경없음
+                </a>
+            </div>
+        </div>
+
+        <div id="lyrWrap" class="btn">
+            <i class="fa-solid fa-layer-group icon"></i>
+            <span class="txt">레이어</span>
+        </div>
+    </div>
+
+    <div id="tree"></div>
+
+    <div id="mapControlWrap">
+        <span class="split"></span>
+
+        <div class="iconWrap" id="calDis">
+            <span>거리측정</span>
+            <i class="fa-solid fa-ruler-horizontal icon top"></i>
+        </div>
+        <%--            <div class="iconWrap" id="calHeight">--%>
+        <%--                <span>표고측정</span>--%>
+        <%--                <i class="fa-solid fa-ruler-vertical icon center"></i>--%>
+        <%--            </div>--%>
+        <div class="iconWrap" id="calArea">
+            <span>면적측정</span>
+            <i class="fa-solid fa-vector-square icon center"></i>
+        </div>
+        <div class="iconWrap" id="clearMap">
+            <span>초기화</span>
+            <i class="fa-solid fa-rotate-right icon bottom"></i>
+        </div>
+        <span class="split"></span>
+
+        <div class="iconWrap" id="saveScreen">
+            <span>화면저장</span>
+            <i class="fa-solid fa-floppy-disk icon top"></i>
+        </div>
+        <div class="iconWrap" id="shareScreen">
+            <span>화면공유</span>
+            <i class="fa-solid fa-share-nodes icon bottom"></i>
+        </div>
+        <span class="split" style="height: 100px;"></span>
+
+        <%--            <i class="fa-solid fa-crosshairs icon"></i>--%>
+        <span class="split"></span>
+
+        <div class="iconWrap">
+            <i class="fa-solid fa-plus icon top" id="zoomIn"></i>
+        </div>
+        <div class="iconWrap">
+            <i class="fa-solid fa-minus icon bottom" id="zoomOut"></i>
+        </div>
+        <span class="split"></span>
+
+    </div>
+    <div id="map" class=""></div>
+    <div id="centerPos"></div>
+</div>
+
+<div id="searchResultModal" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">구획현황 검색결과</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+    </div>
+    <div class="modalBody">
+        <div style="text-align: right">
+            검색결과 <span style="color:red; font-weight:bold;">83</span>건
+        </div>
+
+        <table class="ui celled table" style="">
+            <thead>
+            <tr>
+                <th>순번</th>
+                <th>진흥지역코드(mnum)</th>
+                <th>시군구</th>
+                <th>진흥구분(진흥/보호)</th>
+                <th>면적(ha)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td data-label="Name">1</td>
+                <td data-label="Age">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+            </tr>
+            <tr>
+                <td data-label="Name">2</td>
+                <td data-label="Age">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+            </tr>
+            <tr>
+                <td data-label="Name">3</td>
+                <td data-label="Age">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="searchResultModal2" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">구획현황2 검색결과</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+    </div>
+    <div class="modalBody">
+        <div style="text-align: right">
+            검색결과 <span style="color:red; font-weight:bold;">83</span>건
+        </div>
+
+        <table class="ui celled table" style="">
+            <thead>
+            <tr>
+                <th>순번</th>
+                <th>진흥지역코드(mnum)</th>
+                <th>시군구</th>
+                <th>진흥구분(진흥/보호)</th>
+                <th>면적(ha)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td data-label="Name">1</td>
+                <td data-label="Age">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+            </tr>
+            <tr>
+                <td data-label="Name">2</td>
+                <td data-label="Age">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+            </tr>
+            <tr>
+                <td data-label="Name">3</td>
+                <td data-label="Age">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+                <td data-label="Job">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 </body>
 </html>
