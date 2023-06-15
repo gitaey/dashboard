@@ -147,9 +147,10 @@ button.blue {
   background-color: rgba(0, 0, 0, 0); /* 스크롤바 뒷 배경을 투명 처리한다 */
 }
 #mapWrap #searchWrap #scrollWrap::-webkit-scrollbar {
-  width: 2px;
+  width: 5px;
   position: absolute;
   right: 0;
+  margin-right: 5px;
 }
 #mapWrap #searchWrap .menuWrap {
   display: none;
@@ -159,7 +160,7 @@ button.blue {
   border: 1px solid #e1e1e1;
   padding: 10px;
   margin-bottom: 10px;
-  margin: 0 10px 10px 10px;
+  margin: 0 9px 10px 10px;
 }
 #mapWrap #searchWrap .itemGroup .title {
   display: block;
@@ -176,8 +177,8 @@ button.blue {
 #mapWrap #searchWrap .itemGroup .w80 {
   width: 80px;
 }
-#mapWrap #searchWrap .itemGroup .w108 {
-  width: 108px;
+#mapWrap #searchWrap .itemGroup .w106 {
+  width: 106px;
 }
 #mapWrap #searchWrap .itemGroup .tm5 {
   margin-top: 5px;

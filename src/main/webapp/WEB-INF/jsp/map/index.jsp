@@ -115,29 +115,10 @@
                         <div class="selectWrap">
                             <select id="m001_li" class="selectLi" parent="m001" style="display: none;"></select>
                         </div>
-
-                        <div class="selectWrap" style="text-align: center;">
-                            <div class="ui checkbox right" style="margin-right: 20px;">
-                                <label>산</label>
-                                <input id="san" type="checkbox" name="san">
-                            </div>
-
-                            <div class="ui input">
-                                <input id="bon" class="w80 numberOnly" type="text" placeholder="본번">
-                            </div>
-
-                            -
-
-                            <div class="ui input">
-                                <input id="bu" class="w80 numberOnly" type="text" placeholder="부번">
-                            </div>
-
-                            <button id="btnMovePos" class="ui blue button">위치이동</button>
-                        </div>
                     </div>
 
                     <div class="itemGroup">
-                        <span class="title">농업진흥지역</span>
+                        <span class="title">진흥구분</span>
 
                         <div class="ui form" style="padding: 10px 0 0 0px;">
                             <div class="inline fields" style="display: inline-flex; margin: 0 -1em 1em 0;">
@@ -161,11 +142,11 @@
                         <span class="title">구획면적(ha)</span>
 
                         <div class="ui input">
-                            <input id="minArea" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                            <input id="minArea" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                         </div>
                         ~
                         <div class="ui input">
-                            <input id="maxArea" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                            <input id="maxArea" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                         </div>
                     </div>
 
@@ -173,11 +154,11 @@
                         <span class="title">수원공</span>
 
                         <div class="ui input">
-                            <input id="min2" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                         </div>
                         ~
                         <div class="ui input">
-                            <input id="max2" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                         </div>
                     </div>
 
@@ -185,11 +166,11 @@
                         <span class="title">농지비율(%)</span>
 
                         <div class="ui input">
-                            <input id="min2" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                         </div>
                         ~
                         <div class="ui input">
-                            <input id="max2" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                         </div>
                     </div>
 
@@ -197,11 +178,11 @@
                         <span class="title">비농지비율(%)</span>
 
                         <div class="ui input">
-                            <input id="min2" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                         </div>
                         ~
                         <div class="ui input">
-                            <input id="max2" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                         </div>
                     </div>
                 </div>
@@ -252,11 +233,11 @@
                         <span class="title">경지정리비율(%)</span>
 
                         <div class="ui input">
-                            <input id="min1" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                            <input id="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                         </div>
                         ~
                         <div class="ui input">
-                            <input id="max1" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                            <input id="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                         </div>
                     </div>
 
@@ -264,11 +245,11 @@
                         <span class="title">생산기반율(%)</span>
 
                         <div class="ui input">
-                            <input id="min2" class="tm5 w108 numberOnly" type="text" placeholder="최소">
+                            <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                         </div>
                         ~
                         <div class="ui input">
-                            <input id="max2" class="tm5 w108 numberOnly" type="text" placeholder="최대">
+                            <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                         </div>
                     </div>
                 </div>
