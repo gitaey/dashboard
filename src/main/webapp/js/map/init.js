@@ -19,6 +19,20 @@ $(window).on("load", function () {
     // input 숫자만 입력가능하게 설정
     $(".numberOnly").numberOnly();
 
+    // 체크박스
+    $('.ui.checkbox').checkbox();
+
+    $(".btnMenu").on("click", (evt) => {
+        var id = evt.target.id;
+
+        $(".btnMenu").removeClass("primary");
+        $(evt.target).addClass("primary");
+
+        $(".menuWrap").hide();
+
+        $(`#${id}_wrap`).show();
+    });
+
     // 레이어 불러오기
     $.ajax({
         url: PATH + "/selectLayers.do",
@@ -30,10 +44,7 @@ $(window).on("load", function () {
         }
     });
 
-    // $('.ui.dropdown').dropdown();
-    $('.ui.checkbox').checkbox();
-
-    var selectSido = new SisSelectbox("#m001_sido", {
+    var selectSido = new SisSelectbox(".selectSido", {
         url: "/selectSido.do",
         allField: false,
         fields: {
@@ -42,7 +53,7 @@ $(window).on("load", function () {
         }
     });
 
-    var selectSgg = new SisSelectbox("#m001_sgg", {
+    var selectSgg = new SisSelectbox(".selectSgg", {
         url: "/selectSgg.do",
         allField: true,
         fields: {
@@ -51,7 +62,7 @@ $(window).on("load", function () {
         }
     });
 
-    var selectEmd = new SisSelectbox("#m001_emd", {
+    var selectEmd = new SisSelectbox(".selectEmd", {
         url: "/selectEmd.do",
         allField: true,
         fields: {
@@ -60,7 +71,7 @@ $(window).on("load", function () {
         }
     });
 
-    var selectLi = new SisSelectbox("#m001_li", {
+    var selectLi = new SisSelectbox(".selectLi", {
         url: "/selectLi.do",
         allField: true,
         fields: {
@@ -69,31 +80,46 @@ $(window).on("load", function () {
         }
     });
 
-    selectSido.setConn({
-        onChange: function () {
-            var val = $(this).val();
-            var element = selectSgg.getElementById("m001_sgg");
-            selectSgg.setUrlParams({code: val});
-            selectSgg.getDataByUrl(element, true);
-        }
+    $.each($(".selectSido"), (idx, item) => {
+        var id = item.getAttribute("parent");
+
+        selectSido.setConn({
+            id: id + "_sido",
+            onChange: function () {
+                var val = $(this).val();
+                var element = selectSgg.getElementById(`${id}_sgg`);
+                selectSgg.setUrlParams({code: val});
+                selectSgg.getDataByUrl(element, true);
+            }
+        });
     });
 
-    selectSgg.setConn({
-        onChange: function () {
-            var val = $(this).val();
-            var element = selectEmd.getElementById("m001_emd");
-            selectEmd.setUrlParams({code: val});
-            selectEmd.getDataByUrl(element, true);
-        }
+    $.each($(".selectSgg"), (idx, item) => {
+        var id = item.getAttribute("parent");
+
+        selectSgg.setConn({
+            id: id + "_sgg",
+            onChange: function () {
+                var val = $(this).val();
+                var element = selectEmd.getElementById(`${id}_emd`);
+                selectEmd.setUrlParams({code: val});
+                selectEmd.getDataByUrl(element, true);
+            }
+        });
     });
 
-    selectEmd.setConn({
-        onChange: function () {
-            var val = $(this).val();
-            var element = selectLi.getElementById("m001_li");
-            selectLi.setUrlParams({code: val});
-            selectLi.getDataByUrl(element, true);
-        }
+    $.each($(".selectEmd"), (idx, item) => {
+        var id = item.getAttribute("parent");
+
+        selectEmd.setConn({
+            id: id + "_emd",
+            onChange: function () {
+                var val = $(this).val();
+                var element = selectLi.getElementById(`${id}_li`);
+                selectLi.setUrlParams({code: val});
+                selectLi.getDataByUrl(element, true);
+            }
+        });
     });
 
     // 위치이동 버튼 클릭

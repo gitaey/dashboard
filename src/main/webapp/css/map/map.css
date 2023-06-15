@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   box-sizing: border-box;
   padding: 0;
@@ -107,12 +108,12 @@ button.blue {
   left: 0px;
   bottom: 0px;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-  padding: 10px;
+  padding: 0;
   background: #f5f5f5;
 }
 #mapWrap #searchWrap h3 {
   height: 50px;
-  margin: -10px -10px 10px -10px;
+  padding: -10px 0 10px 0;
   border-bottom: 1px solid #ccc;
   background-color: #fff;
   font-family: "NotoSansKR-Medium";
@@ -127,11 +128,38 @@ button.blue {
   background: #5eb2ff;
   display: block;
 }
+#mapWrap #searchWrap #nonScrollWrap {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+#mapWrap #searchWrap #scrollWrap {
+  position: absolute;
+  top: 176px;
+  bottom: 0;
+  overflow: auto;
+}
+#mapWrap #searchWrap #scrollWrap::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 10px;
+}
+#mapWrap #searchWrap #scrollWrap::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0); /* 스크롤바 뒷 배경을 투명 처리한다 */
+}
+#mapWrap #searchWrap #scrollWrap::-webkit-scrollbar {
+  width: 2px;
+  position: absolute;
+  right: 0;
+}
+#mapWrap #searchWrap .menuWrap {
+  display: none;
+}
 #mapWrap #searchWrap .itemGroup {
   background: #fff;
   border: 1px solid #e1e1e1;
   padding: 10px;
   margin-bottom: 10px;
+  margin: 0 10px 10px 10px;
 }
 #mapWrap #searchWrap .itemGroup .title {
   display: block;
@@ -140,6 +168,10 @@ button.blue {
   border-bottom: 1px solid #e1e1e1;
   font-family: "NotoSansKR-Medium";
   font-size: 13px;
+}
+#mapWrap #searchWrap .itemGroup .btnMenu {
+  margin: 2px 1px 2px 1px !important;
+  width: 48% !important;
 }
 #mapWrap #searchWrap .itemGroup .w80 {
   width: 80px;

@@ -108,7 +108,14 @@
 
                 // url 방식
                 if (_this.props.url) {
-                    _this.getDataByUrl(eleWrap);
+                    if(idx == 0) {
+                        _this.getDataByUrl(eleWrap);
+                    }
+                    else {
+                        var element = $(eleWrap).find("select");
+                        _this._setOptions(element, eleWrap, true);
+                    }
+
                 } else {
                     if (_this.props.allField) {
                         $(ele).prepend("<option value='-'>==== 전체 ====</option>");
@@ -176,7 +183,7 @@
                     url: this.props.url,
                     type: this.props.type ? this.props.type : "post",
                     data: this.props.params ? this.props.params : {},
-                    // async: false,
+                    async: false,
                     success: function (res) {
                         _this.values = res[_this.props.fields.remoteValues];
                         _this._setOptions(element, eleWrap);
@@ -300,7 +307,8 @@
                 if(_this.initLoad) {
                     if (!props) props = {};
 
-                    var selectbox = this.element;
+                    var element = this.getElementById(props.id);
+                    var selectbox = $(element).find("select");
 
                     $(selectbox).unbind("change", props.onChange);
                     $(selectbox).on("change", props.onChange);
