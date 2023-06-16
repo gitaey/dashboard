@@ -54,10 +54,13 @@
     <script src="${pageContext.request.contextPath}/js/sis/2D/sisMap.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/2D/sisLayer.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/2D/sisTree.js"></script>
+    <script src="${pageContext.request.contextPath}/js/sis/2D/sisOverlay.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/2D/sisMeasure.js"></script>
-
+    <script src="${pageContext.request.contextPath}/js/sis/2D/searchAddr.js"></script>
+    <script src="${pageContext.request.contextPath}/js/sis/2D/sisPagination.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/com/sisSelectbox.js"></script>
     <script src="${pageContext.request.contextPath}/js/map/init.js"></script>
+    <script src="${pageContext.request.contextPath}/js/map/naju.js"></script>
 
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
 
@@ -76,11 +79,19 @@
 <%--    </div>--%>
 
 <div id="mapWrap">
+    <div id="posMoveWrap">
+        <div id="searchBtnWrap" class="ui buttons">
+            <button id="btnShowPlace" class="ui button">명칭</button>
+            <div class="or"></div>
+            <button id="btnShowJibun" class="ui primary button">지번</button>
+        </div>
+    </div>
+
     <div id="searchWrap">
         <div id="nonScrollWrap">
             <h3>농업진흥지역 DB구축 현황판</h3>
 
-            <div class="itemGroup">
+            <div id="selectMenu" class="itemGroup">
                 <button id="m001" class="btnMenu ui primary button">
                     구획현황
                 </button>
@@ -90,7 +101,7 @@
                 <button id="m003" class="btnMenu ui button">
                     일반현황
                 </button>
-                <button class="btnMenu ui button">
+                <button id="m004" class="btnMenu ui button">
                     추가
                 </button>
             </div>
@@ -228,7 +239,7 @@
             </div>
         </div>
 
-        <button id="btnSearch" class="btnMenu ui primary button">
+        <button id="btnSearch" class="ui primary button">
             검색
         </button>
     </div>
@@ -303,14 +314,63 @@
     <div id="centerPos"></div>
 </div>
 
-<div id="searchResultModal" class="modalWrap">
+<div id="m001Modal" class="modalWrap">
     <div class="modalTitleWrap">
         <span class="title">구획현황 검색결과</span>
         <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
     </div>
     <div class="modalBody">
+        <div class="ui segment sisLoading">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
+
         <div style="text-align: right">
-            검색결과 <span style="color:red; font-weight:bold;">83</span>건
+            <div style="text-align: right">
+                검색결과 <span id="m001TotalCount" style="color:red; font-weight:bold;">-</span>건 /
+                총 면적 <span id="m001TotalArea" style="color:red; font-weight:bold;">-</span>ha
+            </div>
+        </div>
+
+        <table class="ui celled table" style="">
+            <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>진흥지역코드(mnum)</th>
+                    <th>시군구</th>
+                    <th>진흥구분(진흥/보호)</th>
+                    <th>면적(ha)</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+        <div id="m001PaginationWrap" class="paginationWrap">
+            <div class="sisPagination"></div>
+        </div>
+    </div>
+</div>
+
+<div id="searchResultModal2" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">구획현황2 검색결과</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+    </div>
+    <div class="modalBody">
+        <div class="ui segment sisLoading">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
+
+        <div style="text-align: right">
+            <div style="text-align: right">
+                검색결과 <span style="color:red; font-weight:bold;">83</span>건 /
+                총 면적 <span style="color:red; font-weight:bold;">100</span>ha
+            </div>
         </div>
 
         <table class="ui celled table" style="">
@@ -350,50 +410,95 @@
     </div>
 </div>
 
-<div id="searchResultModal2" class="modalWrap">
+<!-- 위치이동 모달 -->
+<div id="searchPosModal" class="modalWrap">
     <div class="modalTitleWrap">
-        <span class="title">구획현황2 검색결과</span>
+        <span class="title">지번검색</span>
         <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
     </div>
-    <div class="modalBody">
-        <div style="text-align: right">
-            검색결과 <span style="color:red; font-weight:bold;">83</span>건
+    <div class="modalBody" style="overflow: visible;">
+        <!-- 명청검색 -->
+        <div id="searchPlaceWrap">
+            <div class="itemGroup">
+                <span class="title">명칭검색</span>
+
+                <div class="selectWrap">
+                    <div class="ui search">
+                        <div class="ui icon input">
+                            <input id="keyword" class="tm5" type="text" placeholder="검색어를 입력하세요">
+                            <i id="btnPlaceSearch" class="icon search tm5" style="cursor: pointer"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="placeResultWrap" class="itemGroup" style="margin-top: 10px;">
+                <span class="title" style="text-align: right; margin-bottom: 5px;">
+                    검색결과
+                    <span id="count" class="count">45</span>건
+                </span>
+
+                <div id="searchResultWrap" style="display: block;">
+                    <div id="itemsWrap" class="itemsWrap">
+                    </div>
+                </div>
+
+                <div id="addrSearchPagination" class="paginationWrap">
+                    <div class="sisPagination"></div>
+                </div>
+            </div>
+
+            <button id="btnPlaceRefresh" class="ui primary button">
+                초기화
+            </button>
         </div>
 
-        <table class="ui celled table" style="">
-            <thead>
-            <tr>
-                <th>순번</th>
-                <th>진흥지역코드(mnum)</th>
-                <th>시군구</th>
-                <th>진흥구분(진흥/보호)</th>
-                <th>면적(ha)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td data-label="Name">1</td>
-                <td data-label="Age">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-            </tr>
-            <tr>
-                <td data-label="Name">2</td>
-                <td data-label="Age">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-            </tr>
-            <tr>
-                <td data-label="Name">3</td>
-                <td data-label="Age">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- 지번검색 -->
+        <div id="searchJibunWrap">
+            <div class="itemGroup">
+                <span class="title">행정구역</span>
+                <div class="selectWrap">
+                    <select id="m000_sido" class="selectSido" parent="m000" style="display: none;"></select>
+                </div>
+
+                <div class="selectWrap">
+                    <select id="m000_sgg" class="selectSgg" parent="m000" style="display: none;"></select>
+                </div>
+
+                <div class="selectWrap">
+                    <select id="m000_emd" class="selectEmd" parent="m000" style="display: none;"></select>
+                </div>
+
+                <div class="selectWrap">
+                    <select id="m000_li" class="selectLi" parent="m000" style="display: none;"></select>
+                </div>
+
+                <div class="selectWrap" style="text-align: center;">
+                    <div class="ui checkbox right" style="margin-right: 8px;">
+                        <label>산</label>
+                        <input id="san" type="checkbox" name="san">
+                    </div>
+
+                    <div class="ui input">
+                        <input id="bon" class="w60 numberOnly" type="text" maxlength='4' placeholder="본번">
+                    </div>
+                    -
+                    <div class="ui input">
+                        <input id="bu" class="w60 numberOnly" type="text" maxlength='4' placeholder="부번">
+                    </div>
+                </div>
+            </div>
+
+            <button id="btnJibunSearch" class="ui primary button">
+                위치이동
+            </button>
+        </div>
+
+        <div id="jibunSearchLoading" class="ui segment">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
     </div>
 </div>
 

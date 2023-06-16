@@ -13,40 +13,45 @@ import java.util.Map;
 public class MapServiceImpl implements MapService {
 
     @Resource(name = "mapMapper")
-    MapMapper mapMapper;
+    MapMapper mapper;
 
     @Override
     public List<Map<String, Object>> selectSido() throws SQLException {
-        return mapMapper.selectSido();
+        return mapper.selectSido();
     }
 
     @Override
     public List<Map<String, Object>> selectSgg(Map<String, Object> params) throws SQLException {
-        return mapMapper.selectSgg(params);
+        return mapper.selectSgg(params);
     }
 
     @Override
     public List<Map<String, Object>> selectEmd(Map<String, Object> params) throws SQLException {
-        return mapMapper.selectEmd(params);
+        return mapper.selectEmd(params);
     }
 
     @Override
     public List<Map<String, Object>> selectLi(Map<String, Object> params) throws SQLException {
-        return mapMapper.selectLi(params);
+        return mapper.selectLi(params);
     }
 
     @Override
     public List<Map<String, Object>> selectLayers(Map<String, Object> params) throws SQLException {
-        return mapMapper.selectLayers(params);
+        return mapper.selectLayers(params);
     }
 
     @Override
     public Map<String, Object> selectSect(Map<String, Object> params) throws SQLException {
-        return mapMapper.selectSect(params);
+        return mapper.selectSect(params);
     }
 
     @Override
     public Map<String, Object> selectJijuk(Map<String, Object> params) throws SQLException {
-        return mapMapper.selectJijuk(params);
+        return mapper.selectJijuk(params);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectUe101(Map<String, Object> params) throws SQLException {
+        return mapper.selectUe101(params);
     }
 }

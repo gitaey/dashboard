@@ -2,6 +2,13 @@ var lyrList = null;
 
 $(window).on("load", function () {
 
+    // 주소검색
+    window.searchAddr = new SearchAddr({
+        keywordID: "keyword",
+        resultID: "itemsWrap",
+        countID: "count",
+    })
+
     // 2D Map Init
     window.sis = new SisMap("map", {
         baseMap: true
@@ -39,21 +46,10 @@ $(window).on("load", function () {
         $(this).css("zIndex", 99999);
     })
 
+    // 모달 드래그
     $(".modalWrap").draggable({
         handle: ".modalTitleWrap",
         containment : 'parent'
-        // drag: function (evt, ui) {
-        //     $(this).css({
-        //         left: "auto",
-        //         right: window.innerWidth - ui.position.left - $(this).width()
-        //     })
-        // },
-        // stop: function (evt, ui) {
-        //     $(this).css({
-        //         left: "auto",
-        //         right: window.innerWidth - ui.position.left - $(this).width()
-        //     })
-        // }
     });
 
     // 메뉴 선택 이벤트
@@ -86,7 +82,7 @@ $(window).on("load", function () {
             $("[name=includeWater]").attr("disabled", true);
         }
 
-    })
+    });
 
     // 레이어 불러오기
     $.ajax({
@@ -101,6 +97,7 @@ $(window).on("load", function () {
 
     var selectSido = new SisSelectbox(".selectSido", {
         url: "/selectSido.do",
+        defaultValue: "44",
         allField: false,
         fields: {
             text: "ctpKorNm",
@@ -177,14 +174,46 @@ $(window).on("load", function () {
         });
     });
 
-    // 위치이동 버튼 클릭
-    $("#btnMovePos").on("click", () => {
+    // 지번검색 버튼 클릭
+    $("#btnShowJibun").on("click", (evt) => {
+        $("#searchPosModal #searchPlaceWrap").hide();
+        $("#searchPosModal #searchJibunWrap").show();
+        $("#searchPosModal").show();
+    });
+
+    // 명칭검색 버튼 클릭
+    $("#btnShowPlace").on("click", (evt) => {
+        $("#searchPosModal #searchPlaceWrap").show();
+        $("#searchPosModal #searchJibunWrap").hide();
+        $("#searchPosModal").show();
+    });
+
+    // 명칭검색 조회하기
+    $("#keyword").on("keypress", (evt) => {
+        if(evt.key == "Enter") {
+            addressSearch(1);
+        }
+    })
+
+    // 명칭검색 초기화
+    $("#btnPlaceRefresh").on("click", () => {
+        $("#keyword").val("");
+        $("#placeResultWrap").hide();
+        if(searchAddr.overlay) sis.map.removeOverlay(searchAddr.overlay);
+    });
+
+    var addressSearch = function (page) {
+        searchAddr.searchName(page);
+    }
+
+    // 지번검색 위치이동 버튼 클릭
+    $("#btnJibunSearch").on("click", () => {
         var code = "";
 
-        var sidoCode = $("#sido").val();
-        var sggCode = $("#sgg").val();
-        var emdCode = $("#emd").val();
-        var liCode = $("#li").val();
+        var sidoCode = $("#m000_sido").val();
+        var sggCode = $("#m000_sgg").val();
+        var emdCode = $("#m000_emd").val();
+        var liCode = $("#m000_li").val();
         var isSan =  $("#san").is(":checked") ? "2" : "1";
         var bon = $("#bon").val().lpad(4, "0");
         var bu = $("#bu").val().lpad(4, "0");
@@ -220,6 +249,9 @@ $(window).on("load", function () {
                 code
             },
             type: "post",
+            beforeSend: () => {
+                $("#jibunSearchLoading").show();
+            },
             success: (res) => {
                 if(res.data) {
                     if(res.data.geom) {
@@ -236,8 +268,11 @@ $(window).on("load", function () {
                         sis.view.fit(feature.getGeometry().getExtent());
                     }
                 }
+            },
+            complete: () => {
+                $("#jibunSearchLoading").hide();
             }
-        });
+        })
     };
 
     // 코드로 행정구역 가져오기
@@ -267,6 +302,24 @@ $(window).on("load", function () {
             }
         });
     }
+
+    // 진흥지역 검색
+    $("#btnSearch").on("click", (e) => {
+        var id = $("#selectMenu .btnMenu.primary").attr("id");
+
+        if(id == "m001") {
+            getDistrictStatus(id);
+        }
+        else if(id == "m002") {
+
+        }
+        else if(id == "m003") {
+
+        }
+        else if(id == "m004") {
+
+        }
+    });
 
     $("#mapMenuWrap #lyrWrap.btn").on("click", (e) => {
         var isActive = $(e.target).closest(".btn").hasClass("active");
@@ -311,6 +364,7 @@ $(window).on("load", function () {
     $("#clearMap").on("click", function () {
         sisMeasure._allClear();
         sisLyr.wfs.selectLayer.getSource().clear();
+        if(searchAddr.overlay) sis.map.removeOverlay(searchAddr.overlay);
     });
 
     // 배경지도 변경

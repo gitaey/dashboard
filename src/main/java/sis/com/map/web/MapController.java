@@ -102,4 +102,14 @@ public class MapController {
         return "jsonView";
     }
 
+    // 구획현황 > 조회
+    @RequestMapping("/selectUe101.do")
+    public String selectUe101(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        List<Map<String, Object>> item = mapService.selectUe101(params);
+
+        model.put("data", item);
+
+        return "jsonView";
+    }
 }

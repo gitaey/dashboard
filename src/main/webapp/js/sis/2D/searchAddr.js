@@ -30,8 +30,6 @@
 
         // 명칭검색 (카카오)
         searchName: function (page = 1) {
-            console.log(this);
-
             var self = this;
             const size = 15;
             const query = $("#" + this.keywordID).val();
@@ -50,6 +48,7 @@
                 data: data, // 요청 변수 설정
                 async: true,
                 beforeSend: (xhr) => {
+                    $("#jibunSearchLoading").show();
                     xhr.setRequestHeader("Authorization", "KakaoAK baf884e4526f4f1d9f15d8b93b539c7d");
                 },
                 success: function (data) {
@@ -91,29 +90,18 @@
                                         self.createTable(items, items.length, true);
 
                                         self.pagination.setDataCount(items.length);
-
-                                        // var ele = (
-                                        //     <>
-                                        //         <div className="countWrap">
-                                        //             <span>검색결과 </span>
-                                        //             <span className="count">{items.length}</span>
-                                        //             <span>건</span>
-                                        //         </div>
-                                        //
-                                        //         <div className="itemsWrap">{self.createTable(items, items.length, true)}</div>
-                                        //
-                                        //         <div className="paginationWrap">
-                                        //             <SisPagination totalCount={items.length} viewCount={size} onClick={self.searchName} />
-                                        //         </div>
-                                        //     </>
-                                        // );
                                     }
                                 }
                             },
                         });
                     }
+
+                    $("#placeResultWrap").show();
+                    $("#jibunSearchLoading").hide();
                 },
                 error: function (xhr, status, error) {
+                    $("#placeResultWrap").hide();
+                    $("#jibunSearchLoading").hide();
                     alert("에러발생"); // AJAX 호출 에러
                 },
             });
@@ -185,7 +173,7 @@
             wrap.innerText = data["place_name"];
             document.body.appendChild(wrap);
 
-            $(wrap).prepend('<i class="bi bi-geo-alt-fill"></i>');
+            $(wrap).prepend('<i class="fa-solid fa-location-dot"></i>');
 
             this.overlay = new SisOverlay(`#searchOverlayWrap`, "bottom-center", [5, -10]);
             sis.map.addOverlay(this.overlay);
@@ -238,7 +226,7 @@
                             wrap.innerText = jibunAddr;
                             document.body.appendChild(wrap);
 
-                            $(wrap).prepend('<i class="bi bi-geo-alt-fill"></i>');
+                            $(wrap).prepend('<i class="fa-solid fa-location-dot"></i>');
 
                             self.overlay = new SisOverlay(`#searchOverlayWrap`, "bottom-center", [5, -10]);
                             sis.map.addOverlay(self.overlay);

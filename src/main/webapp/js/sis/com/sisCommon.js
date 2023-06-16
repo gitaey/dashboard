@@ -1,51 +1,57 @@
 // 천단위 콤마 (소수점포함)
 function numberWithCommas(num) {
-	var parts = num.toString().split(".");
-	return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+    var parts = num.toString().split(".");
+    return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
 }
 
-$.fn.numberOnly = function() {
-	var val = "";
+$.fn.numberOnly = function () {
+    $(this).on("keypress", (event) => {
+        if($(this).hasClass("float")) {
+            if ((event.key >= 0 && event.key <= 9) || event.key == "." || event.key == "Backspace") {
+                var val = event.target.value;
 
-	$(this).on("keypress", (event) => {
-		if((event.key >= 0 && event.key <= 9) || event.key == ".") {
+                var parseVal = parseFloat(val);
 
-			return true;
-		}
+                if (typeof parseVal == "number" && parseVal.toString() != "NaN") {
+                    var split = event.target.value.split(".");
 
-		return false;
-	});
+                    if (split.length > 1) {
+                        if (split[1].length > 1) {
+                            return false;
+                        }
+                    }
+                }
 
-	$(this).on("keyup", (event) => {
-		if((event.key >= 0 && event.key <= 9) || event.key == ".") {
-			let regexp = /^\d*.?\d{0,2}$/;
-			if (!regexp.test(event.target.value)) {
-				event.target.value = val;
+                return true;
+            }
+        }
+        else {
+            if ((event.key >= 0 && event.key <= 9) || event.key == "Backspace") {
+                return true;
+            }
+        }
 
-				return false;
-			}
+        return false;
+    });
 
-			val = event.target.value;
-			return true;
-		}
-
-		return false;
-	});
+    // $(this).on("keyup", (e) => {
+    //     e.target.value = e.target.value.replace( /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' );
+    // });
 }
 
-	/**
+/**
  * 쿠키 저장하기
  * @param cookie_name
  * @param value
  * @param days
  */
 function setCookie(cookie_name, value, days) {
-	var exdate = new Date();
-	exdate.setDate(exdate.getDate() + days);
-	// 설정 일수만큼 현재시간에 만료값으로 지정
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + days);
+    // 설정 일수만큼 현재시간에 만료값으로 지정
 
-	var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
-	document.cookie = cookie_name + '=' + cookie_value;
+    var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
+    document.cookie = cookie_name + '=' + cookie_value;
 }
 
 /**
@@ -54,17 +60,17 @@ function setCookie(cookie_name, value, days) {
  * @returns {string}
  */
 function getCookie(cookie_name) {
-	var x, y;
-	var val = document.cookie.split(';');
+    var x, y;
+    var val = document.cookie.split(';');
 
-	for (var i = 0; i < val.length; i++) {
-		x = val[i].substr(0, val[i].indexOf('='));
-		y = val[i].substr(val[i].indexOf('=') + 1);
-		x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
-		if (x == cookie_name) {
-			return unescape(y); // unescape로 디코딩 후 값 리턴
-		}
-	}
+    for (var i = 0; i < val.length; i++) {
+        x = val[i].substr(0, val[i].indexOf('='));
+        y = val[i].substr(val[i].indexOf('=') + 1);
+        x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+        if (x == cookie_name) {
+            return unescape(y); // unescape로 디코딩 후 값 리턴
+        }
+    }
 }
 
 /**
@@ -72,11 +78,11 @@ function getCookie(cookie_name) {
  * @param target
  * @param arrYear
  */
-function yearSelectMake( target, arrYear ){
-	var obj = document.getElementById( target );
-	for( var idx = 0; idx < arrYear.length ; idx++ ){
-		obj.options[ obj.options.length ]= new Option ( arrYear[idx], arrYear[idx] );
-	}
+function yearSelectMake(target, arrYear) {
+    var obj = document.getElementById(target);
+    for (var idx = 0; idx < arrYear.length; idx++) {
+        obj.options[obj.options.length] = new Option(arrYear[idx], arrYear[idx]);
+    }
 }
 
 /**
@@ -85,9 +91,9 @@ function yearSelectMake( target, arrYear ){
  * @returns {string}
  */
 function getParameterByName(name) {
-	const url = new URL(window.location.href);
-	const urlParams = url.searchParams;
-	return urlParams.get(name);
+    const url = new URL(window.location.href);
+    const urlParams = url.searchParams;
+    return urlParams.get(name);
 }
 
 /**
@@ -96,9 +102,9 @@ function getParameterByName(name) {
  * @returns {boolean}
  */
 function hasParameterByName(name) {
-	const url = new URL(window.location.href);
-	const urlParams = url.searchParams;
-	return urlParams.has(name);
+    const url = new URL(window.location.href);
+    const urlParams = url.searchParams;
+    return urlParams.has(name);
 }
 
 /**
@@ -107,16 +113,16 @@ function hasParameterByName(name) {
  *  - padLen : 최대 채우고자 하는 길이
  *  - padStr : 채우고자하는 문자(char)
  */
-String.prototype.lpad = function(padLen, padStr) {
-	var str = this;
-	if (padStr.length > padLen) {
-		console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
-		return str + "";
-	}
-	while (str.length < padLen)
-		str = padStr + str;
-	str = str.length >= padLen ? str.substring(0, padLen) : str;
-	return str;
+String.prototype.lpad = function (padLen, padStr) {
+    var str = this;
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str + "";
+    }
+    while (str.length < padLen)
+        str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    return str;
 };
 
 /**
@@ -125,167 +131,167 @@ String.prototype.lpad = function(padLen, padStr) {
  *  - padLen : 최대 채우고자 하는 길이
  *  - padStr : 채우고자하는 문자(char)
  */
-String.prototype.rpad = function(padLen, padStr) {
-	var str = this;
-	if (padStr.length > padLen) {
-		console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
-		return str + "";
-	}
-	while (str.length < padLen)
-		str += padStr;
-	str = str.length >= padLen ? str.substring(0, padLen) : str;
-	return str;
+String.prototype.rpad = function (padLen, padStr) {
+    var str = this;
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str + "";
+    }
+    while (str.length < padLen)
+        str += padStr;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    return str;
 };
 
 // DataTable Refresh Table
 function refreshTable(tableId, urlData) {
-	$.getJSON(urlData, function(json) {
-		var table = $(tableId).dataTable();
-		var oSettings = table.fnSettings();
-		
-		table.fnClearTable(this);
-		
-		for(var i = 0; i < json[Object.keys(json)[0]].length; i++) {
-			table.oApi._fnAddData(oSettings, json[Object.keys(json)[0]][i]);
-		}
-		
-		oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
-		table.fnDraw();
-	});
+    $.getJSON(urlData, function (json) {
+        var table = $(tableId).dataTable();
+        var oSettings = table.fnSettings();
+
+        table.fnClearTable(this);
+
+        for (var i = 0; i < json[Object.keys(json)[0]].length; i++) {
+            table.oApi._fnAddData(oSettings, json[Object.keys(json)[0]][i]);
+        }
+
+        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+        table.fnDraw();
+    });
 }
 
 //Automatically cancel unfinished ajax requests
 //when the user navigates elsewhere.
-(function(window, $) {
-	$.xhrPool = [];
-	$.xhrAbort = function() {
-		$.each($.xhrPool, function(idx, jqXHR) {
-			jqXHR.abort();
-		});
-	};
+(function (window, $) {
+    $.xhrPool = [];
+    $.xhrAbort = function () {
+        $.each($.xhrPool, function (idx, jqXHR) {
+            jqXHR.abort();
+        });
+    };
 
-	var oldbeforeunload = window.onbeforeunload;
-	window.onbeforeunload = function() {
-		var r = oldbeforeunload ? oldbeforeunload() : undefined;
-		if (r == undefined) {
-			$.xhrAbort();
-		}
-		return r;
-	}
+    var oldbeforeunload = window.onbeforeunload;
+    window.onbeforeunload = function () {
+        var r = oldbeforeunload ? oldbeforeunload() : undefined;
+        if (r == undefined) {
+            $.xhrAbort();
+        }
+        return r;
+    }
 
-	$(document).ajaxSend(function(e, jqXHR, options) {
-		$.xhrPool.push(jqXHR);
-	});
-	$(document).ajaxComplete(function(e, jqXHR, options) {
-		$.xhrPool = $.grep($.xhrPool, function(x) {
-			return x != jqXHR
-		});
-	});
+    $(document).ajaxSend(function (e, jqXHR, options) {
+        $.xhrPool.push(jqXHR);
+    });
+    $(document).ajaxComplete(function (e, jqXHR, options) {
+        $.xhrPool = $.grep($.xhrPool, function (x) {
+            return x != jqXHR
+        });
+    });
 
 
-	$.xhrCheckData = function(data) {
-		if (typeof data == "undefined") return false;
+    $.xhrCheckData = function (data) {
+        if (typeof data == "undefined") return false;
 
-		if (data.hasOwnProperty("error")) {
-			var errorCode = data["error"];
+        if (data.hasOwnProperty("error")) {
+            var errorCode = data["error"];
 
-			switch (errorCode) {
-				case "401":
-					$.xhrAbort();
-					alert("로그인후 다시 시도하세요. / Ajax 요청 실패");
-					top.location.href = G.baseUrl + "user/auth/login.do";
-				break;
-				default:
-					alert("Ajax 요청 실패 / [" + errorCode + "] " + data["message"]);
+            switch (errorCode) {
+                case "401":
+                    $.xhrAbort();
+                    alert("로그인후 다시 시도하세요. / Ajax 요청 실패");
+                    top.location.href = G.baseUrl + "user/auth/login.do";
+                    break;
+                default:
+                    alert("Ajax 요청 실패 / [" + errorCode + "] " + data["message"]);
 
-				break;
-			}
+                    break;
+            }
 
-			return false;
+            return false;
 
-		} else {
-			return true;
+        } else {
+            return true;
 
-		}
-	}
+        }
+    }
 
 })(window, jQuery);
 
-(function(window, $) {
-	var PageSetup = function(options) {
-		this.options = options;
-		this.init();
-	};
+(function (window, $) {
+    var PageSetup = function (options) {
+        this.options = options;
+        this.init();
+    };
 
-	PageSetup.prototype = {
-		config: null,
-		defaults : {},
-		init : function() {
-			this.config = $.extend({}, this.defaults, this.options);
-			var pageTitle = this.config.pageTitle;
-			if (pageTitle) {
-				$("#pageTitle").html(pageTitle);
+    PageSetup.prototype = {
+        config: null,
+        defaults: {},
+        init: function () {
+            this.config = $.extend({}, this.defaults, this.options);
+            var pageTitle = this.config.pageTitle;
+            if (pageTitle) {
+                $("#pageTitle").html(pageTitle);
 
-				var iframes = $('iframe', top.document);
-				var contents = iframes.contents();
-				var thisIframe = null;
-				contents.each(function(idx) {
-					if (this == document || iframes[idx] == self) {
-						thisIframe = iframes[idx];
-					}
-				});
+                var iframes = $('iframe', top.document);
+                var contents = iframes.contents();
+                var thisIframe = null;
+                contents.each(function (idx) {
+                    if (this == document || iframes[idx] == self) {
+                        thisIframe = iframes[idx];
+                    }
+                });
 
-				var panel = $(thisIframe).parent();
-				var tabKey = $(panel).attr("data-tab-key");
+                var panel = $(thisIframe).parent();
+                var tabKey = $(panel).attr("data-tab-key");
 
-				var label = $("ul.tabs>li[data-tab-key='" + tabKey + "']>a>span.tab-label", top.document);
-				if (label.html() == "") label.html(pageTitle);
-			}
+                var label = $("ul.tabs>li[data-tab-key='" + tabKey + "']>a>span.tab-label", top.document);
+                if (label.html() == "") label.html(pageTitle);
+            }
 
-			var pageLocation = this.config.pageLocation;
-			if (pageLocation) {
-				var parent = $("#pageLocation");
-				parent.empty();
+            var pageLocation = this.config.pageLocation;
+            if (pageLocation) {
+                var parent = $("#pageLocation");
+                parent.empty();
 
-				var idx = 0;
-				var li;
+                var idx = 0;
+                var li;
 
-				li = $("<li><i class='fas fa-home'></i></li>");
-				li.appendTo(parent);
+                li = $("<li><i class='fas fa-home'></i></li>");
+                li.appendTo(parent);
 
-				$(pageLocation).each( function() {
-					var pageName = pageLocation[idx];
-					// var active = (idx >= pageLocation.length-1) ? " class='active'" : "";
-					// li = $("<li" + active + ">" + pageName + "</li>");
-					li = $("<li>" + pageName + "</li>");
-					li.appendTo(parent)
-					idx++;
-				});
+                $(pageLocation).each(function () {
+                    var pageName = pageLocation[idx];
+                    // var active = (idx >= pageLocation.length-1) ? " class='active'" : "";
+                    // li = $("<li" + active + ">" + pageName + "</li>");
+                    li = $("<li>" + pageName + "</li>");
+                    li.appendTo(parent)
+                    idx++;
+                });
 
-				li = $("<li>" + this.config.pageTitle + "</li>");
-				li.appendTo(parent);
-			}
+                li = $("<li>" + this.config.pageTitle + "</li>");
+                li.appendTo(parent);
+            }
 
-			return this;
-		}
-	}
+            return this;
+        }
+    }
 
-	PageSetup.defaults = PageSetup.prototype.defaults;
-	window.PageSetup = PageSetup;
+    PageSetup.defaults = PageSetup.prototype.defaults;
+    window.PageSetup = PageSetup;
 
-	/* Combobox 실행대기 후 실행 */
-	$.waitForLazyRunners = function(callback) {
-		var run = function() {
-			if (!$.runner || $.runner <= 0) {
-				clearInterval(interval);
-				if(typeof callback === 'function') {
-					callback();
-				}
-			} else {
-				//console.log("wait...");
-			}
-		};
-		var interval = setInterval(run, 30);
-	}
+    /* Combobox 실행대기 후 실행 */
+    $.waitForLazyRunners = function (callback) {
+        var run = function () {
+            if (!$.runner || $.runner <= 0) {
+                clearInterval(interval);
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else {
+                //console.log("wait...");
+            }
+        };
+        var interval = setInterval(run, 30);
+    }
 
 })(window, jQuery);

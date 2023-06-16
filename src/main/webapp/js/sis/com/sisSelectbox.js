@@ -14,7 +14,6 @@
         element: null,
         arrSelectbox: [], // selectbox array
         values: [],
-        initLoad: false,
 
         props: {
             url: "", // json url
@@ -86,10 +85,8 @@
                     $(eleItems).toggleClass("hidden").toggleClass("active");
                     $(eleWrap).toggleClass("active");
 
-                    var item = $(eleItems).find(".item[data-value=" + $(ele).val() + "]");
-                    var idx = item.index();
-                    var height = item.innerHeight();
-                    $(eleItems).scrollTop(height * idx);
+                    var idx = $(eleItems).find(".item[data-value=" + $(ele).val() + "]").index();
+                    $(eleItems).scrollTop(35 * idx);
 
                     setTimeout(function () {
                         $(document).on("click", function (e) {
@@ -105,66 +102,64 @@
                         });
                     });
                 });
+            });
 
-                // url 방식
-                if (_this.props.url) {
-                    if(idx == 0) {
-                        _this.getDataByUrl(eleWrap);
-                    }
-                    else {
-                        var element = $(eleWrap).find("select");
-                        _this._setOptions(element, eleWrap, true);
-                    }
 
+            var eleWrap = $(this.element).closest(".sisSelectbox");
+            var ele = $(this.element);
+            var eleText = $(eleWrap).find(".text");
+            var eleItems = $(eleWrap).find(".items");
+
+            // url 방식
+            if (_this.props.url) {
+                _this.getDataByUrl(eleWrap);
+            } else {
+                if (_this.props.allField) {
+                    $(ele).prepend("<option value='-'>==== 전체 ====</option>");
                 } else {
-                    if (_this.props.allField) {
-                        $(ele).prepend("<option value='-'>==== 전체 ====</option>");
-                    } else {
-                        $(ele).prepend("<option value='-'>==== 선택 ====</option>");
-                    }
-
-                    var options = $(ele).find("option");
-
-                    $.each(options, function (idx, opt) {
-                        var value = $(opt).val();
-                        var text = $(opt).text();
-
-                        eleItems.append("<div class='item' data-value='" + value + "'>" + text + "</div>");
-
-                        if (_this.props.defaultValue) {
-                            if (_this.props.defaultValue == value) {
-                                $(ele).val(value);
-                                $(eleText).text(text);
-                            }
-                        } else {
-                            if (idx == 0) {
-                                $(ele).val(value);
-                                $(eleText).text(text);
-                            }
-                        }
-                    });
-
-                    if (_this.initLoad) {
-                        $(ele).change();
-                    }
-
-                    // option 선택 이벤트
-                    $(eleItems).find(".item").on("click", function () {
-                        var val = $(this).attr("data-value");
-                        var text = $(this).text();
-
-                        $(ele).val(val);
-                        // $(eleText).text(text);
-
-                        if (_this.props.onChange) {
-                            _this.props.onChange(val, text);
-                        }
-
-                        $(ele).change();
-                    });
+                    $(ele).prepend("<option value='-'>==== 선택 ====</option>");
                 }
 
-            });
+                var options = $(ele).find("option");
+
+                $.each(options, function (idx, opt) {
+                    var value = $(opt).val();
+                    var text = $(opt).text();
+
+                    eleItems.append("<div class='item' data-value='" + value + "'>" + text + "</div>");
+
+                    if (_this.props.defaultValue) {
+                        if (_this.props.defaultValue == value) {
+                            $(ele).val(value);
+                            $(eleText).text(text);
+                        }
+                    } else {
+                        if (idx == 0) {
+                            $(ele).val(value);
+                            $(eleText).text(text);
+                        }
+                    }
+                });
+
+                if (_this.initLoad) {
+                    $(ele).change();
+                }
+
+                // option 선택 이벤트
+                $(eleItems).find(".item").on("click", function () {
+                    var val = $(this).attr("data-value");
+                    var text = $(this).text();
+
+                    $(ele).val(val);
+                    // $(eleText).text(text);
+
+                    if (_this.props.onChange) {
+                        _this.props.onChange(val, text);
+                    }
+
+                    $(ele).change();
+                });
+            }
 
             this.initLoad = true;
         },
@@ -175,6 +170,14 @@
         getDataByUrl: function (eleWrap, reload) {
             var _this = this;
             var element = $(eleWrap).find("select");
+            var code = this.props.params.code;
+
+            if(reload && ( !code || code == "-")) {
+                this.values = [];
+                this._setOptions(element, eleWrap);
+
+                return;
+            }
 
             if (_this.values.length > 0 && !reload) {
                 _this._setOptions(element, eleWrap, true);
@@ -183,7 +186,7 @@
                     url: this.props.url,
                     type: this.props.type ? this.props.type : "post",
                     data: this.props.params ? this.props.params : {},
-                    async: false,
+                    // async: false,
                     success: function (res) {
                         _this.values = res[_this.props.fields.remoteValues];
                         _this._setOptions(element, eleWrap);
@@ -210,25 +213,22 @@
             $(element).html("");
             $(eleItems).html("");
 
-            if (!isLoaded) {
-                if (this.props.allField) {
-                    var field = {};
-                    field[this.props.fields.value] = "-";
-                    field[this.props.fields.text] = "==== 전체 ====";
-                    this.values.unshift(field);
-                } else {
-                    var field = {};
+            if(!this.props.nonField) {
+                if (!isLoaded) {
+                    if (this.props.allField) {
+                        var field = {};
+                        field[this.props.fields.value] = "-";
+                        field[this.props.fields.text] = "==== 전체 ====";
 
-                    if(!this.props.defaultField) {
+                        this.values = this.values || [];
+                        this.values.unshift(field);
+                    } else {
+                        var field = {};
                         field[this.props.fields.value] = "-";
                         field[this.props.fields.text] = "==== 선택 ====";
 
-                        _this.values.unshift(field);
-                    } else {
-                        field[this.props.fields.value] = this.props.defaultField.value;
-                        field[this.props.fields.text] = this.props.defaultField.text;
-
-                        _this.values.unshift(field);
+                        this.values = this.values || [];
+                        this.values.unshift(field);
                     }
                 }
             }
@@ -253,23 +253,24 @@
                 }
             });
 
-            if (_this.initLoad && this.values.length > 1) {
+            if (_this.initLoad) {
                 $(element).change();
             }
 
             // option 선택 이벤트
             $(eleItems).find(".item").on("click", function () {
+                var select = $(this).closest(".sisSelectbox").find("select");
                 var val = $(this).attr("data-value");
                 var text = $(this).text();
 
-                $(element).val(val);
+                select.val(val);
                 // $(eleText).text(text);
 
                 if (_this.props.onChange) {
                     _this.props.onChange(val, text);
                 }
 
-                $(element).change();
+                select.change();
             });
         },
 
@@ -301,21 +302,13 @@
         },
 
         setConn: function (props) {
-            var _this = this;
+            if (!props) props = {};
 
-            var interval = setInterval(() => {
-                if(_this.initLoad) {
-                    if (!props) props = {};
+            var element = this.getElementById(props.id);
+            var selectbox = $(element).find("select");
 
-                    var element = this.getElementById(props.id);
-                    var selectbox = $(element).find("select");
-
-                    $(selectbox).unbind("change", props.onChange);
-                    $(selectbox).on("change", props.onChange);
-
-                    clearInterval(interval);
-                }
-            }, 100)
+            $(selectbox).unbind("change", props.onChange);
+            $(selectbox).on("change", props.onChange);
         }
     }
 })(window, jQuery)

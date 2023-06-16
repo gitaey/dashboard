@@ -12,6 +12,7 @@
     }
 
     SisPagination.prototype = {
+        props: {},
         curPage: 1,
         viewCount: 15,
         pageCount: 5,
@@ -24,6 +25,7 @@
 
         _extendProps: function (props) {
             this.props = $.extend({}, this.props, props);
+            this.viewCount = props.viewCount;
         },
 
         _init: function (props) {
@@ -34,22 +36,27 @@
             var id = this.id;
             var self = this;
 
+            $("#" + id).off("click", ".firstPage");
             $("#" + id).on("click", ".firstPage", function() {
                 self.first();
             });
 
+            $("#" + id).off("click", ".prevPage");
             $("#" + id).on("click", ".prevPage", function() {
                 self.prev();
             });
 
+            $("#" + id).off("click", ".nextPage");
             $("#" + id).on("click", ".nextPage", function() {
                 self.next();
             });
 
+            $("#" + id).off("click", ".lastPage");
             $("#" + id).on("click", ".lastPage", function() {
                 self.last();
             });
 
+            $("#" + id).off("click", "section > div");
             $("#" + id).on("click", "section > div", function(evt) {
                 $("#" + id + " section > div").removeClass("active");
                 $(evt.target).addClass("active");
@@ -67,7 +74,7 @@
             if(this.totalCount > 0) {
                 for(var i = this.startPage; i <= this.endPage; i++) {
                     if(i > this.lastPage) break;
-                    if(i == this.curPage)
+                    if(i == this.curPage || i == this.props.curPage)
                         pages += "<div class='active'>" + i + "</div>";
                     else
                         pages += "<div>" + i + "</div>";

@@ -113,6 +113,40 @@ button.blue {
         z-index: 999;
     }
 
+    #posMoveWrap {
+        position: absolute;
+        left: 290px;
+        top: 15px;
+        z-index: 100;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 1px 5px 0 grey;
+        color: #cacbcd;
+        background: transparent;
+
+        .or:before {
+            content: "\f002";
+            font-family: 'Icons';
+        }
+
+        #searchBtnWrap {
+            background: #fff;
+            border-radius: 7px;
+
+        }
+
+        #searchPosWrap {
+            background: #fff;
+            padding: 10px;
+        }
+
+        #searchJibunWrap {
+            background: #f5f5f5;
+            padding:0;
+            margin: 0;
+        }
+    }
+
     #searchWrap {
         position: absolute;
         z-index: 999;
@@ -126,7 +160,7 @@ button.blue {
         background: #f5f5f5;
 
         h3 {
-            height: 50px;
+            height: 53px;
             padding: -10px 0 10px 0;
             border-bottom: 1px solid #ccc;
             background-color: #fff;
@@ -520,87 +554,169 @@ button.blue {
     }
 }
 
-#info-modal {
-    display: none;
-    position: absolute;
-    left: 200px;
-    top: 110px;
-    width: 700px;
-    height: 500px;
-    background-color: white;
-    z-index: 9999;
-    box-shadow: 0 0 10px #000;
+#searchPosModal {
+    overflow: visible;
+    min-width: 200px;
 
-    .modal-header {
-        display: inline-flex;
-        width: 100%;
-        height: 50px;
-        background-color: #5eb2ff;
-        line-height: 50px;
-        color: #fff;
-
-        .modal-title {
-            padding-left: 20px;
-            width: calc(100% - 50px);
+    #searchPlaceWrap {
+        #placeResultWrap {
+            display: none;
         }
 
-        .modal-close {
-            width: 50px;
-            height: 50px;
-            text-align: center;
-
-            svg {
-                width: 30px;
-                height: 30px;
-                cursor: pointer;
-                position: relative;
-                top: 50%;
-                transform: translate(0, -50%);
-            }
-        }
-    }
-
-    .modal-body {
-        width: calc(100%);
-        height: calc(100% - 50px);
-        padding: 10px 20px;
-
-        .modal-info-tbl {
-            border-collapse: collapse;
-            //border: 1px solid black;
-            width: 100%;
+        #searchResultWrap {
+            max-height: 450px;
+            overflow: auto;
             margin-bottom: 10px;
+        }
 
-            &:first-child {
-                height: 50px;
+        #addrSearchPagination {
+            margin-bottom: 10px;
+        }
+
+        #btnPlaceRefresh {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #count, #area {
+            color: red;
+        }
+
+        .ui.input {
+            width: 100%;
+        }
+
+        .item {
+            line-height: 13px;
+            padding: 10px 0;
+            border-bottom: 1px solid #d2d2d2;
+            cursor: pointer;
+
+            span {
+                display: block;
             }
 
-            tr {
-                height: 38px;
-
-                &:first-child {
-                    border-top: 1px solid black;
-                }
-
-                &:last-child {
-                    border-bottom: 1px solid black;
-                }
+            .itemTitle {
+                font-weight: 700;
+                font-size: 11pt;
+                margin-bottom: 8px;
             }
 
-            th {
-                text-align: center;
-                background-color: #edf6ff;
-                border-right: 1px solid #d6d6d6;
-                border-left: 1px solid #d6d6d6;
+            .itemRoadAddr {
+                font-size: 9pt;
             }
 
-            td {
-                text-align: center;
-                border-right: 1px solid #d6d6d6;
-                border-left: 1px solid #d6d6d6;
+            .itemAddr {
+                font-size: 9pt;
             }
         }
     }
+
+    .itemGroup {
+        background: #fff;
+        border: 1px solid #e1e1e1;
+        padding: 10px 10px 5px 10px;
+
+        .title {
+            display: block;
+            padding-left: 5px;
+            font-weight: bold;
+            border-bottom: 1px solid #e1e1e1;
+            font-family: 'NotoSansKR-Medium';
+            font-size: 13px;
+            margin-right: 5px;
+        }
+
+        .btnMenu {
+            margin: 2px 1px 2px 1px !important;
+            width: 48% !important;
+        }
+
+        .w60 {
+            width: 60px;
+            padding: 9.5px;
+        }
+
+        .w106 {
+            width: 106px;
+        }
+
+        .tm5 {
+            margin-top: 5px;
+        }
+
+        .selectWrap {
+            margin: 5px 0;
+        }
+    }
+
+    #btnJibunSearch {
+        width: 100%;
+        background: #2185d0;
+        display: block;
+        margin-top: 5px;
+        color: #fff;
+    }
+
+    #jibunSearchLoading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 0;
+        margin: 0;
+        opacity: 0.8;
+        display: none;
+    }
+}
+
+#searchOverlayWrap {
+    position: relative;
+    background: #fff;
+    border-radius: 6px;
+    padding: 5px 10px 5px 5px;
+    border: 1px solid #e1e1e1;
+    font-weight: bold;
+    box-shadow: 0 1px 5px 0 grey;
+
+    &:before {
+        bottom: -10px;
+        border-top: 10px solid #e1e1e1;
+    }
+
+    &:after {
+        border-top: 10px solid #fff;
+        bottom: -9px;
+    }
+
+    &:before, &:after {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        left: calc(50% - 5px);
+    }
+
+    svg {
+        font-size: 1.5rem;
+        color: #2185d0;
+        vertical-align: sub;
+        margin-right: 3px;
+    }
+}
+
+.modalBody .sisLoading {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;;
+    bottom: 0 !important;;
+    top: 0 !important;;
+    margin: 0 !important;;
+    opacity: 0.8 !important;;
+    display: none;
 }
 
 .ui.input>input {

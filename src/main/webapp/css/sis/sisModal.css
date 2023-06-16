@@ -6,7 +6,7 @@
     background: #fff;
     box-shadow: 0 0 7px 0 grey;
     min-width: 200px;
-    /*display: none;*/
+    display: none;
 }
 
 .modalTransparent {
