@@ -326,30 +326,66 @@
             </div>
         </div>
 
-        <div style="text-align: right">
+        <div id="ue101Wrap">
             <div style="text-align: right">
-                검색결과 <span id="m001TotalCount" style="color:red; font-weight:bold;">-</span>건 /
-                총 면적 <span id="m001TotalArea" style="color:red; font-weight:bold;">-</span>ha
+                <div style="text-align: right">
+                    검색결과 <span id="m001TotalCount" style="color:red; font-weight:bold;">-</span>건 /
+                    총 면적 <span id="m001TotalArea" style="color:red; font-weight:bold;">-</span>ha
+                </div>
             </div>
-        </div>
 
-        <table class="ui celled table" style="">
-            <thead>
+            <table class="ui celled table" style="">
+                <thead>
                 <tr>
                     <th>순번</th>
                     <th>진흥지역코드(mnum)</th>
                     <th>시군구</th>
-                    <th>진흥구분(진흥/보호)</th>
+                    <th>진흥구분</th>
                     <th>면적(ha)</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <div id="m001PaginationWrap" class="paginationWrap">
-            <div class="sisPagination"></div>
+            <div id="m001PaginationWrap" class="paginationWrap">
+                <div class="sisPagination"></div>
+            </div>
+        </div>
+
+        <div id="ldregWrap" style="display: none;">
+            <div style="text-align: right">
+                <div style="float:left; cursor: pointer; padding-left: 1px; margin-top:-8px;">
+                    <button class="ui primary button" style="padding: 3px 10px;" onclick="javascript: $('#ldregWrap').hide(); $('#ue101Wrap').show();">
+                        <i class="fa-solid fa-arrow-left fa-2xl"></i>
+                    </button>
+                </div>
+                <div style="text-align: right">
+                    검색결과 <span id="m001TotalCount2" style="color:red; font-weight:bold;">-</span>건 /
+                    총 면적 <span id="m001TotalArea2" style="color:red; font-weight:bold;">-</span>ha
+                </div>
+            </div>
+
+            <table class="ui celled table" style="">
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>PNU</th>
+                    <th>주소</th>
+<%--                    <th>진흥구분</th>--%>
+                    <th>면적(㎡)</th>
+<%--                    <th>지목</th>--%>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div id="m001PaginationWrap2" class="paginationWrap">
+                <div class="sisPagination"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -499,6 +535,12 @@
                 <div class="ui text loader">Loading</div>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="mapLoading" class="ui segment">
+    <div class="ui active inverted dimmer">
+        <div class="ui text loader">Loading</div>
     </div>
 </div>
 

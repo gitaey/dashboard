@@ -708,7 +708,19 @@ button.blue {
     }
 }
 
-.modalBody .sisLoading {
+.modalBody {
+    tr {
+        &:hover {
+            background: #f9fafb;
+        }
+    }
+
+    td {
+        cursor: pointer;
+    }
+}
+
+.modalBody .sisLoading, #mapLoading {
     position: absolute !important;
     left: 0 !important;
     right: 0 !important;;
@@ -717,6 +729,7 @@ button.blue {
     margin: 0 !important;;
     opacity: 0.8 !important;;
     display: none;
+    z-index: 100000;
 }
 
 .ui.input>input {

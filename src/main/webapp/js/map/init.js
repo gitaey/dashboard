@@ -241,73 +241,12 @@ $(window).on("load", function () {
         getJijuk(code);
     });
 
-    // pnu로 지적도 가져오기
-    var getJijuk = (code) => {
-        $.ajax({
-            url: "/selectJijuk.do",
-            data: {
-                code
-            },
-            type: "post",
-            beforeSend: () => {
-                $("#jibunSearchLoading").show();
-            },
-            success: (res) => {
-                if(res.data) {
-                    if(res.data.geom) {
-                        var wkt = res.data.geom;
-                        var format = new ol.format.WKT();
-                        var feature = format.readFeature(wkt, {
-                            dataProjection: 'EPSG:5186',
-                            featureProjection: 'EPSG:3857'
-                        });
-
-                        sisLyr.wfs.selectLayer.getSource().clear();
-                        sisLyr.wfs.selectLayer.getSource().addFeature(feature);
-
-                        sis.view.fit(feature.getGeometry().getExtent());
-                    }
-                }
-            },
-            complete: () => {
-                $("#jibunSearchLoading").hide();
-            }
-        })
-    };
-
-    // 코드로 행정구역 가져오기
-    var getSect = (code) => {
-        $.ajax({
-            url: "/selectSect.do",
-            data: {
-                code
-            },
-            type: "post",
-            success: (res) => {
-                if(res.data) {
-                    if(res.data.geom) {
-                        var wkt = res.data.geom;
-                        var format = new ol.format.WKT();
-                        var feature = format.readFeature(wkt, {
-                            dataProjection: 'EPSG:5186',
-                            featureProjection: 'EPSG:3857'
-                        });
-
-                        sisLyr.wfs.selectLayer.getSource().clear();
-                        sisLyr.wfs.selectLayer.getSource().addFeature(feature);
-
-                        sis.view.fit(feature.getGeometry().getExtent());
-                    }
-                }
-            }
-        });
-    }
-
     // 진흥지역 검색
     $("#btnSearch").on("click", (e) => {
         var id = $("#selectMenu .btnMenu.primary").attr("id");
 
         if(id == "m001") {
+            $(`#${id}Modal`).show();
             getDistrictStatus(id);
         }
         else if(id == "m002") {
@@ -443,6 +382,85 @@ $(window).on("load", function () {
     });
 
 });
+
+// pnu로 지적도 가져오기
+var getJijuk = (code) => {
+    $.ajax({
+        url: "/selectJijuk.do",
+        data: {
+            code
+        },
+        type: "post",
+        beforeSend: () => {
+            $("#jibunSearchLoading").show();
+            $("#mapLoading").show();
+        },
+        success: (res) => {
+            if(res.data) {
+                if(res.data.geom) {
+                    var wkt = res.data.geom;
+                    var format = new ol.format.WKT();
+                    var feature = format.readFeature(wkt, {
+                        dataProjection: 'EPSG:5186',
+                        featureProjection: 'EPSG:3857'
+                    });
+
+                    sisLyr.wfs.selectLayer.getSource().clear();
+                    sisLyr.wfs.selectLayer.getSource().addFeature(feature);
+
+                    sis.view.fit(feature.getGeometry().getExtent());
+                }
+            }
+        },
+        complete: () => {
+            $("#jibunSearchLoading").hide();
+            $("#mapLoading").hide();
+        },
+        error: () => {
+            $("#jibunSearchLoading").hide();
+            $("#mapLoading").hide();
+        }
+    })
+};
+
+// 코드로 행정구역 가져오기
+var getSect = (code) => {
+    $.ajax({
+        url: "/selectSect.do",
+        data: {
+            code
+        },
+        type: "post",
+        beforeSend: () => {
+            $("#mapLoading").show();
+        },
+        success: (res) => {
+            if(res.data) {
+                if(res.data.geom) {
+                    var wkt = res.data.geom;
+                    var format = new ol.format.WKT();
+                    var feature = format.readFeature(wkt, {
+                        dataProjection: 'EPSG:5186',
+                        featureProjection: 'EPSG:3857'
+                    });
+
+                    sisLyr.wfs.selectLayer.getSource().clear();
+                    sisLyr.wfs.selectLayer.getSource().addFeature(feature);
+
+                    sis.view.fit(feature.getGeometry().getExtent());
+                }
+            }
+        },
+        complete: () => {
+            $("#mapLoading").hide();
+        },
+        error: () => {
+            alert("필지조회 오류");
+            $("#mapLoading").hide();
+        }
+    });
+}
+
 
 function downloadURI(uri, name) {
     var anchor = document.createElement('a');

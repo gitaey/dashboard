@@ -1,5 +1,5 @@
 
-var m001Pagination;
+var m001Pagination, m001Pagination2;
 
 // 구획현황 조회
 var getDistrictStatus = (id) => {
@@ -21,11 +21,15 @@ var getDistrictStatus = (id) => {
 
         codes.code = code;
 
-        if(codes.minArea > codes.maxArea) {
-            alert("구획면적 최소면적이 최대면적보다 큽니다.");
+        if(codes.minArea) {
+            if(codes.maxArea > -1) {
+                if (codes.minArea > codes.maxArea) {
+                    alert("구획면적 최소면적이 최대면적보다 큽니다.");
 
-            $("#maxArea").focus();
-            return;
+                    $("#maxArea").focus();
+                    return;
+                }
+            }
         }
 
         m001Pagination = new SisPagination({
@@ -44,20 +48,32 @@ var getDistrictStatus = (id) => {
 
 var selectUe101 = (codes, page = 1) => {
     var createTable = (data) => {
-        var tbody = $(`#${codes.id}Modal tbody`);
+        var tbody = $(`#${codes.id}Modal #ue101Wrap tbody`);
         tbody.html("");
 
         $.each(data, (idx, item) => {
+            item.sidoNm = item.sidoNm || "";
+            item.sggNm = item.sggNm || "";
+
+            var addr = item.sidoNm + " " + item.sggNm;
+            if(addr.trim() == "") addr = "-";
+
             tbody.append(`
-                        <tr>
+                        <tr id="${item.mnum}">
                             <td>${item.idx}</td>
                             <td>${item.mnum}</td>
-                            <td>${item.sidoNm} ${item.sggNm}</td>
+                            <td>${addr}</td>
                             <td>${item.uname}</td>
-                            <td>${item.garea}</td>
+                            <td>${item.garea || "-"}</td> 
                         </tr>
                     `);
         });
+
+        var tr = $(`#${codes.id}Modal #ue101Wrap tbody tr`);
+        tr.off("click");
+        tr.on("click", (evt) => {
+            getJijukByMnum(evt, codes)
+        })
     };
 
     $.ajax({
@@ -90,6 +106,91 @@ var selectUe101 = (codes, page = 1) => {
     });
 }
 
+// MNUM으로 필지 가져오기
+var getJijukByMnum = (evt, codes) => {
+    var mnum = $(evt.target).closest("tr").attr("id");
+    codes.mnum = mnum;
+
+    m001Pagination2 = new SisPagination({
+        id: "m001PaginationWrap2",
+        viewCount: 10,
+        totalCount: 0,
+        onClick: function (p) {
+            codes.page = p;
+            selectJijuk(codes);
+        }
+    });
+
+    selectJijuk(codes);
+}
+
+// 필지 조회
+var selectJijuk = (codes) => {
+    var createTable = (data) => {
+        var tbody = $(`#${codes.id}Modal #ldregWrap tbody`);
+        tbody.html("");
+
+        $.each(data, (idx, item) => {
+            item.sidoNm = item.sidoNm || "";
+            item.sggNm = item.sggNm || "";
+            item.umdNm = item.umdNm || "";
+            item.riNm = item.riNm || "";
+
+            var bon = parseInt(item.pnu.substr(11, 4));
+            var bu = parseInt(item.pnu.substr(15, 4));
+
+            var addr = item.sidoNm + " " + item.sggNm + " " + item.umdNm + " " + item.riNm + " " + bon + "-" + bu;
+
+            if(addr.trim() == "") addr = "-";
+
+            tbody.append(`
+                        <tr id="${item.pnu}">
+                            <td>${item.idx}</td>
+                            <td>${item.pnu}</td>
+                            <td>${addr}</td>
+                            <td>${item.garea || "-"}</td> 
+                        </tr>
+                    `);
+        });
+
+        var tr = $(`#${codes.id}Modal #ldregWrap tbody tr`);
+        tr.off("click");
+        tr.on("click", (evt) => {
+            var pnu = $(evt.target).closest("tr").attr("id");
+            getJijuk(pnu);
+        })
+    };
+
+    $.ajax({
+        url: "selectJijukByMnum.do",
+        type: "post",
+        data: codes,
+        beforeSend: () => {
+            $(`#${codes.id}Modal .sisLoading`).show();
+        },
+        success: (res) => {
+            var data = res.data;
+
+            if(data) {
+                if(data.length > 0) {
+                    var totalCount = data[0]["totalCount"];
+                    var totalArea = data[0]["totalArea"];
+
+                    $(`#${codes.id}TotalCount2`).text(numberWithCommas(totalCount));
+                    $(`#${codes.id}TotalArea2`).text(numberWithCommas(totalArea));
+                    $(`#ue101Wrap`).hide();
+                    $(`#ldregWrap`).show();
+
+                    createTable(data);
+                    m001Pagination2.setDataCount(totalCount);
+                }
+            }
+        },
+        complete: () => {
+            $(`#${codes.id}Modal .sisLoading`).hide();
+        }
+    });
+};
 
 var getValue = function(id) {
     return {

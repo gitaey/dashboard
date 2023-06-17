@@ -25,4 +25,6 @@ public interface MapMapper {
     Map<String, Object> selectJijuk(Map<String, Object> params) throws SQLException;
 
     List<Map<String, Object>> selectUe101(Map<String, Object> params) throws SQLException;
+
+    List<Map<String, Object>> selectJijukByMnum(Map<String, Object> params) throws SQLException;
 }

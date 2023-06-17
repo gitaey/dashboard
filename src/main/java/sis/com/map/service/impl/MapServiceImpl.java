@@ -54,4 +54,9 @@ public class MapServiceImpl implements MapService {
     public List<Map<String, Object>> selectUe101(Map<String, Object> params) throws SQLException {
         return mapper.selectUe101(params);
     }
+
+    @Override
+    public List<Map<String, Object>> selectJijukByMnum(Map<String, Object> params) throws SQLException {
+        return mapper.selectJijukByMnum(params);
+    }
 }
