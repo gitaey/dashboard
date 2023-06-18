@@ -4,767 +4,775 @@ $header-menu-width: 340px;
 $search-wrap-width: 272px;
 
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 button.blue {
-    background: #5eb2ff !important;
+  background: #5eb2ff !important;
 }
 
 #tileLoading {
-    display: none;
-    position: absolute;
-    width: 200px;
-    height: 40px;
-    left: 40px;
-    bottom: 40px;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 9999;
-    text-align: center;
-    line-height: 40px;
-    color: #fff;
-    font-weight: bold;
+  display: none;
+  position: absolute;
+  width: 200px;
+  height: 40px;
+  left: 40px;
+  bottom: 40px;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-weight: bold;
 }
 
 #headerWrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $header-height;
+  background: #5eb2ff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+
+  > div {
+    height: 100%;
+    line-height: $header-height;
+  }
+
+  #centerWrap {
+    display: block;
+    max-width: 1152px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  #logoWrap {
+    display: inline-block;
+    color: #fff;
+    cursor: pointer;
+    //text-indent: -9999px;
+  }
+
+  #previewWrap {
+    margin-left: 60px;
+    position: absolute;
+    top: 0;
+    color: #fff;
+    left: $logo-width;
+    right: $header-menu-width;
+    cursor: pointer;
+  }
+
+  #menuWrap {
+    display: inline-block;
+    width: $header-menu-width;
+    float: right;
+
+    span {
+      display: inline-block;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      width: 80px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
+  }
+}
+
+#mapWrap {
+  position: absolute;
+  top: $header-height;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .drawTooltip {
+    position: absolute;
+    z-index: 999;
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+    padding: 1px 7px;
+    background-color: rgba(255, 0, 0, .7);
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+  }
+
+  #centerPos {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    z-index: 999;
+  }
+
+  #posMoveWrap {
+    position: absolute;
+    left: 290px;
+    top: 15px;
+    z-index: 100;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 1px 5px 0 grey;
+    color: #cacbcd;
+    background: transparent;
+
+    .or:before {
+      content: "\f002";
+      font-family: 'Icons';
+    }
+
+    #searchBtnWrap {
+      background: #fff;
+      border-radius: 7px;
+
+    }
+
+    #searchPosWrap {
+      background: #fff;
+      padding: 10px;
+    }
+
+    #searchJibunWrap {
+      background: #f5f5f5;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  #searchWrap {
+    position: absolute;
+    z-index: 999;
+    background: #fff;
+    width: $search-wrap-width;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    padding: 0;
+    background: #f5f5f5;
+
+    h3 {
+      height: 53px;
+      padding: -10px 0 10px 0;
+      border-bottom: 1px solid #ccc;
+      background-color: #fff;
+      font-family: 'NotoSansKR-Medium';
+      font-size: 17px;
+      color: #333;
+      text-align: center;
+      line-height: 50px;
+    }
+
+    #btnSearch {
+      width: 90%;
+      background: #2185d0;
+      display: block;
+      bottom: 15px;
+      left: 14px;
+      position: absolute;
+      margin-top: 5px;
+      color: #fff;
+    }
+
+    #nonScrollWrap {
+      position: absolute;
+      top: 0;
+      overflow: hidden;
+    }
+
+    #scrollWrap {
+      position: absolute;
+      top: 176px;
+      bottom: 65px;
+      overflow: auto;
+      right: 0;
+      left: 0;
+      overflow-x: hidden;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: gray;
+        border-radius: 10px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0); /* 스크롤바 뒷 배경을 투명 처리한다 */
+      }
+
+      &::-webkit-scrollbar {
+        width: 5px;
+        margin-right: -5px;
+      }
+    }
+
+    .menuWrap {
+      display: none;
+    }
+
+    .itemGroup {
+      background: #fff;
+      border: 1px solid #e1e1e1;
+      padding: 10px;
+      margin-bottom: 10px;
+      margin: 0 9px 10px 10px;
+
+      .title {
+        display: block;
+        padding-left: 5px;
+        font-weight: bold;
+        border-bottom: 1px solid #e1e1e1;
+        font-family: 'NotoSansKR-Medium';
+        font-size: 13px;
+        margin-right: 5px;
+      }
+
+      .btnMenu {
+        margin: 2px 1px 2px 1px !important;
+        width: 48% !important;
+      }
+
+      .w80 {
+        width: 80px;
+      }
+
+      .w106 {
+        width: 106px;
+      }
+
+      .tm5 {
+        margin-top: 5px;
+      }
+    }
+
+    .selectWrap {
+      margin: 5px 0;
+    }
+
+    .right {
+      right: 0;
+      width: 20px;
+      color: #2b2b2b;
+    }
+
+    #keywordIcon {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+    }
+
+    #keyword {
+      margin: 5px;
+      width: 358px;
+      padding-left: 40px;
+      padding-right: 40px;
+      font-size: 10pt;
+
+      &:focus {
+        box-shadow: 0 0 0 1px rgba(13, 110, 253, .25);
+      }
+
+    }
+  }
+
+  #mapMenuWrap {
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    z-index: 999;
+    display: inline-flex;
+
+    .btn {
+      background: #fff;
+      border-radius: 5px;
+      padding: 0;
+      margin-right: 10px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
+
+      &:hover, &.active {
+        .icon:not(.one) {
+          color: #5eb2ff;
+        }
+
+        //border: 1px solid #fff;
+      }
+
+      &:focus, &:hover, &:visited {
+        //border: 1px solid #fff;
+      }
+
+      span {
+        display: inline-block;
+        color: #212529;
+        font-size: 11pt;
+      }
+
+      .iconWrap {
+        display: inline-block;
+
+        .iconTooltip {
+          display: none;
+          position: absolute;
+          border-radius: 15px;
+          bottom: -25px;
+          background: #2b2b2b;
+          color: #fff;
+          z-index: 999;
+          font-size: 9pt;
+          padding: 2px 5px;
+          white-space: nowrap;
+          margin-left: -8px;
+        }
+
+        &:hover {
+          .iconTooltip {
+            display: block;
+          }
+        }
+      }
+
+      .icon {
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 100%;
+        padding: 0 10px;
+        cursor: pointer;
+        display: block;
+
+        &:hover {
+          &.one {
+            color: #5eb2ff;
+          }
+        }
+
+        &.big {
+          width: 30px;
+        }
+
+        &.small {
+          width: 25px;
+        }
+      }
+
+      .txt {
+        padding: 10px 10px 10px 35px;
+
+        &.hidden {
+          text-indent: -9999px;
+          padding: 10px 10px 10px 30px;
+        }
+      }
+
+      .menuPop {
+        display: none;
+        position: absolute;
+        top: 55px;
+        padding: 8px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
+        right: 10px;
+
+        &#mapSetting {
+          width: 280px;
+        }
+
+        .menuWrap {
+          border-radius: 10px;
+          background: #e8e8e8;
+          text-align: center;
+          margin: 5px 5px 18px 5px;
+          width: 46px;
+          height: 46px;
+          display: inline-block;
+
+          &:hover, &.active {
+            .menu, .txt {
+              color: #5eb2ff;
+            }
+          }
+
+          .menu {
+            display: block;
+            width: 22px;
+            height: 22px;
+            padding: 12px;
+            margin: 0 auto
+          }
+
+          .txt {
+            position: relative;
+            bottom: 1px;
+            display: block;
+            padding: 0;
+            font-size: 8pt;
+            white-space: nowrap;
+          }
+        }
+
+        .selectWrap {
+          text-align: left;
+
+          .form-check {
+            display: inline-block;
+
+            label {
+              margin-left: -10px;
+              white-space: nowrap;
+              padding-left: 5px;
+              min-width: 53px;
+            }
+
+          }
+
+          .title {
+            display: inline-block;
+            width: 60px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+  #mapControlWrap {
+    position: absolute;
+    z-index: 999;
+    right: 15px;
+    bottom: 30px;
+
+    .iconWrap {
+      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
+
+      span {
+        display: none;
+        position: absolute;
+        border-radius: 15px;
+        right: 45px;
+        margin-top: 10px;
+        background: #2b2b2b;
+        color: #fff;
+        z-index: 999;
+        font-size: 9pt;
+        padding: 2px 5px;
+        white-space: nowrap;
+      }
+
+      &:hover {
+        span {
+          display: block;
+        }
+      }
+
+      &.active {
+        color: #5eb2ff;
+      }
+    }
+
+    #compassWrap {
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .icon {
+      display: block;
+      padding: 7px;
+      background: #fff;
+      border-radius: 5px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+
+      &.compass {
+        width: 42px;
+        height: 43px;
+        pointer-events: none;
+      }
+
+      &.top {
+        border-radius: 5px 5px 0 0;
+        border-bottom: 1px solid lightgrey;
+      }
+
+      &.center {
+        border-radius: 0;
+      }
+
+      &.bottom {
+        border-radius: 0 0 5px 5px;
+        border-top: 1px solid lightgrey;
+      }
+
+      &:hover {
+        color: #5eb2ff;
+      }
+
+      &.active {
+        color: #5eb2ff;
+      }
+    }
+
+    .split {
+      display: block;
+      height: 10px;
+    }
+  }
+
+  #map {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 99;
+
+    &.split {
+      width: 50%;
+    }
+  }
+
+  #map3d {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: gray;
+
+    display: none;
+
+    &.split {
+      width: 50%;
+      display: inline-block;
+    }
+  }
+}
+
+#searchPosModal {
+  overflow: visible;
+  min-width: 200px;
+
+  #searchPlaceWrap {
+    #placeResultWrap {
+      display: none;
+    }
+
+    #searchResultWrap {
+      max-height: 450px;
+      overflow: auto;
+      margin-bottom: 10px;
+    }
+
+    #addrSearchPagination {
+      margin-bottom: 10px;
+    }
+
+    #btnPlaceRefresh {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #count, #area {
+      color: red;
+    }
+
+    .ui.input {
+      width: 100%;
+    }
+
+    .item {
+      line-height: 13px;
+      padding: 10px 0;
+      border-bottom: 1px solid #d2d2d2;
+      cursor: pointer;
+
+      span {
+        display: block;
+      }
+
+      .itemTitle {
+        font-weight: 700;
+        font-size: 11pt;
+        margin-bottom: 8px;
+      }
+
+      .itemRoadAddr {
+        font-size: 9pt;
+      }
+
+      .itemAddr {
+        font-size: 9pt;
+      }
+    }
+  }
+
+  .itemGroup {
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    padding: 10px 10px 5px 10px;
+
+    .title {
+      display: block;
+      padding-left: 5px;
+      font-weight: bold;
+      border-bottom: 1px solid #e1e1e1;
+      font-family: 'NotoSansKR-Medium';
+      font-size: 13px;
+      margin-right: 5px;
+    }
+
+    .btnMenu {
+      margin: 2px 1px 2px 1px !important;
+      width: 48% !important;
+    }
+
+    .w60 {
+      width: 60px;
+      padding: 9.5px;
+    }
+
+    .w106 {
+      width: 106px;
+    }
+
+    .tm5 {
+      margin-top: 5px;
+    }
+
+    .selectWrap {
+      margin: 5px 0;
+    }
+  }
+
+  #btnJibunSearch {
+    width: 100%;
+    background: #2185d0;
+    display: block;
+    margin-top: 5px;
+    color: #fff;
+  }
+
+  #jibunSearchLoading {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: $header-height;
-    background: #5eb2ff;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    z-index: 1000;
-
-    > div {
-        height: 100%;
-        line-height: $header-height;
-    }
-
-    #centerWrap {
-        display: block;
-        max-width: 1152px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-    #logoWrap {
-        display: inline-block;
-        color: #fff;
-        cursor: pointer;
-        //text-indent: -9999px;
-    }
-
-    #previewWrap {
-        margin-left: 60px;
-        position: absolute;
-        top: 0;
-        color: #fff;
-        left: $logo-width;
-        right: $header-menu-width;
-        cursor: pointer;
-    }
-
-    #menuWrap {
-        display: inline-block;
-        width: $header-menu-width;
-        float: right;
-
-        span {
-            display: inline-block;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            width: 80px;
-        }
-
-        a {
-            text-decoration: none;
-            color: #fff;
-        }
-    }
-}
-
-#mapWrap {
-    position: absolute;
-    top: $header-height;
-    left: 0;
-    right: 0;
     bottom: 0;
-
-    .drawTooltip {
-        position: absolute;
-        z-index: 999;
-        font-family: Lato,"Helvetica Neue",Arial,Helvetica,sans-serif;
-        padding: 1px 7px;
-        background-color: rgba(255,0,0,.7);
-        color: #fff;
-        border: 1px solid #fff;
-        border-radius: 4px;
-    }
-
-    #centerPos {
-        position: absolute;
-        bottom: 5px;
-        right: 15px;
-        z-index: 999;
-    }
-
-    #posMoveWrap {
-        position: absolute;
-        left: 290px;
-        top: 15px;
-        z-index: 100;
-        text-align: center;
-        cursor: pointer;
-        box-shadow: 0 1px 5px 0 grey;
-        color: #cacbcd;
-        background: transparent;
-
-        .or:before {
-            content: "\f002";
-            font-family: 'Icons';
-        }
-
-        #searchBtnWrap {
-            background: #fff;
-            border-radius: 7px;
-
-        }
-
-        #searchPosWrap {
-            background: #fff;
-            padding: 10px;
-        }
-
-        #searchJibunWrap {
-            background: #f5f5f5;
-            padding:0;
-            margin: 0;
-        }
-    }
-
-    #searchWrap {
-        position: absolute;
-        z-index: 999;
-        background: #fff;
-        width: $search-wrap-width;
-        top: 0px;
-        left: 0px;
-        bottom: 0px;
-        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-        padding: 0;
-        background: #f5f5f5;
-
-        h3 {
-            height: 53px;
-            padding: -10px 0 10px 0;
-            border-bottom: 1px solid #ccc;
-            background-color: #fff;
-            font-family: 'NotoSansKR-Medium';
-            font-size: 17px;
-            color: #333;
-            text-align: center;
-            line-height: 50px;
-        }
-
-        #btnSearch {
-            width: 90%;
-            background: #2185d0;
-            display: block;
-            bottom: 15px;
-            left: 14px;
-            position: absolute;
-            margin-top: 5px;
-            color: #fff;
-        }
-
-        #nonScrollWrap {
-            position: absolute;
-            top: 0;
-            overflow: hidden;
-        }
-
-        #scrollWrap {
-            position: absolute;
-            top: 176px;
-            bottom: 65px;
-            overflow: auto;
-            right: 0;
-            left: 0;
-            overflow-x: hidden;
-
-            &::-webkit-scrollbar-thumb{
-                background-color: gray;
-                border-radius: 10px;
-            }
-
-            &::-webkit-scrollbar-track{
-                background-color: rgba(0,0,0,0); /* 스크롤바 뒷 배경을 투명 처리한다 */
-            }
-
-            &::-webkit-scrollbar{
-                width: 5px;
-                margin-right: -5px;
-            }
-        }
-
-        .menuWrap {
-            display: none;
-        }
-
-        .itemGroup {
-            background: #fff;
-            border: 1px solid #e1e1e1;
-            padding: 10px;
-            margin-bottom: 10px;
-            margin: 0 9px 10px 10px;
-
-            .title{
-                display: block;
-                padding-left: 5px;
-                font-weight: bold;
-                border-bottom: 1px solid #e1e1e1;
-                font-family: 'NotoSansKR-Medium';
-                font-size: 13px;
-                margin-right: 5px;
-            }
-
-            .btnMenu {
-                margin: 2px 1px 2px 1px !important;
-                width: 48% !important;
-            }
-
-            .w80 {
-                width: 80px;
-            }
-
-            .w106 {
-                width: 106px;
-            }
-
-            .tm5 {
-                margin-top:5px;
-            }
-        }
-
-        .selectWrap {
-            margin: 5px 0;
-        }
-
-        .right {
-            right: 0;
-            width: 20px;
-            color: #2b2b2b;
-        }
-
-        #keywordIcon {
-            position: absolute;
-            left: 5px;
-            top: 5px;
-        }
-
-        #keyword {
-            margin: 5px;
-            width: 358px;
-            padding-left: 40px;
-            padding-right: 40px;
-            font-size: 10pt;
-
-            &:focus {
-                box-shadow: 0 0 0 1px rgba(13,110,253,.25);
-            }
-
-        }
-    }
-
-    #mapMenuWrap {
-        position: absolute;
-        right: 5px;
-        top: 15px;
-        z-index: 999;
-        display: inline-flex;
-
-        .btn {
-            background: #fff;
-            border-radius: 5px;
-            padding: 0;
-            margin-right: 10px;
-            cursor: pointer;
-            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
-
-            &:hover, &.active {
-                .icon:not(.one) {
-                    color: #5eb2ff;
-                }
-                //border: 1px solid #fff;
-            }
-
-            &:focus, &:hover, &:visited {
-                //border: 1px solid #fff;
-            }
-
-            span {
-                display: inline-block;
-                color: #212529;
-                font-size: 11pt;
-            }
-
-            .iconWrap {
-                display: inline-block;
-
-                .iconTooltip {
-                    display: none;
-                    position: absolute;
-                    border-radius: 15px;
-                    bottom: -25px;
-                    background: #2b2b2b;
-                    color: #fff;
-                    z-index: 999;
-                    font-size: 9pt;
-                    padding: 2px 5px;
-                    white-space: nowrap;
-                    margin-left: -8px;
-                }
-
-                &:hover {
-                    .iconTooltip {
-                        display: block;
-                    }
-                }
-            }
-
-            .icon {
-                position: absolute;
-                top: 0;
-                width: 20px;
-                height: 100%;
-                padding: 0 10px;
-                cursor: pointer;
-                display: block;
-
-                &:hover {
-                    &.one {
-                        color: #5eb2ff;
-                    }
-                }
-
-                &.big {
-                    width: 30px;
-                }
-
-                &.small {
-                    width: 25px;
-                }
-            }
-
-            .txt {
-                padding: 10px 10px 10px 35px;
-
-                &.hidden {
-                    text-indent: -9999px;
-                    padding: 10px 10px 10px 30px;
-                }
-            }
-
-            .menuPop {
-                display: none;
-                position: absolute;
-                top: 55px;
-                padding: 8px;
-                background: #fff;
-                border-radius: 10px;
-                box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
-                right: 10px;
-
-                &#mapSetting {
-                    width: 280px;
-                }
-
-                .menuWrap {
-                    border-radius: 10px;
-                    background: #e8e8e8;
-                    text-align: center;
-                    margin: 5px 5px 18px 5px;
-                    width: 46px;
-                    height: 46px;
-                    display: inline-block;
-
-                    &:hover, &.active {
-                        .menu, .txt {
-                            color: #5eb2ff;
-                        }
-                    }
-
-                    .menu {
-                        display: block;
-                        width: 22px;
-                        height: 22px;
-                        padding: 12px;
-                        margin: 0 auto
-                    }
-                    .txt {
-                        position: relative;
-                        bottom: 1px;
-                        display: block;
-                        padding: 0;
-                        font-size: 8pt;
-                        white-space: nowrap;
-                    }
-                }
-
-                .selectWrap {
-                    text-align: left;
-
-                    .form-check {
-                        display: inline-block;
-
-                        label {
-                            margin-left: -10px;
-                            white-space: nowrap;
-                            padding-left: 5px;
-                            min-width: 53px;
-                        }
-
-                    }
-
-                    .title {
-                        display: inline-block;
-                        width: 60px;
-                        font-weight: bold;
-                    }
-                }
-            }
-        }
-    }
-
-    #mapControlWrap {
-        position: absolute;
-        z-index: 999;
-        right: 15px;
-        bottom: 30px;
-
-        .iconWrap {
-            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
-
-            span {
-                display: none;
-                position: absolute;
-                border-radius: 15px;
-                right: 45px;
-                margin-top: 10px;
-                background: #2b2b2b;
-                color: #fff;
-                z-index: 999;
-                font-size: 9pt;
-                padding: 2px 5px;
-                white-space: nowrap;
-            }
-
-            &:hover {
-                span {
-                    display: block;
-                }
-            }
-
-            &.active {
-                color: #5eb2ff;
-            }
-        }
-
-        #compassWrap {
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .icon {
-            display: block;
-            padding: 7px;
-            background: #fff;
-            border-radius: 5px;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-
-            &.compass {
-                width: 42px;
-                height: 43px;
-                pointer-events: none;
-            }
-
-            &.top {
-                border-radius: 5px 5px 0 0;
-                border-bottom: 1px solid lightgrey;
-            }
-
-            &.center {
-                border-radius: 0;
-            }
-
-            &.bottom {
-                border-radius: 0 0 5px 5px;
-                border-top: 1px solid lightgrey;
-            }
-
-            &:hover {
-                color: #5eb2ff;
-            }
-
-            &.active {
-                color: #5eb2ff;
-            }
-        }
-
-        .split {
-            display: block;
-            height: 10px;
-        }
-    }
-
-    #map {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        z-index: 99;
-
-        &.split {
-            width: 50%;
-        }
-    }
-
-    #map3d {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        background: gray;
-
-        display: none;
-
-        &.split {
-            width: 50%;
-            display: inline-block;
-        }
-    }
-}
-
-#searchPosModal {
-    overflow: visible;
-    min-width: 200px;
-
-    #searchPlaceWrap {
-        #placeResultWrap {
-            display: none;
-        }
-
-        #searchResultWrap {
-            max-height: 450px;
-            overflow: auto;
-            margin-bottom: 10px;
-        }
-
-        #addrSearchPagination {
-            margin-bottom: 10px;
-        }
-
-        #btnPlaceRefresh {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        #count, #area {
-            color: red;
-        }
-
-        .ui.input {
-            width: 100%;
-        }
-
-        .item {
-            line-height: 13px;
-            padding: 10px 0;
-            border-bottom: 1px solid #d2d2d2;
-            cursor: pointer;
-
-            span {
-                display: block;
-            }
-
-            .itemTitle {
-                font-weight: 700;
-                font-size: 11pt;
-                margin-bottom: 8px;
-            }
-
-            .itemRoadAddr {
-                font-size: 9pt;
-            }
-
-            .itemAddr {
-                font-size: 9pt;
-            }
-        }
-    }
-
-    .itemGroup {
-        background: #fff;
-        border: 1px solid #e1e1e1;
-        padding: 10px 10px 5px 10px;
-
-        .title {
-            display: block;
-            padding-left: 5px;
-            font-weight: bold;
-            border-bottom: 1px solid #e1e1e1;
-            font-family: 'NotoSansKR-Medium';
-            font-size: 13px;
-            margin-right: 5px;
-        }
-
-        .btnMenu {
-            margin: 2px 1px 2px 1px !important;
-            width: 48% !important;
-        }
-
-        .w60 {
-            width: 60px;
-            padding: 9.5px;
-        }
-
-        .w106 {
-            width: 106px;
-        }
-
-        .tm5 {
-            margin-top: 5px;
-        }
-
-        .selectWrap {
-            margin: 5px 0;
-        }
-    }
-
-    #btnJibunSearch {
-        width: 100%;
-        background: #2185d0;
-        display: block;
-        margin-top: 5px;
-        color: #fff;
-    }
-
-    #jibunSearchLoading {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 0;
-        margin: 0;
-        opacity: 0.8;
-        display: none;
-    }
+    border: 0;
+    margin: 0;
+    opacity: 0.8;
+    display: none;
+  }
 }
 
 #searchOverlayWrap {
-    position: relative;
-    background: #fff;
-    border-radius: 6px;
-    padding: 5px 10px 5px 5px;
-    border: 1px solid #e1e1e1;
-    font-weight: bold;
-    box-shadow: 0 1px 5px 0 grey;
+  position: relative;
+  background: #fff;
+  border-radius: 6px;
+  padding: 5px 10px 5px 5px;
+  border: 1px solid #e1e1e1;
+  font-weight: bold;
+  box-shadow: 0 1px 5px 0 grey;
 
-    &:before {
-        bottom: -10px;
-        border-top: 10px solid #e1e1e1;
-    }
+  &:before {
+    bottom: -10px;
+    border-top: 10px solid #e1e1e1;
+  }
 
-    &:after {
-        border-top: 10px solid #fff;
-        bottom: -9px;
-    }
+  &:after {
+    border-top: 10px solid #fff;
+    bottom: -9px;
+  }
 
-    &:before, &:after {
-        content: "";
-        width: 0;
-        height: 0;
-        position: absolute;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        left: calc(50% - 5px);
-    }
+  &:before, &:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    left: calc(50% - 5px);
+  }
 
-    svg {
-        font-size: 1.5rem;
-        color: #2185d0;
-        vertical-align: sub;
-        margin-right: 3px;
-    }
+  svg {
+    font-size: 1.5rem;
+    color: #2185d0;
+    vertical-align: sub;
+    margin-right: 3px;
+  }
 }
 
 .modalBody {
-    tr {
-        &:hover {
-            background: #f9fafb;
-        }
+  tr {
+    &:hover {
+      background: #f9fafb;
     }
+  }
 
-    td {
-        cursor: pointer;
-    }
+  td {
+    cursor: pointer;
+  }
 }
 
 .modalBody .sisLoading, #mapLoading {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;;
-    bottom: 0 !important;;
-    top: 0 !important;;
-    margin: 0 !important;;
-    opacity: 0.8 !important;;
-    display: none;
-    z-index: 100000;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;;
+  bottom: 0 !important;;
+  top: 0 !important;;
+  margin: 0 !important;;
+  opacity: 0.8 !important;;
+  display: none;
+  z-index: 100000;
 }
 
-.ui.input>input {
-    border-radius: 0 !important;
+.ui.input > input {
+  border-radius: 0 !important;
 }
 
 .ui.selection.dropdown {
-    width: 100%;
+  width: 100%;
 }
 
 .ui.selection.dropdown, .ui.selection.dropdown .menu {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 .ui.checkbox.right {
-    width: auto !important;
+  width: auto !important;
 }
 
 .ui.checkbox.right .box:before, .ui.checkbox.right label:before,
 .ui.checkbox.right .box:after, .ui.checkbox.right label:after {
-    right: -0px !important;
-    left: unset;
-    border-radius: 0 !important;
+  right: -0px !important;
+  left: unset;
+  border-radius: 0 !important;
 }
 
 .ui.checkbox.right .box, .ui.checkbox.right label {
-    padding-left: 0 !important;
-    padding-right: 22px;
+  padding-left: 0 !important;
+  padding-right: 22px;
 }
 
 .ui.menu.three.item .item {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 
 .inline.fields .field {
-    width: 120px;
+  width: 120px;
+}
+
+.ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
+  padding: .78571429em .78571429em;
+  text-align: center;
+  //border-bottom: 1px solid rgba(34,36,38,.1);
 }

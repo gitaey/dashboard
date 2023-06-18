@@ -113,7 +113,29 @@ public class MapController {
         return "jsonView";
     }
 
-    // 구획현황 > 진흥지역선택 > 지적도 조회
+    // 관리번호 > 진흥지역 조회
+    @RequestMapping("/selectMngCode.do")
+    public String selectMngCode(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        List<Map<String, Object>> item = mapService.selectMngCode(params);
+
+        model.put("data", item);
+
+        return "jsonView";
+    }
+
+    // 일반현황 조회
+    @RequestMapping("/selectStatistics.do")
+    public String selectStatistics(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        List<Map<String, Object>> item = mapService.selectStatistics(params);
+
+        model.put("data", item);
+
+        return "jsonView";
+    }
+
+    // MNUM으로 지적도 조회
     @RequestMapping("/selectJijukByMnum.do")
     public String selectJijukByMnum(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 

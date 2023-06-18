@@ -640,4 +640,9 @@ button.blue {
   width: 120px;
 }
 
+.ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
+  padding: 0.78571429em 0.78571429em;
+  text-align: center;
+}
+
 /*# sourceMappingURL=map.css.map */

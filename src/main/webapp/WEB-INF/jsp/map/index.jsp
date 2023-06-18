@@ -43,6 +43,9 @@
     <!-- Html2Canvas -->
     <script src="${pageContext.request.contextPath}/js/plugins/html2canvas/html2canvas.js"></script>
 
+    <!-- lodash -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
     <!-- sisMap -->
     <link href="${pageContext.request.contextPath}/css/sis/sisMeasure.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/sis/sisTree.css" rel="stylesheet">
@@ -59,8 +62,8 @@
     <script src="${pageContext.request.contextPath}/js/sis/2D/searchAddr.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/2D/sisPagination.js"></script>
     <script src="${pageContext.request.contextPath}/js/sis/com/sisSelectbox.js"></script>
-    <script src="${pageContext.request.contextPath}/js/map/init.js"></script>
-    <script src="${pageContext.request.contextPath}/js/map/naju.js"></script>
+    <script src="${pageContext.request.contextPath}/js/map/init.js?ver=1"></script>
+    <script src="${pageContext.request.contextPath}/js/map/naju.js?ver=1"></script>
 
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
 
@@ -112,23 +115,22 @@
             <!-- ####### -->
             <!-- 구획현황 -->
             <!-- ####### -->
-            <div id="m001_wrap" class="menuWrap" style="display: block;">
                 <div class="itemGroup">
                     <span class="title">행정구역</span>
                     <div class="selectWrap">
-                        <select id="m001_sido" class="selectSido" parent="m001" style="display: none;"></select>
+                        <select id="left_sido" parent="left" class="selectSido" style="display: none;"></select>
                     </div>
 
                     <div class="selectWrap">
-                        <select id="m001_sgg" class="selectSgg" parent="m001" style="display: none;"></select>
+                        <select id="left_sgg" parent="left" class="selectSgg" style="display: none;"></select>
                     </div>
 
                     <div class="selectWrap">
-                        <select id="m001_emd" class="selectEmd" parent="m001" style="display: none;"></select>
+                        <select id="left_emd" parent="left" class="selectEmd" style="display: none;"></select>
                     </div>
 
                     <div class="selectWrap">
-                        <select id="m001_li" class="selectLi" parent="m001" style="display: none;"></select>
+                        <select id="left_li" parent="left" class="selectLi" style="display: none;"></select>
                     </div>
                 </div>
 
@@ -139,13 +141,13 @@
                         <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
                             <div class="field">
                                 <div class="ui checkbox">
-                                    <input id="m001_uea110" type="checkbox" name="m001_uea110" checked="checked">
+                                    <input id="uea110" type="checkbox" name="uea110" checked="checked">
                                     <label>진흥구역</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui checkbox">
-                                    <input id="m001_uea120" type="checkbox" name="m001_uea120" checked="checked">
+                                    <input id="uea120" type="checkbox" name="uea120" checked="checked">
                                     <label>보호구역</label>
                                 </div>
                             </div>
@@ -236,7 +238,6 @@
                         <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
                 </div>
-            </div>
         </div>
 
         <button id="btnSearch" class="ui primary button">
@@ -326,7 +327,7 @@
             </div>
         </div>
 
-        <div id="ue101Wrap">
+        <div id="m001Ue101Wrap">
             <div style="text-align: right">
                 <div style="text-align: right">
                     검색결과 <span id="m001TotalCount" style="color:red; font-weight:bold;">-</span>건 /
@@ -354,10 +355,10 @@
             </div>
         </div>
 
-        <div id="ldregWrap" style="display: none;">
+        <div id="m001LdregWrap" style="display: none;">
             <div style="text-align: right">
                 <div style="float:left; cursor: pointer; padding-left: 1px; margin-top:-8px;">
-                    <button class="ui primary button" style="padding: 3px 10px;" onclick="javascript: $('#ldregWrap').hide(); $('#ue101Wrap').show();">
+                    <button class="ui primary button" style="padding: 3px 10px;" onclick="javascript: $('#m001LdregWrap').hide(); $('#m001Ue101Wrap').show();">
                         <i class="fa-solid fa-arrow-left fa-2xl"></i>
                     </button>
                 </div>
@@ -390,9 +391,9 @@
     </div>
 </div>
 
-<div id="searchResultModal2" class="modalWrap">
+<div id="m002Modal" class="modalWrap">
     <div class="modalTitleWrap">
-        <span class="title">구획현황2 검색결과</span>
+        <span class="title">관리번호 검색결과</span>
         <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
     </div>
     <div class="modalBody">
@@ -402,47 +403,108 @@
             </div>
         </div>
 
-        <div style="text-align: right">
+        <div id="m002Ue101Wrap">
             <div style="text-align: right">
-                검색결과 <span style="color:red; font-weight:bold;">83</span>건 /
-                총 면적 <span style="color:red; font-weight:bold;">100</span>ha
+                <div style="text-align: right">
+                    검색결과 <span id="m002TotalCount" style="color:red; font-weight:bold;">-</span>건 /
+                    총 면적 <span id="m002TotalArea" style="color:red; font-weight:bold;">-</span>ha
+                </div>
+            </div>
+
+            <table class="ui celled table" style="">
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>진흥지역코드(mnum)</th>
+                    <th>시군구</th>
+                    <th>진흥구분</th>
+                    <th>면적(ha)</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div id="m002PaginationWrap" class="paginationWrap">
+                <div class="sisPagination"></div>
             </div>
         </div>
 
-        <table class="ui celled table" style="">
-            <thead>
-            <tr>
-                <th>순번</th>
-                <th>진흥지역코드(mnum)</th>
-                <th>시군구</th>
-                <th>진흥구분(진흥/보호)</th>
-                <th>면적(ha)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td data-label="Name">1</td>
-                <td data-label="Age">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-            </tr>
-            <tr>
-                <td data-label="Name">2</td>
-                <td data-label="Age">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-            </tr>
-            <tr>
-                <td data-label="Name">3</td>
-                <td data-label="Age">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-                <td data-label="Job">-</td>
-            </tr>
-            </tbody>
-        </table>
+        <div id="m002LdregWrap" style="display: none;">
+            <div style="text-align: right">
+                <div style="float:left; cursor: pointer; padding-left: 1px; margin-top:-8px;">
+                    <button class="ui primary button" style="padding: 3px 10px;" onclick="javascript: $('#m002LdregWrap').hide(); $('#m002Ue101Wrap').show();">
+                        <i class="fa-solid fa-arrow-left fa-2xl"></i>
+                    </button>
+                </div>
+                <div style="text-align: right">
+                    검색결과 <span id="m002TotalCount2" style="color:red; font-weight:bold;">-</span>건 /
+                    총 면적 <span id="m002TotalArea2" style="color:red; font-weight:bold;">-</span>ha
+                </div>
+            </div>
+
+            <table class="ui celled table" style="">
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>PNU</th>
+                    <th>주소</th>
+                    <%--                    <th>진흥구분</th>--%>
+                    <th>면적(㎡)</th>
+                    <%--                    <th>지목</th>--%>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div id="m002PaginationWrap2" class="paginationWrap">
+                <div class="sisPagination"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="m003Modal" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">일반현황 검색결과</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+    </div>
+    <div class="modalBody">
+        <div class="ui segment sisLoading">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
+
+        <div id="m003Ue101Wrap" style="max-height: 800px; overflow: auto;">
+            <table class="ui celled structured table" style="">
+                <thead>
+                <tr>
+                    <th rowspan="2">시도</th>
+                    <th rowspan="2">구분</th>
+                    <th colspan="2">진흥지역</th>
+                    <th colspan="3">농지현황</th>
+                </tr>
+                <tr>
+                    <th>권역수(개수)</th>
+                    <th>면적(ha)</th>
+                    <th>전</th>
+                    <th>답</th>
+                    <th>과</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div id="m003PaginationWrap" class="paginationWrap">
+                <div class="sisPagination"></div>
+            </div>
+        </div>
     </div>
 </div>
 

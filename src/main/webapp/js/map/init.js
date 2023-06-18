@@ -1,5 +1,15 @@
 var lyrList = null;
 
+(function ($) {
+    $.each(['show', 'hide'], function (i, ev) {
+        var el = $.fn[ev];
+        $.fn[ev] = function () {
+            this.trigger(ev);
+            return el.apply(this, arguments);
+        };
+    });
+})(jQuery);
+
 $(window).on("load", function () {
 
     // 주소검색
@@ -66,6 +76,7 @@ $(window).on("load", function () {
             $(".itemGroup.m002").show();
         }
         else if(id == "m003") {
+            // $("#left_sido").val("-").change();
             $(".itemGroup.m002").hide();
         } else {
             $(".itemGroup.m002").hide();
@@ -73,7 +84,7 @@ $(window).on("load", function () {
     });
 
     // 보호구역 선택 이벤트
-    $("#m001_uea120").on("change", (evt) => {
+    $("#uea120").on("change", (evt) => {
         var checked = evt.target.checked;
 
         if(checked) {
@@ -245,15 +256,16 @@ $(window).on("load", function () {
     $("#btnSearch").on("click", (e) => {
         var id = $("#selectMenu .btnMenu.primary").attr("id");
 
+        $(`#${id}Modal`).show();
+
         if(id == "m001") {
-            $(`#${id}Modal`).show();
             getDistrictStatus(id);
         }
         else if(id == "m002") {
-
+            getMngNo(id);
         }
         else if(id == "m003") {
-
+            getStatistics(id);
         }
         else if(id == "m004") {
 
