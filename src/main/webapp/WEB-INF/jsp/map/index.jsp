@@ -112,169 +112,174 @@
 
 
         <div id="scrollWrap">
-            <!-- ####### -->
-            <!-- 구획현황 -->
-            <!-- ####### -->
-            <div class="itemGroup">
-                <span class="title">행정구역</span>
-                <div class="selectWrap">
-                    <select id="left_sido" parent="left" class="selectSido" style="display: none;"></select>
+            <form id="frm" method="post">
+                <input type="hidden" name="mnum">
+                <input type="hidden" name="page">
+
+                <!-- ####### -->
+                <!-- 구획현황 -->
+                <!-- ####### -->
+                <div class="itemGroup">
+                    <span class="title">행정구역</span>
+                    <div class="selectWrap">
+                        <select id="left_sido" name="sido" parent="left" class="selectSido" style="display: none;"></select>
+                    </div>
+
+                    <div class="selectWrap">
+                        <select id="left_sgg" name="sgg" parent="left" class="selectSgg" style="display: none;"></select>
+                    </div>
+
+                    <div class="selectWrap">
+                        <select id="left_emd" name="emd" parent="left" class="selectEmd" style="display: none;"></select>
+                    </div>
+
+                    <div class="selectWrap">
+                        <select id="left_li" name="li" parent="left" class="selectLi" style="display: none;"></select>
+                    </div>
                 </div>
 
-                <div class="selectWrap">
-                    <select id="left_sgg" parent="left" class="selectSgg" style="display: none;"></select>
-                </div>
+                <div class="itemGroup m003" style="display: none;">
+                    <span class="title">구분</span>
 
-                <div class="selectWrap">
-                    <select id="left_emd" parent="left" class="selectEmd" style="display: none;"></select>
-                </div>
-
-                <div class="selectWrap">
-                    <select id="left_li" parent="left" class="selectLi" style="display: none;"></select>
-                </div>
-            </div>
-
-            <div class="itemGroup m003" style="display: none;">
-                <span class="title">구분</span>
-
-                <div class="ui form" style="padding: 10px 0 0 0px;">
-                    <div class="block fields" style="display: block; margin: 0 -1em 0 0em;">
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input id="m003Type1" type="radio" name="m003Type" value="1" checked="checked"
-                                       tabindex="0" class="hidden">
-                                <label>진흥지역 지목별 현황</label>
+                    <div class="ui form" style="padding: 10px 0 0 0px;">
+                        <div class="block fields" style="display: block; margin: 0 -1em 0 0em;">
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="m003Type1" type="radio" name="m003Type" value="1" checked="checked"
+                                           tabindex="0" class="hidden">
+                                    <label>진흥지역 지목별 현황</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input id="m003Type2" type="radio" name="m003Type" value="2" tabindex="0"
-                                       class="hidden">
-                                <label>진흥지역 이용현황</label>
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="m003Type2" type="radio" name="m003Type" value="2" tabindex="0"
+                                           class="hidden">
+                                    <label>진흥지역 이용현황</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input id="m003Type3" type="radio" name="m003Type" value="3" tabindex="0"
-                                       class="hidden">
-                                <label>전체농지중 진흥지역 현황</label>
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="m003Type3" type="radio" name="m003Type" value="3" tabindex="0"
+                                           class="hidden">
+                                    <label>전체농지중 진흥지역 현황</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input id="m003Type4" type="radio" name="m003Type" value="4" tabindex="0"
-                                       class="hidden">
-                                <label>용도지역별 진흥지역 현황</label>
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="m003Type4" type="radio" name="m003Type" value="4" tabindex="0"
+                                           class="hidden">
+                                    <label>용도지역별 진흥지역 현황</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="itemGroup">
-                <span class="title">진흥구분</span>
+                <div class="itemGroup">
+                    <span class="title">진흥구분</span>
 
-                <div class="ui form" style="padding: 10px 0 0 0px;">
-                    <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
-                        <div class="field">
-                            <div class="ui checkbox">
-                                <input id="uea110" type="checkbox" name="uea110" checked="checked">
-                                <label>진흥구역</label>
+                    <div class="ui form" style="padding: 10px 0 0 0px;">
+                        <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input id="uea110" type="checkbox" name="uea110" checked="checked">
+                                    <label>진흥구역</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui checkbox">
-                                <input id="uea120" type="checkbox" name="uea120" checked="checked">
-                                <label>보호구역</label>
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input id="uea120" type="checkbox" name="uea120" checked="checked">
+                                    <label>보호구역</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="itemGroup">
-                <span class="title">구획면적(ha)</span>
+                <div class="itemGroup">
+                    <span class="title">구획면적(ha)</span>
 
-                <div class="ui input">
-                    <input id="minArea" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    <div class="ui input">
+                        <input id="minArea" name="minArea" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="maxArea" name="maxArea" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
                 </div>
-                ~
-                <div class="ui input">
-                    <input id="maxArea" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                </div>
-            </div>
 
-            <div class="itemGroup">
+                <div class="itemGroup">
                 <span class="title">
                     수원공
                     <span style="color: red">※보호구역 선택시 활성화</span>
                 </span>
 
-                <div class="ui form" style="padding: 10px 0 0 0px;">
-                    <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input id="includeWater" type="radio" name="includeWater" checked="checked">
-                                <label>포함</label>
+                    <div class="ui form" style="padding: 10px 0 0 0px;">
+                        <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="includeWater" type="radio" name="includeWater" checked="checked">
+                                    <label>포함</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input id="nonIncludeWater" type="radio" name="includeWater">
-                                <label>미포함</label>
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input id="nonIncludeWater" type="radio" name="includeWater">
+                                    <label>미포함</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="itemGroup">
-                <span class="title">농지비율(%)</span>
+                <div class="itemGroup">
+                    <span class="title">농지비율(%)</span>
 
-                <div class="ui input">
-                    <input id="minFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    <div class="ui input">
+                        <input id="minFarmVal" name="minFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="maxFarmVal" name="maxFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
                 </div>
-                ~
-                <div class="ui input">
-                    <input id="maxFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                </div>
-            </div>
 
-            <div class="itemGroup">
-                <span class="title">비농지비율(%)</span>
+                <div class="itemGroup">
+                    <span class="title">비농지비율(%)</span>
 
-                <div class="ui input">
-                    <input id="minUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    <div class="ui input">
+                        <input id="minUnFarmVal" name="minUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="maxUnFarmVal" name="maxUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
                 </div>
-                ~
-                <div class="ui input">
-                    <input id="maxUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                </div>
-            </div>
 
-            <div class="itemGroup m002" style="display: none;">
-                <span class="title">경지정리비율(%)</span>
+                <div class="itemGroup m002" style="display: none;">
+                    <span class="title">경지정리비율(%)</span>
 
-                <div class="ui input">
-                    <input id="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    <div class="ui input">
+                        <input id="min1" name="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="max1" name="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
                 </div>
-                ~
-                <div class="ui input">
-                    <input id="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                </div>
-            </div>
 
-            <div class="itemGroup m002" style="display: none;">
-                <span class="title">생산기반율(%)</span>
+                <div class="itemGroup m002" style="display: none;">
+                    <span class="title">생산기반율(%)</span>
 
-                <div class="ui input">
-                    <input id="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    <div class="ui input">
+                        <input id="min2" name="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                    </div>
+                    ~
+                    <div class="ui input">
+                        <input id="max2" name="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
                 </div>
-                ~
-                <div class="ui input">
-                    <input id="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                </div>
-            </div>
+            </form>
         </div>
 
         <button id="btnSearch" class="ui primary button">

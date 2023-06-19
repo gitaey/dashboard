@@ -1,22 +1,13 @@
 package sis.com.map.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.egovframe.rte.psl.dataaccess.util.EgovMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import sis.com.map.service.JsonVO;
 import sis.com.map.service.MapService;
-import sis.com.map.service.NoticeVO;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,7 +114,7 @@ public class MapController {
 
         model.put("data", item);
 
-        return "/map/m001_view";
+        return "viewJijukByMnum";
     }
 
     // 일반현황 조회
@@ -145,6 +136,6 @@ public class MapController {
 
         model.put("data", item);
 
-        return "jsonView";
+        return "/map/viewJijukByMnum";
     }
 }

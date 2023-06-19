@@ -4,28 +4,32 @@ var m003Pagination;
 
 // 구획현황 조회
 var getDistrictStatus = (id) => {
-    var codes = getValue();
-    codes.id = id;
+    var formData = new FormData($("#frm")[0]);
+    formData.append("id", id);
+    formData.append("page", 1);
 
     var code = "";
 
-    if(codes.sido == "-") {
+    if(formData.get("sido") == "-") {
         $(`#${id}Modal`).hide();
         alert("행정구역을 선택해 주세요");
 
         return ;
     } else {
-        code = codes.sido;
+        code = formData.get("sido");
 
-        if(codes.sgg != "-") code = codes.sgg;
-        if(codes.emd != "-") code = codes.emd;
-        if(codes.li != "-") code = codes.li;
+        if(formData.get("sgg") != "-") code = formData.get("sgg");
+        if(formData.get("emd") != "-") code = formData.get("emd");
+        if(formData.get("li") != "-") code = formData.get("li");
 
-        codes.code = code;
+        formData.append("code", code);
 
-        if(codes.minArea) {
-            if(codes.maxArea > -1) {
-                if (codes.minArea > codes.maxArea) {
+        var minArea = formData.get("minArea");
+        var maxArea = formData.get("maxArea");
+
+        if(minArea) {
+            if(maxArea > -1) {
+                if (minArea > maxArea) {
                     alert("구획면적 최소면적이 최대면적보다 큽니다.");
 
                     $("#maxArea").focus();
@@ -39,20 +43,21 @@ var getDistrictStatus = (id) => {
             viewCount: 10,
             totalCount: 0,
             onClick: function (p) {
-                codes.page = p;
-                selectUe101(codes, p);
+                formData.append("page", p);
+                selectUe101(formData);
             }
         });
 
-        selectUe101(codes, 1);
+        selectUe101(formData);
     }
 }
 
-var selectUe101 = (codes, page = 1) => {
-    codes.page = page;
+var selectUe101 = (formData) => {
+
+    var id = formData.get("id");
 
     var createTable = (data, tData) => {
-        var tbody = $(`#${codes.id}Modal #${codes.id}Ue101Wrap tbody`);
+        var tbody = $(`#${id}Modal #${id}Ue101Wrap tbody`);
         tbody.html("");
 
         $.each(data, (idx, item) => {
@@ -73,20 +78,27 @@ var selectUe101 = (codes, page = 1) => {
                     `);
         });
 
-        var tr = $(`#${codes.id}Modal #${codes.id}Ue101Wrap tbody tr`);
+        var tr = $(`#${id}Modal #${id}Ue101Wrap tbody tr`);
         tr.off("click");
         tr.on("click", (evt) => {
-            window.open(`/selectMngCode.do`, "_blank");
-            // getJijukByMnum(evt, codes, 1)
+            var mnum = $(evt.target).closest("tr").attr("id");
+            var pop = window.open("", "m001Pop");
+
+            var frm = $("#frm")[0];
+            frm.mnum.value = mnum;
+            frm.page.value = 1;
+            frm.action = "/selectJijukByMnum.do";
+            frm.target = "m001Pop";
+            frm.submit();
         })
     };
 
     $.ajax({
         url: "selectUe101.do",
         type: "post",
-        data: codes,
+        data: Object.fromEntries(formData),
         beforeSend: () => {
-            $(`#${codes.id}Modal .sisLoading`).show();
+            $(`#${id}Modal .sisLoading`).show();
         },
         success: (res) => {
             var data = res.data;
@@ -97,20 +109,20 @@ var selectUe101 = (codes, page = 1) => {
                     var totalCount = tData["totalCount"];
                     var totalArea = tData["totalArea"];
 
-                    $(`#${codes.id}TotalCount`).text(numberWithCommas(totalCount));
-                    $(`#${codes.id}TotalArea`).text(numberWithCommas(totalArea));
-                    $(`#${codes.id}Modal`).show();
+                    $(`#${id}TotalCount`).text(numberWithCommas(totalCount));
+                    $(`#${id}TotalArea`).text(numberWithCommas(totalArea));
+                    $(`#${id}Modal`).show();
 
                     createTable(data, tData);
 
-                    if(codes.id == "m001") m001Pagination.setDataCount(totalCount);
-                    if(codes.id == "m002") m002Pagination.setDataCount(totalCount);
-                    if(codes.id == "m003") m003Pagination.setDataCount(totalCount);
+                    if(id == "m001") m001Pagination.setDataCount(totalCount);
+                    if(id == "m002") m002Pagination.setDataCount(totalCount);
+                    if(id == "m003") m003Pagination.setDataCount(totalCount);
                 }
             }
         },
         complete: () => {
-            $(`#${codes.id}Modal .sisLoading`).hide();
+            $(`#${id}Modal .sisLoading`).hide();
         }
     });
 }
@@ -135,6 +147,7 @@ var getMngNo = (id) => {
         if(codes.li != "-") code = codes.li;
 
         codes.code = code;
+        $("[name=code]").val(code);
 
         if(codes.minArea) {
             if(codes.maxArea > -1) {
@@ -384,7 +397,7 @@ var selectJijuk = (codes, page = 1) => {
 };
 
 var getValue = function() {
-    return {
+    var data = {
         page: 1,
         sido: $(`#left_sido`).val(),
         sgg: $(`#left_sgg`).val(),
@@ -395,4 +408,6 @@ var getValue = function() {
         minArea: $(`#minArea`).val() ? $(`#minArea`).val() : -1,
         maxArea: $(`#maxArea`).val() ? $(`#maxArea`).val() : -1,
     }
+
+    return data
 }

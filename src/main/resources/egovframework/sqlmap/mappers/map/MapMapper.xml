@@ -77,12 +77,12 @@
         from
             tmp.lunch_repot_mnum t0
         where 1=1
-        <if test="maxArea > -1">
+        <if test="!maxArea.equals('') and maxArea > -1">
             <![CDATA[
                     and (ST_AREA(geom) / 10000) <= #{maxArea}::float
                 ]]>
         </if>
-        <if test="minArea > -1">
+        <if test="!minArea.equals('') and minArea > -1">
             <![CDATA[
                     and (ST_AREA(geom) / 10000) >= #{minArea}::float
                 ]]>
@@ -116,12 +116,13 @@
         from
         (select * from work.lsmd_cont_ue101_44_mng a
         where 1=1
-        <if test="maxArea > -1">
+          --test
+        <if test="!maxArea.equals('') and maxArea > -1">
             <![CDATA[
                     and (ST_AREA(geom) / 10000) <= #{maxArea}::float
                 ]]>
         </if>
-        <if test="minArea > -1">
+        <if test="minArea != '' and minArea > -1">
             <![CDATA[
                     and (ST_AREA(geom) / 10000) >= #{minArea}::float
                 ]]>
