@@ -40,16 +40,18 @@ var getDistrictStatus = (id) => {
             totalCount: 0,
             onClick: function (p) {
                 codes.page = p;
-                selectUe101(codes);
+                selectUe101(codes, p);
             }
         });
 
-        selectUe101(codes);
+        selectUe101(codes, 1);
     }
 }
 
 var selectUe101 = (codes, page = 1) => {
-    var createTable = (data) => {
+    codes.page = page;
+
+    var createTable = (data, tData) => {
         var tbody = $(`#${codes.id}Modal #${codes.id}Ue101Wrap tbody`);
         tbody.html("");
 
@@ -66,7 +68,7 @@ var selectUe101 = (codes, page = 1) => {
                             <td>${item.mnum}</td>
                             <td>${addr}</td>
                             <td>${item.uname}</td>
-                            <td>${item.garea || "-"}</td> 
+                            <td>${item.garea}</td> 
                         </tr>
                     `);
         });
@@ -74,7 +76,8 @@ var selectUe101 = (codes, page = 1) => {
         var tr = $(`#${codes.id}Modal #${codes.id}Ue101Wrap tbody tr`);
         tr.off("click");
         tr.on("click", (evt) => {
-            getJijukByMnum(evt, codes)
+            window.open(`/selectMngCode.do`, "_blank");
+            // getJijukByMnum(evt, codes, 1)
         })
     };
 
@@ -87,17 +90,18 @@ var selectUe101 = (codes, page = 1) => {
         },
         success: (res) => {
             var data = res.data;
+            var tData = res.total;
 
             if(data) {
                 if(data.length > 0) {
-                    var totalCount = data[0]["totalCount"];
-                    var totalArea = data[0]["totalArea"];
+                    var totalCount = tData["totalCount"];
+                    var totalArea = tData["totalArea"];
 
                     $(`#${codes.id}TotalCount`).text(numberWithCommas(totalCount));
                     $(`#${codes.id}TotalArea`).text(numberWithCommas(totalArea));
                     $(`#${codes.id}Modal`).show();
 
-                    createTable(data);
+                    createTable(data, tData);
 
                     if(codes.id == "m001") m001Pagination.setDataCount(totalCount);
                     if(codes.id == "m002") m002Pagination.setDataCount(totalCount);
@@ -149,11 +153,11 @@ var getMngNo = (id) => {
             totalCount: 0,
             onClick: function (p) {
                 codes.page = p;
-                selectUe101(codes);
+                selectUe101(codes, p);
             }
         });
 
-        selectUe101(codes);
+        selectUe101(codes, 1);
     }
 }
 
@@ -213,7 +217,7 @@ var getStatistics = (id) => {
 
                             if (idx == 0) {
                                 str += `<td rowspan="3">${key}</td>
-                                        <td>${item.uname}</td>
+                                        <td style="text-align: center;">${item.uname}</td>
                                         <td>${item.wideAreaCnt}</td>
                                         <td>${item.wideAreaSum}</td>  
                                         <td>전</td> 
@@ -246,7 +250,7 @@ var getStatistics = (id) => {
 
                             if (idx == 0) {
                                 str += `<td rowspan="3">${key}</td>
-                                        <td>${item.uname}</td>
+                                        <td style="text-align: center;">${item.uname}</td>
                                         <td>${item.wideAreaCnt}</td>
                                         <td>${item.wideAreaSum}</td>  
                                         <td>전</td> 
@@ -278,7 +282,7 @@ var getStatistics = (id) => {
 }
 
 // MNUM으로 필지 가져오기
-var getJijukByMnum = (evt, codes) => {
+var getJijukByMnum = (evt, codes, page) => {
     var mnum = $(evt.target).closest("tr").attr("id");
     codes.mnum = mnum;
 
@@ -289,7 +293,7 @@ var getJijukByMnum = (evt, codes) => {
             totalCount: 0,
             onClick: function (p) {
                 codes.page = p;
-                selectJijuk(codes);
+                selectJijuk(codes, p);
             }
         });
     }
@@ -300,16 +304,18 @@ var getJijukByMnum = (evt, codes) => {
             totalCount: 0,
             onClick: function (p) {
                 codes.page = p;
-                selectJijuk(codes);
+                selectJijuk(codes, p);
             }
         });
     }
 
-    selectJijuk(codes);
+    selectJijuk(codes, page);
 }
 
 // 필지 조회
-var selectJijuk = (codes) => {
+var selectJijuk = (codes, page = 1) => {
+    codes.page = page;
+
     var createTable = (data) => {
         var tbody = $(`#${codes.id}Modal #${codes.id}LdregWrap tbody`);
         tbody.html("");
@@ -332,7 +338,7 @@ var selectJijuk = (codes) => {
                             <td>${item.idx}</td>
                             <td>${item.pnu}</td>
                             <td>${addr}</td>
-                            <td>${item.garea || "-"}</td> 
+                            <td>${item.garea}</td> 
                         </tr>
                     `);
         });
@@ -341,7 +347,7 @@ var selectJijuk = (codes) => {
         tr.off("click");
         tr.on("click", (evt) => {
             var pnu = $(evt.target).closest("tr").attr("id");
-            getJijuk(pnu);
+            getJijuk(pnu, page);
         })
     };
 

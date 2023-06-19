@@ -27,4 +27,6 @@ public interface MapService {
     List<Map<String, Object>> selectMngCode(Map<String, Object> params) throws SQLException;
 
     List<Map<String, Object>> selectStatistics(Map<String, Object> params) throws SQLException;
+
+    Map<String, Object> selectUe101Total(Map<String, Object> params) throws SQLException;
 }

@@ -69,4 +69,9 @@ public class MapServiceImpl implements MapService {
     public List<Map<String, Object>> selectStatistics(Map<String, Object> params) throws SQLException {
         return mapper.selectStatistics(params);
     }
+
+    @Override
+    public Map<String, Object> selectUe101Total(Map<String, Object> params) throws SQLException {
+        return mapper.selectUe101Total(params);
+    }
 }

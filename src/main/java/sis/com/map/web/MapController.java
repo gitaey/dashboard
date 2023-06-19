@@ -106,8 +106,10 @@ public class MapController {
     @RequestMapping("/selectUe101.do")
     public String selectUe101(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
+        Map<String, Object> total = mapService.selectUe101Total(params);
         List<Map<String, Object>> item = mapService.selectUe101(params);
 
+        model.put("total", total);
         model.put("data", item);
 
         return "jsonView";
@@ -121,7 +123,7 @@ public class MapController {
 
         model.put("data", item);
 
-        return "jsonView";
+        return "/map/m001_view";
     }
 
     // 일반현황 조회

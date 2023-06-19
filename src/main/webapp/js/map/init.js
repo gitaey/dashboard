@@ -71,15 +71,19 @@ $(window).on("load", function () {
 
         if(id == "m001") {
             $(".itemGroup.m002").hide();
+            $(".itemGroup.m003").hide();
         }
         else if(id == "m002") {
             $(".itemGroup.m002").show();
+            $(".itemGroup.m003").hide();
         }
         else if(id == "m003") {
             // $("#left_sido").val("-").change();
             $(".itemGroup.m002").hide();
+            $(".itemGroup.m003").show();
         } else {
             $(".itemGroup.m002").hide();
+            $(".itemGroup.m003").hide();
         }
     });
 
@@ -259,6 +263,8 @@ $(window).on("load", function () {
         $(`#${id}Modal`).show();
 
         if(id == "m001") {
+            $(`#${id}Ue101Wrap`).show();
+            $(`#${id}LdregWrap`).hide();
             getDistrictStatus(id);
         }
         else if(id == "m002") {

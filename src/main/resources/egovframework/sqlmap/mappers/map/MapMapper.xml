@@ -69,53 +69,71 @@
         where pnu = #{code}
     </select>
 
-    <select id="selectUe101" resultType="egovMap">
-        -- 구획현황 > 진흥지역 조회
-        select * from (
+    <select id="selectUe101Total" resultType="egovMap">
+        -- 시연용 임시 테이블임
         select
-            row_number()over() idx,
-            count(*)over() total_count,
-            sum(garea)over() total_area,
-            *
-        from (
-                 select
-                        t0.juso_code,                                            -- 지역코드
-                        t1.col_adm_se,                                           -- 관리기관 코드
-                        js.sido_nm,                                              -- 시도 이름
-                        js.sgg_nm,                                               -- 시군구 이름
-                        t0.mnum,                                                 -- 진흥지역 관리번호
-                        t0.ucode,                                                -- 진흥지역 구분코드
-                        (case
-                             when t0.ucode = 'UEA110' then '농업진흥구역'
-                             when t0.ucode = 'UEA120' then '농업보호구역'
-                             else '농업진흥지역'
-                            end)                                       as uname, -- 진흥지역 구분명
-                        round((ST_AREA(t1.geom)):: numeric / 10000, 2) as garea  -- 진흥지역 면적(ha)
-                 from (select distinct substring(pnu, 1, 10) as juso_code, mnum, ucode
-                       from origin.lsmd_cont_ue101_rmdup_${sido}) t0
-                          left outer join work.lsmd_cont_ue101_${sido}_mng t1 on (t0.mnum = t1.mnum)
-                          left outer join (select *
-                                           from origin.tc_jscd_bupd
-                                           where del_dttm is null
-                                             and sgg_nm is not null
-                                             and umd_nm is null) js
-                                          on (t1.col_adm_se = substring(js.juso_code, 1, 5))
-                 where 1 = 1
-                   and substring(t0.juso_code, 1, 10) like #{code} || '%'
-        ) a
+            count(t0.mnum) as total_count,
+            round((sum(st_area(t0.geom)) / 10000)::numeric, 2) as total_area
+        from
+            tmp.lunch_repot_mnum t0
         where 1=1
         <if test="maxArea > -1">
             <![CDATA[
-                    a.garea <= #{maxArea}::float
+                    and (ST_AREA(geom) / 10000) <= #{maxArea}::float
                 ]]>
         </if>
         <if test="minArea > -1">
             <![CDATA[
-                    and a.garea >= #{minArea}::float
+                    and (ST_AREA(geom) / 10000) >= #{minArea}::float
                 ]]>
         </if>
+    </select>
+
+    <select id="selectUe101" resultType="egovMap">
+        -- 구획현황 > 진흥지역 조회
+        select z.* from (
+        select
+            row_number() over() as idx,
+            mnum,
+            col_adm_se,
+            sido_nm,
+            sgg_nm,
+            ucode,
+            uname,
+            round(sum(garea) / 10000, 2) as garea
+        from (select
+                t0.mnum, -- 진흥지역 관리번호
+                substring(pnu, 1, 5) as col_adm_se, -- 관리기관 코드
+                js.sido_nm, -- 시도 이름
+                js.sgg_nm, -- 시군구 이름
+                t0.ucode, -- 진흥지역 구분코드
+                (case
+                when t0.ucode = 'UEA110' then '농업진흥구역'
+                when t0.ucode = 'UEA120' then '농업보호구역'
+                else '농업진흥지역'
+                end) as uname, -- 진흥지역 구분명
+                (ST_AREA(t1.geom))::numeric as garea -- 진흥지역 면적(ha)
+        from
+        (select * from work.lsmd_cont_ue101_44_mng a
+        where 1=1
+        <if test="maxArea > -1">
+            <![CDATA[
+                    and (ST_AREA(geom) / 10000) <= #{maxArea}::float
+                ]]>
+        </if>
+        <if test="minArea > -1">
+            <![CDATA[
+                    and (ST_AREA(geom) / 10000) >= #{minArea}::float
+                ]]>
+        </if>
+            ) t0
+            join (select * from origin.lsmd_cont_ue101_rmdup_44 where substring(pnu, 1, 5) = substring(mnum, 8, 5)) t1 on (t0.mnum = t1.mnum)
+            left outer join (select * from origin.tc_jscd_bupd where del_dttm is null and sgg_nm is not null and umd_nm is null) js on (substring(pnu, 1, 5) = substring(js.juso_code, 1, 5))
         ) a
-        <![CDATA[ where idx > ((#{page}::integer - 1) * 10) and idx <= (#{page}::integer * 10) ]]>
+        group by mnum, col_adm_se, sido_nm, sgg_nm, ucode, uname
+        order by mnum ) z
+        where 1=1
+        <![CDATA[ and idx > ((#{page}::integer - 1) * 10) and idx <= (#{page}::integer * 10) ]]>
     </select>
 
     <select id="selectMngCode" resultType="egovMap">
