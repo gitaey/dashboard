@@ -209,10 +209,10 @@
                 </div>
 
                 <div class="itemGroup">
-                <span class="title">
-                    수원공
-                    <span style="color: red">※보호구역 선택시 활성화</span>
-                </span>
+                    <span class="title">
+                        수원공
+                        <span style="color: red">※보호구역 선택시 활성화</span>
+                    </span>
 
                     <div class="ui form" style="padding: 10px 0 0 0px;">
                         <div class="inline fields" style="display: inline-flex; margin: 0 -1em 0 .5em;">
@@ -228,6 +228,19 @@
                                     <label>미포함</label>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div id="waterBufferWrap" class="ui selection dropdown disabled" style="margin-top: 10px;">
+                        <input id="waterBuffer" type="hidden" name="gender">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">반경선택</div>
+                        <div class="menu">
+                            <div class="item" data-value="100">100m</div>
+                            <div class="item" data-value="200">200m</div>
+                            <div class="item" data-value="300">300m</div>
+                            <div class="item" data-value="400">400m</div>
+                            <div class="item" data-value="500">500m</div>
                         </div>
                     </div>
                 </div>
@@ -257,9 +270,38 @@
                 </div>
 
                 <div class="itemGroup m002" style="display: none;">
-                    <span class="title">
+                    <span class="title test">
                         경지정리비율(%)
-                        <i id="prmtRef" class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                        <div class="iconPopup" data-html='
+                            <table class="ui celled table" style="">
+                                <thead>
+                                <tr>
+                                    <th>분류</th>
+                                    <th>진흥면적</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>가급</td>
+                                    <td>100ha 초과</td>
+                                </tr>
+                                <tr>
+                                    <td>나급</td>
+                                    <td>30ha 초과 100ha 이하</td>
+                                </tr>
+                                <tr>
+                                    <td>다급</td>
+                                    <td>10ha 초과 30ha 이하</td>
+                                </tr>
+                                <tr>
+                                    <td>라급</td>
+                                    <td>10ha 이하</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        '>
+                            <i id="prmtRef" class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                        </div>
                     </span>
 
                     <div class="ui input">
@@ -269,32 +311,37 @@
                     <div class="ui input">
                         <input id="max1" name="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
-
-                        <div id="toolTipPrmt"  class="ui flowing popup top left transition hidden">
-                            <div class="ui three column divided center aligned grid">
-                                <div class="column">
-                                    <h4 class="ui header">Basic Plan</h4>
-                                    <p><b>2</b> projects, $10 a month</p>
-                                    <div class="ui button">Choose</div>
-                                </div>
-                                <div class="column">
-                                    <h4 class="ui header">Business Plan</h4>
-                                    <p><b>5</b> projects, $20 a month</p>
-                                    <div class="ui button">Choose</div>
-                                </div>
-                                <div class="column">
-                                    <h4 class="ui header">Premium Plan</h4>
-                                    <p><b>8</b> projects, $25 a month</p>
-                                    <div class="ui button">Choose</div>
-                                </div>
-                            </div>
-                        </div>
                 </div>
 
                 <div class="itemGroup m002" style="display: none;">
                     <span class="title">
                         생산기반율(%)
-                        <i class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                        <div class="iconPopup" data-html='
+                            <table class="ui celled table" style="">
+                                <thead>
+                                <tr>
+                                    <th>분류</th>
+                                    <th>비율</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>상급</td>
+                                    <td>70% 초과</td>
+                                </tr>
+                                <tr>
+                                    <td>중급</td>
+                                    <td>40% 초과 70% 이해</td>
+                                </tr>
+                                <tr>
+                                    <td>하급</td>
+                                    <td>40% 이하</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        '>
+                            <i class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                        </div>
                     </span>
 
                     <div class="ui input">
@@ -468,6 +515,8 @@
     <div class="modalTitleWrap">
         <span class="title">관리번호 검색결과</span>
         <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+        <div class="minimize"><i class="fa-solid fa-minus"></i></div>
+        <div class="maximize"><i class="fa-regular fa-window-maximize"></i></div>
     </div>
     <div class="modalBody">
         <div class="ui segment sisLoading">
@@ -495,6 +544,8 @@
                     <th>수원공 포함여부</th>
                     <th>농지비율(%)</th>
                     <th>비농지비율(%)</th>
+                    <th>경지정리비율(%)</th>
+                    <th>생산기반율(%)</th>
                 </tr>
                 </thead>
                 <tbody>

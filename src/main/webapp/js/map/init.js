@@ -33,12 +33,12 @@ $(window).on("load", function () {
         target: "tree"
     });
 
-    $("#prmtRef").popup({
-        popup: $("#toolTipPrmt"),
-        on: "click",
-        position : 'right center',
-    });
+    $('.ui.dropdown').dropdown();
 
+    $('.iconPopup').popup({
+        position : 'right center',
+        hoverable: true,
+    });
     // input 숫자만 입력가능하게 설정
     $(".numberOnly").numberOnly();
 
@@ -121,7 +121,17 @@ $(window).on("load", function () {
         } else {
             $("[name=includeWater]").attr("disabled", true);
         }
+    });
 
+    // 수원공 선택 이벤트
+    $("[name=includeWater]").on("change", (evt) => {
+        var id = evt.target.id;
+
+        if(id == "nonIncludeWater") {
+            $("#waterBufferWrap").removeClass("disabled");
+        } else {
+            $("#waterBufferWrap").addClass("disabled");
+        }
     });
 
     // 레이어 불러오기
@@ -285,7 +295,21 @@ $(window).on("load", function () {
     $("#btnSearch").on("click", (e) => {
         var id = $("#selectMenu .btnMenu.primary").attr("id");
 
+        var code = "";
+
+        var sidoCode = $("#m000_sido").val();
+        var sggCode = $("#m000_sgg").val();
+        var emdCode = $("#m000_emd").val();
+        var liCode = $("#m000_li").val();
+
+        if(sidoCode != "-") code = sidoCode;
+        if(sggCode != "-") code = sggCode;
+        if(emdCode != "-") code = emdCode;
+        if(liCode != "-") code = liCode;
+
         if(id == "m001") {
+            getSect(code);
+
             $(`#${id}Modal`).find(".maximize").hide();
             $(`#${id}Modal`).find(".minimize").show();
             $(`#${id}Modal`).find(".modalBody").show();
@@ -296,6 +320,8 @@ $(window).on("load", function () {
             getDistrictStatus(id);
         }
         else if(id == "m002") {
+            getSect(code);
+
             $(`#${id}Modal`).find(".maximize").hide();
             $(`#${id}Modal`).find(".minimize").show();
             $(`#${id}Modal`).find(".modalBody").show();

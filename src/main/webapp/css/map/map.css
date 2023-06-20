@@ -640,11 +640,8 @@ button.blue {
   text-align: center;
 }
 
-.sisTooltip {
-  position: absolute;
-  display: none;
-  width: auto;
-  padding: 10px;
+.iconPopup {
+  display: inline-block;
 }
 
 /*# sourceMappingURL=map.css.map */

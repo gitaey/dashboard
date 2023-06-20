@@ -45,6 +45,10 @@
             border-left: 1px solid rgba(34,36,38,.1) !important;
         }
 
+        .borderBottom {
+            border-bottom: 1px solid rgba(34,36,38,.1) !important;
+        }
+
         thead tr:last-child td {
             border-bottom: 1px solid rgba(34,36,38,.1) !important;
         }
@@ -53,11 +57,11 @@
     </style>
 </head>
 <body>
-<%--    <div class="ui segment sisLoading" style="position: absolute;width: 100%;height: 100%;">--%>
-<%--        <div class="ui active inverted dimmer">--%>
-<%--            <div class="ui text loader">Loading</div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
+    <div class="ui segment sisLoading" style="position: absolute;width: 100%;height: 100%;">
+        <div class="ui active inverted dimmer">
+            <div class="ui text loader">Loading</div>
+        </div>
+    </div>
 
     <div style="padding:15px;">
         <div class="ui segment">
@@ -67,17 +71,25 @@
             <table id="tblUe101" class="ui grey celled table" style="text-align: center;">
                 <thead>
                 <tr>
-                    <td rowspan="2" class="th">시도</td>
-                    <td rowspan="2" class="th">구분</td>
-                    <td colspan="2" class="th">진흥지역</td>
-                    <td colspan="3" class="th">농지현황</td>
+                    <td rowspan="3" class="th borderBottom">시도</td>
+                    <td rowspan="3" class="th borderBottom">구분</td>
+                    <td rowspan="2" colspan="2" class="th">진흥지역</td>
+                    <td colspan="6" class="th">농지현황</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="th borderLeft">전</td>
+                    <td colspan="2" class="th">답</td>
+                    <td colspan="2" class="th">과</td>
                 </tr>
                 <tr>
                     <td class="th borderLeft">권역수(개수)</td>
                     <td class="th">면적(ha)</td>
-                    <td class="th">전</td>
-                    <td class="th">답</td>
-                    <td class="th">과</td>
+                    <td class="th">필지수</td>
+                    <td class="th">면적</td>
+                    <td class="th">필지수</td>
+                    <td class="th">면적</td>
+                    <td class="th">필지수</td>
+                    <td class="th">면적</td>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -125,23 +137,32 @@
                                         <td style="text-align: center;">` + item.uname + `</td>
                                         <td>` + item.wideAreaCnt + `</td>
                                         <td>` + item.wideAreaSum + `</td>
-                                        <td>전</td>
-                                        <td>답</td>
-                                        <td>과</td>`;
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>`;
                                 }
                                 else {
                                     str += `<td class='borderLeft'>` + item.uname + `</td>
                                         <td>` + item.wideAreaCnt + `</td>
                                         <td>` + item.wideAreaSum + `</td>
-                                        <td>전</td>
-                                        <td>답</td>
-                                        <td>과</td>`;
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>`;
                                 }
 
                                 str += `</tr>`;
                             });
                             str += `<tr>
                                     <td class='borderLeft'>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                     <td>-</td>
                                     <td>-</td>
                                     <td>-</td>
@@ -158,17 +179,23 @@
                                         <td style="text-align: center;">` + item.uname + `</td>
                                         <td>` + item.wideAreaCnt + `</td>
                                         <td>` + item.wideAreaSum + `</td>
-                                        <td>전</td>
-                                        <td>답</td>
-                                        <td>과</td>`;
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>`;
                                 }
                                 else {
                                     str += `<td class='borderLeft'>` + item.uname + `</td>
                                         <td>` + item.wideAreaCnt + `</td>
                                         <td>` + item.wideAreaSum + `</td>
-                                        <td>전</td>
-                                        <td>답</td>
-                                        <td>과</td>`;
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>`;
                                 }
 
                                 str += `</tr>`;

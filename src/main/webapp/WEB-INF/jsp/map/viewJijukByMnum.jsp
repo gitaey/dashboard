@@ -43,7 +43,6 @@
             font-weight: bold;
         }
 
-
     </style>
 </head>
 <body>
@@ -153,6 +152,7 @@
     var sido = "${params.sido}";
     var page = 1;
     var pagination;
+    var sisLyr = opener.sisLyr;
 
     $(window).on("load", () => {
         selectJijuk(mnum, sido, page);
@@ -196,6 +196,15 @@
                     $("#areaPrdct").text(numberWithCommas(item["areaPrdct"])); // 생산기반 면적(㎡)
                     $("#prdctnCls").text(item["prdctnCls"]); // 생산분류
                     $("#rtPrdctn").text(item["rtPrdctn"]); // 생산비율(%)
+
+                    var wkt = item.geom;
+                    var feature = sisLyr.createFeatureByWKT(wkt);
+
+                    sisLyr.wfs.selectLayer.getSource().clear();
+                    sisLyr.wfs.selectLayer.getSource().addFeature(feature);
+
+                    opener.sis.view.fit(feature.getGeometry().getExtent());
+
                 }
 
                 if(data) {

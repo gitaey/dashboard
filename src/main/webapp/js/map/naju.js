@@ -26,7 +26,6 @@ var getDistrictStatus = (id) => {
 }
 
 var selectUe101 = (formData) => {
-
     var id = formData.get("id");
     var popIdx = 0;
 
@@ -41,18 +40,34 @@ var selectUe101 = (formData) => {
             var addr = item.sidoNm + " " + item.sggNm;
             if(addr.trim() == "") addr = "-";
 
-            tbody.append(`
-                        <tr id="${item.mnum}">
-                            <td>${item.idx}</td>
-                            <td>${item.mnum}</td>
-                            <td>${addr}</td>
-                            <td>${item.uname}</td>
-                            <td>${item.garea}</td>
-                            <td>-</td> 
-                            <td>-</td> 
-                            <td>-</td>  
-                        </tr>
-                    `);
+            if(id == "m001")
+                tbody.append(`
+                            <tr id="${item.mnum}">
+                                <td>${item.idx}</td>
+                                <td>${item.mnum}</td>
+                                <td>${addr}</td>
+                                <td>${item.uname}</td>
+                                <td>${item.garea}</td>
+                                <td>-</td> 
+                                <td>-</td> 
+                                <td>-</td>  
+                            </tr>
+                        `);
+            else
+                tbody.append(`
+                            <tr id="${item.mnum}">
+                                <td>${item.idx}</td>
+                                <td>${item.mnum}</td>
+                                <td>${addr}</td>
+                                <td>${item.uname}</td>
+                                <td>${item.garea}</td>
+                                <td>-</td> 
+                                <td>-</td> 
+                                <td>-</td>  
+                                <td>-</td> 
+                                <td>-</td>  
+                            </tr>
+                        `);
         });
 
         var tr = $(`#${id}Modal #${id}Ue101Wrap tbody tr`);
