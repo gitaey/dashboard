@@ -135,8 +135,8 @@
                                 if (idx == 0) {
                                     str += `<td rowspan="3">` + key + `</td>
                                         <td style="text-align: center;">` + item.uname + `</td>
-                                        <td>` + item.wideAreaCnt + `</td>
-                                        <td>` + item.wideAreaSum + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
@@ -146,8 +146,8 @@
                                 }
                                 else {
                                     str += `<td class='borderLeft'>` + item.uname + `</td>
-                                        <td>` + item.wideAreaCnt + `</td>
-                                        <td>` + item.wideAreaSum + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
@@ -177,8 +177,8 @@
                                 if (idx == 0) {
                                     str += `<td rowspan="3">` + key + `</td>
                                         <td style="text-align: center;">` + item.uname + `</td>
-                                        <td>` + item.wideAreaCnt + `</td>
-                                        <td>` + item.wideAreaSum + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
@@ -188,8 +188,8 @@
                                 }
                                 else {
                                     str += `<td class='borderLeft'>` + item.uname + `</td>
-                                        <td>` + item.wideAreaCnt + `</td>
-                                        <td>` + item.wideAreaSum + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
+                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>

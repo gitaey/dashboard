@@ -277,25 +277,21 @@
                                 <thead>
                                 <tr>
                                     <th>분류</th>
-                                    <th>진흥면적</th>
+                                    <th>비율</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>가급</td>
-                                    <td>100ha 초과</td>
+                                    <td>상급</td>
+                                    <td>70% 초과</td>
                                 </tr>
                                 <tr>
-                                    <td>나급</td>
-                                    <td>30ha 초과 100ha 이하</td>
+                                    <td>중급</td>
+                                    <td>40% 초과 70% 이해</td>
                                 </tr>
                                 <tr>
-                                    <td>다급</td>
-                                    <td>10ha 초과 30ha 이하</td>
-                                </tr>
-                                <tr>
-                                    <td>라급</td>
-                                    <td>10ha 이하</td>
+                                    <td>하급</td>
+                                    <td>40% 이하</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -321,21 +317,25 @@
                                 <thead>
                                 <tr>
                                     <th>분류</th>
-                                    <th>비율</th>
+                                    <th>진흥면적</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>상급</td>
-                                    <td>70% 초과</td>
+                                    <td>가급</td>
+                                    <td>100ha 초과</td>
                                 </tr>
                                 <tr>
-                                    <td>중급</td>
-                                    <td>40% 초과 70% 이해</td>
+                                    <td>나급</td>
+                                    <td>30ha 초과 100ha 이하</td>
                                 </tr>
                                 <tr>
-                                    <td>하급</td>
-                                    <td>40% 이하</td>
+                                    <td>다급</td>
+                                    <td>10ha 초과 30ha 이하</td>
+                                </tr>
+                                <tr>
+                                    <td>라급</td>
+                                    <td>10ha 이하</td>
                                 </tr>
                                 </tbody>
                             </table>
