@@ -80,6 +80,7 @@
                     <td rowspan="3" class="th borderBottom">구분</td>
                     <td rowspan="2" colspan="2" class="th">진흥지역</td>
                     <td colspan="6" class="th">농지현황</td>
+                    <td rowspan="2" colspan="2" class="th">기타</td>
                 </tr>
                 <tr>
                     <td colspan="2" class="th borderLeft">전</td>
@@ -89,6 +90,8 @@
                 <tr>
                     <td class="th borderLeft">권역수(개수)</td>
                     <td class="th">면적(ha)</td>
+                    <td class="th">필지수</td>
+                    <td class="th">면적</td>
                     <td class="th">필지수</td>
                     <td class="th">면적</td>
                     <td class="th">필지수</td>
@@ -147,12 +150,16 @@
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>-</td>`;
                                 }
                                 else {
                                     str += `<td class='borderLeft'>` + item.uname + `</td>
                                         <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
                                         <td>` + numberWithCommas(item.wideAreaSum) + `</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
@@ -165,6 +172,8 @@
                             });
                             str += `<tr>
                                     <td class='borderLeft'>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                     <td>-</td>
                                     <td>-</td>
                                     <td>-</td>
@@ -189,12 +198,16 @@
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>-</td>`;
                                 }
                                 else {
                                     str += `<td class='borderLeft'>` + item.uname + `</td>
                                         <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
                                         <td>` + numberWithCommas(item.wideAreaSum) + `</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>

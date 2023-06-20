@@ -73,6 +73,9 @@ var selectUe101 = (formData) => {
         var tr = $(`#${id}Modal #${id}Ue101Wrap tbody tr`);
         tr.off("click");
         tr.on("click", (evt) => {
+            tr.removeClass("active");
+            $(evt.target).closest("tr").addClass("active");
+
             var mnum = $(evt.target).closest("tr").attr("id");
             var popId = "m001Pop" + popIdx;
 
@@ -178,7 +181,7 @@ var getStatistics = (id) => {
     if(check(formData)) {
         var popId = "m002Pop" + popIdx;
 
-        var nWidth = "900";
+        var nWidth = "1024";
         var nHeight = "875";
 
         var curX = window.screenLeft;
