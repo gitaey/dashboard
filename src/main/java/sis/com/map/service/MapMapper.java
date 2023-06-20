@@ -33,4 +33,6 @@ public interface MapMapper {
     List<Map<String, Object>> selectStatistics(Map<String, Object> params) throws SQLException;
 
     Map<String, Object> selectUe101Total(Map<String, Object> params) throws SQLException;
+
+    Map<String, Object> selectUe101ByMnum(Map<String, Object> params) throws SQLException;
 }

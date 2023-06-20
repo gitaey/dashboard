@@ -33,6 +33,12 @@ $(window).on("load", function () {
         target: "tree"
     });
 
+    $("#prmtRef").popup({
+        popup: $("#toolTipPrmt"),
+        on: "click",
+        position : 'right center',
+    });
+
     // input 숫자만 입력가능하게 설정
     $(".numberOnly").numberOnly();
 
@@ -46,6 +52,25 @@ $(window).on("load", function () {
         modal.attr("style", "");
         modal.hide();
     });
+
+    // 모달 최소화
+    $(".modalWrap .minimize").on("click", (evt) => {
+        var modal = $(evt.target).closest(".modalWrap");
+
+        modal.find(".modalBody").hide();
+        modal.find(".minimize").hide();
+        modal.find(".maximize").show();
+    });
+
+    // 모달 최대화
+    $(".modalWrap .maximize").on("click", (evt) => {
+        var modal = $(evt.target).closest(".modalWrap");
+
+        modal.find(".modalBody").show();
+        modal.find(".minimize").show();
+        modal.find(".maximize").hide();
+    });
+
 
     // 모달 zIndex 설정
     $(".modalWrap").on("mousedown", function () {
@@ -260,14 +285,22 @@ $(window).on("load", function () {
     $("#btnSearch").on("click", (e) => {
         var id = $("#selectMenu .btnMenu.primary").attr("id");
 
-        $(`#${id}Modal`).show();
-
         if(id == "m001") {
+            $(`#${id}Modal`).find(".maximize").hide();
+            $(`#${id}Modal`).find(".minimize").show();
+            $(`#${id}Modal`).find(".modalBody").show();
+            $(`#${id}Modal`).show();
+
             $(`#${id}Ue101Wrap`).show();
             $(`#${id}LdregWrap`).hide();
             getDistrictStatus(id);
         }
         else if(id == "m002") {
+            $(`#${id}Modal`).find(".maximize").hide();
+            $(`#${id}Modal`).find(".minimize").show();
+            $(`#${id}Modal`).find(".modalBody").show();
+            $(`#${id}Modal`).show();
+
             getMngNo(id);
         }
         else if(id == "m003") {

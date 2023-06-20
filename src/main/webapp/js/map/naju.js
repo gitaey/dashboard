@@ -2,42 +2,15 @@ var m001Pagination, m001Pagination2;
 var m002Pagination, m002Pagination2;
 var m003Pagination;
 
+var arrPop = [];
+
 // 구획현황 조회
 var getDistrictStatus = (id) => {
     var formData = new FormData($("#frm")[0]);
     formData.append("id", id);
     formData.append("page", 1);
 
-    var code = "";
-
-    if(formData.get("sido") == "-") {
-        $(`#${id}Modal`).hide();
-        alert("행정구역을 선택해 주세요");
-
-        return ;
-    } else {
-        code = formData.get("sido");
-
-        if(formData.get("sgg") != "-") code = formData.get("sgg");
-        if(formData.get("emd") != "-") code = formData.get("emd");
-        if(formData.get("li") != "-") code = formData.get("li");
-
-        formData.append("code", code);
-
-        var minArea = formData.get("minArea");
-        var maxArea = formData.get("maxArea");
-
-        if(minArea) {
-            if(maxArea > -1) {
-                if (minArea > maxArea) {
-                    alert("구획면적 최소면적이 최대면적보다 큽니다.");
-
-                    $("#maxArea").focus();
-                    return;
-                }
-            }
-        }
-
+    if(check(formData)) {
         m001Pagination = new SisPagination({
             id: "m001PaginationWrap",
             viewCount: 10,
@@ -55,6 +28,7 @@ var getDistrictStatus = (id) => {
 var selectUe101 = (formData) => {
 
     var id = formData.get("id");
+    var popIdx = 0;
 
     var createTable = (data, tData) => {
         var tbody = $(`#${id}Modal #${id}Ue101Wrap tbody`);
@@ -73,7 +47,10 @@ var selectUe101 = (formData) => {
                             <td>${item.mnum}</td>
                             <td>${addr}</td>
                             <td>${item.uname}</td>
-                            <td>${item.garea}</td> 
+                            <td>${item.garea}</td>
+                            <td>-</td> 
+                            <td>-</td> 
+                            <td>-</td>  
                         </tr>
                     `);
         });
@@ -82,14 +59,41 @@ var selectUe101 = (formData) => {
         tr.off("click");
         tr.on("click", (evt) => {
             var mnum = $(evt.target).closest("tr").attr("id");
-            var pop = window.open("", "m001Pop");
+            var popId = "m001Pop" + popIdx;
+
+            var nWidth = "900";
+            var nHeight = "875";
+
+            var curX = window.screenLeft;
+            var curY = window.screenTop;
+            var curWidth = document.body.clientWidth;
+            var curHeight = document.body.clientHeight;
+
+            var nLeft = curX + (curWidth / 2) - (nWidth / 2);
+            var nTop = curY + (curHeight / 2) - (nHeight / 2);
+
+            var pop = window.open("", popId, "toolbar=no, menubar=no, location=no, status=no,scrollbars=no, resizable=no," +
+                "left=" + nLeft + ",top=" + nTop + ",width=" + nWidth + ",height=" + nHeight);
 
             var frm = $("#frm")[0];
             frm.mnum.value = mnum;
             frm.page.value = 1;
-            frm.action = "/selectJijukByMnum.do";
-            frm.target = "m001Pop";
+            frm.action = "/viewUe101Ldreg.do";
+            frm.target = popId;
             frm.submit();
+
+            arrPop.push(pop)
+
+            $(window).off("beforeunload");
+            $(window).on("beforeunload", () => {
+                $.each(arrPop, (idx, item) => {
+                    item.close();
+                });
+
+                arrPop = [];
+            });
+
+            popIdx++;
         })
     };
 
@@ -129,203 +133,74 @@ var selectUe101 = (formData) => {
 
 // 관리번호 조회
 var getMngNo = (id) => {
-    var codes = getValue();
-    codes.id = id;
+    var formData = new FormData($("#frm")[0]);
+    formData.append("id", id);
+    formData.append("page", 1);
 
-    var code = "";
-
-    if(codes.sido == "-") {
-        $(`#${id}Modal`).hide();
-        alert("행정구역을 선택해 주세요");
-
-        return ;
-    } else {
-        code = codes.sido;
-
-        if(codes.sgg != "-") code = codes.sgg;
-        if(codes.emd != "-") code = codes.emd;
-        if(codes.li != "-") code = codes.li;
-
-        codes.code = code;
-        $("[name=code]").val(code);
-
-        if(codes.minArea) {
-            if(codes.maxArea > -1) {
-                if (codes.minArea > codes.maxArea) {
-                    alert("구획면적 최소면적이 최대면적보다 큽니다.");
-
-                    $("#maxArea").focus();
-                    return;
-                }
-            }
-        }
-
+    if(check(formData)) {
         m002Pagination = new SisPagination({
             id: "m002PaginationWrap",
             viewCount: 10,
             totalCount: 0,
             onClick: function (p) {
-                codes.page = p;
-                selectUe101(codes, p);
+                formData.append("page", p);
+                selectUe101(formData);
             }
         });
 
-        selectUe101(codes, 1);
+        selectUe101(formData);
     }
 }
 
 // 일반현황 조회
 var getStatistics = (id) => {
-    var codes = getValue();
-    codes.id = id;
+    var formData = new FormData($("#frm")[0]);
+    formData.append("id", id);
+    formData.append("page", 1);
 
-    var code = "-";
+    var popIdx = 0;
 
-    code = codes.sido;
+    if(check(formData)) {
+        var popId = "m002Pop" + popIdx;
 
-    if (codes.sgg != "-") code = codes.sgg;
-    if (codes.emd != "-") code = codes.emd;
-    if (codes.li != "-") code = codes.li;
+        var nWidth = "900";
+        var nHeight = "875";
 
-    codes.code = code;
+        var curX = window.screenLeft;
+        var curY = window.screenTop;
+        var curWidth = document.body.clientWidth;
+        var curHeight = document.body.clientHeight;
 
-    if (codes.minArea) {
-        if (codes.maxArea > -1) {
-            if (codes.minArea > codes.maxArea) {
-                alert("구획면적 최소면적이 최대면적보다 큽니다.");
+        var nLeft = curX + (curWidth / 2) - (nWidth / 2);
+        var nTop = curY + (curHeight / 2) - (nHeight / 2);
 
-                $("#maxArea").focus();
-                return;
-            }
-        }
+        var pop = window.open("", popId, "toolbar=no, menubar=no, location=no, status=no,scrollbars=no, resizable=no," +
+            "left=" + nLeft + ",top=" + nTop + ",width=" + nWidth + ",height=" + nHeight);
+
+        var frm = $("#frm")[0];
+        frm.page.value = 1;
+        frm.action = "/viewStatistics.do";
+        frm.target = popId;
+        frm.submit();
+
+        arrPop.push(pop)
+
+        $(window).off("beforeunload");
+        $(window).on("beforeunload", () => {
+            $.each(arrPop, (idx, item) => {
+                item.close();
+            });
+
+            arrPop = [];
+        });
+
+        popIdx++;
+
+
     }
-
-    $.ajax({
-        url: "/selectStatistics.do",
-        type: "post",
-        data: codes,
-        beforeSend: () => {
-            $(`#${codes.id}Modal .sisLoading`).show();
-        },
-        success: (res) => {
-            console.log(res);
-
-            var data = res.data;
-
-            if(data) {
-                var gData = _.chain(data)
-                    .groupBy("addr").value();
-
-                var tbody = $(`#${codes.id}Modal #${codes.id}Ue101Wrap tbody`);
-                tbody.html("");
-
-                var str = ``;
-
-                $.each(gData, (key, v) => {
-                    str = "";
-
-                    if(v.length == 2) {
-                        $.each(v, (idx, item) => {
-                            str += `<tr>`;
-
-                            if (idx == 0) {
-                                str += `<td rowspan="3">${key}</td>
-                                        <td style="text-align: center;">${item.uname}</td>
-                                        <td>${item.wideAreaCnt}</td>
-                                        <td>${item.wideAreaSum}</td>  
-                                        <td>전</td> 
-                                        <td>답</td>
-                                        <td>과</td>`;
-                            }
-                            else {
-                                str += `<td>${item.uname}</td>
-                                        <td>${item.wideAreaCnt}</td>
-                                        <td>${item.wideAreaSum}</td>  
-                                        <td>전</td> 
-                                        <td>답</td>
-                                        <td>과</td>`;
-                            }
-
-                            str += `</tr>`;
-                        });
-                        str += `<tr>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>`
-                    }
-                    else {
-                        $.each(v, (idx, item) => {
-                            str += `<tr>`;
-
-                            if (idx == 0) {
-                                str += `<td rowspan="3">${key}</td>
-                                        <td style="text-align: center;">${item.uname}</td>
-                                        <td>${item.wideAreaCnt}</td>
-                                        <td>${item.wideAreaSum}</td>  
-                                        <td>전</td> 
-                                        <td>답</td>
-                                        <td>과</td>`;
-                            }
-                            else {
-                                str += `<td>${item.uname}</td>
-                                        <td>${item.wideAreaCnt}</td>
-                                        <td>${item.wideAreaSum}</td>  
-                                        <td>전</td> 
-                                        <td>답</td>
-                                        <td>과</td>`;
-                            }
-
-                            str += `</tr>`;
-                        });
-                    }
-
-                    tbody.append(str);
-                });
-            }
-
-        },
-        complete: () => {
-            $(`#${codes.id}Modal .sisLoading`).hide();
-        }
-    });
 }
 
-// MNUM으로 필지 가져오기
-var getJijukByMnum = (evt, codes, page) => {
-    var mnum = $(evt.target).closest("tr").attr("id");
-    codes.mnum = mnum;
-
-    if(codes.id == "m001") {
-        m001Pagination2 = new SisPagination({
-            id: "m001PaginationWrap2",
-            viewCount: 10,
-            totalCount: 0,
-            onClick: function (p) {
-                codes.page = p;
-                selectJijuk(codes, p);
-            }
-        });
-    }
-    else if(codes.id == "m002") {
-        m002Pagination2 = new SisPagination({
-            id: "m002PaginationWrap2",
-            viewCount: 10,
-            totalCount: 0,
-            onClick: function (p) {
-                codes.page = p;
-                selectJijuk(codes, p);
-            }
-        });
-    }
-
-    selectJijuk(codes, page);
-}
-
-// 필지 조회
+// 필지 조회 (팝업창에서 사용함)
 var selectJijuk = (codes, page = 1) => {
     codes.page = page;
 
@@ -410,4 +285,39 @@ var getValue = function() {
     }
 
     return data
+}
+
+var check = function(formData) {
+    var code = "";
+
+    if(formData.get("sido") == "-") {
+        $(`#${id}Modal`).hide();
+        alert("행정구역을 선택해 주세요");
+
+        return  false;
+    } else {
+        code = formData.get("sido");
+
+        if(formData.get("sgg") != "-") code = formData.get("sgg");
+        if(formData.get("emd") != "-") code = formData.get("emd");
+        if(formData.get("li") != "-") code = formData.get("li");
+
+        formData.append("code", code);
+
+        var minArea = formData.get("minArea");
+        var maxArea = formData.get("maxArea");
+
+        if(minArea) {
+            if(maxArea > -1) {
+                if (minArea > maxArea) {
+                    alert("구획면적 최소면적이 최대면적보다 큽니다.");
+
+                    $("#maxArea").focus();
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
 }

@@ -277,7 +277,34 @@ sum(st_area(geom)) / 10000 as wide_area_sum
                           order by pnu
                       ) a
              ) a
-            <![CDATA[ where idx > ((#{page}::integer - 1) * 10) and idx <= (#{page}::integer * 10) ]]>
+            <![CDATA[ where idx > ((#{page}::integer - 1) * #{viewCount}::integer) and idx <= (#{page}::integer * #{viewCount}::integer) ]]>
+    </select>
+
+    <select id="selectUe101ByMnum" resultType="egovMap">
+        select
+            mnum,
+            alias,
+            ntfdate,
+            grid_nm,
+            grid_nm_sn,
+            crtr_ymd,
+            prmt_clsf,
+            prdctn_cls,
+            ucode,
+            emd_cd,
+            round(area_prmt::numeric, 2) area_prmt,
+            round(area_prdct::numeric, 2) area_prdct,
+            round(rt_prdctn::numeric, 2) rt_prdctn,
+            area_frln,
+            area_fclt,
+            area_etc,
+            prmt_rmrk,
+            crt_ymd,
+            mdfcn_ymd,
+            del_ymd,
+            map_join
+        from work.lsmd_cont_ue101_44_mng
+        where mnum = #{mnum}
     </select>
 
 

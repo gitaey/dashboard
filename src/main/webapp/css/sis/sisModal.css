@@ -29,6 +29,7 @@
     font-size: 10pt;
     display: -ms-inline-flexbox;
     z-index: 100;
+    padding-right: 5px;
 }
 
 .modalTitleWrap > span {
@@ -40,7 +41,7 @@
 
 .modalTitleWrap > div {
     float: right;
-    padding: 9.5px 15px;
+    padding: 9.5px 10px;
     cursor: pointer;
     font-size: 12pt;
 }
@@ -59,11 +60,20 @@
     z-index: 100;
 }
 
-.modalWrap .close {
+.modalWrap .close,
+.modalWrap .minimize,
+.modalWrap .maximize {
     cursor: pointer;
 }
 
+.modalWrap .minimize,
+.modalWrap .maximize  {
+    padding: 12px 10px;
+}
 
+.modalWrap .maximize {
+    display: none;
+}
 
 .modalTitle {
     background: #2185d0;

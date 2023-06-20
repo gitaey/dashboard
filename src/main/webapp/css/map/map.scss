@@ -256,9 +256,9 @@ button.blue {
     }
 
     .right {
-      right: 0;
-      width: 20px;
-      color: #2b2b2b;
+      //right: 0;
+      //width: 20px;
+      //color: #2b2b2b;
     }
 
     #keywordIcon {
@@ -775,4 +775,11 @@ button.blue {
   padding: .78571429em .78571429em;
   text-align: center;
   //border-bottom: 1px solid rgba(34,36,38,.1);
+}
+
+.sisTooltip {
+  position: absolute;
+  display: none;
+  width: auto;
+  padding: 10px;
 }

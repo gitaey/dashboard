@@ -74,4 +74,9 @@ public class MapServiceImpl implements MapService {
     public Map<String, Object> selectUe101Total(Map<String, Object> params) throws SQLException {
         return mapper.selectUe101Total(params);
     }
+
+    @Override
+    public Map<String, Object> selectUe101ByMnum(Map<String, Object> params) throws SQLException {
+        return mapper.selectUe101ByMnum(params);
+    }
 }

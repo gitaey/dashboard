@@ -128,14 +128,34 @@ public class MapController {
         return "jsonView";
     }
 
+    // 구획 및 필지정보 조회
+    @RequestMapping("/viewUe101Ldreg.do")
+    public String viewUe101Ldreg(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        model.put("params", params);
+
+        return "/map/viewJijukByMnum";
+    }
+
+    // 일반현황 뷰 호출
+    @RequestMapping("/viewStatistics.do")
+    public String selectUe101Ldreg(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        model.put("params", params);
+
+        return "/map/viewStatistics";
+    }
+
     // MNUM으로 지적도 조회
     @RequestMapping("/selectJijukByMnum.do")
     public String selectJijukByMnum(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
-        List<Map<String, Object>> item = mapService.selectJijukByMnum(params);
+        Map<String, Object> ue101 = mapService.selectUe101ByMnum(params);
+        List<Map<String, Object>> data = mapService.selectJijukByMnum(params);
 
-        model.put("data", item);
+        model.put("item", ue101);
+        model.put("data", data);
 
-        return "/map/viewJijukByMnum";
+        return "jsonView";
     }
 }

@@ -220,11 +220,6 @@ button.blue {
 #mapWrap #searchWrap .selectWrap {
   margin: 5px 0;
 }
-#mapWrap #searchWrap .right {
-  right: 0;
-  width: 20px;
-  color: #2b2b2b;
-}
 #mapWrap #searchWrap #keywordIcon {
   position: absolute;
   left: 5px;
@@ -643,6 +638,13 @@ button.blue {
 .ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
   padding: 0.78571429em 0.78571429em;
   text-align: center;
+}
+
+.sisTooltip {
+  position: absolute;
+  display: none;
+  width: auto;
+  padding: 10px;
 }
 
 /*# sourceMappingURL=map.css.map */

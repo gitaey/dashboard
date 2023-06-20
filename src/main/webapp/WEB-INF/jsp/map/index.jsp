@@ -257,7 +257,10 @@
                 </div>
 
                 <div class="itemGroup m002" style="display: none;">
-                    <span class="title">경지정리비율(%)</span>
+                    <span class="title">
+                        경지정리비율(%)
+                        <i id="prmtRef" class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                    </span>
 
                     <div class="ui input">
                         <input id="min1" name="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
@@ -266,10 +269,33 @@
                     <div class="ui input">
                         <input id="max1" name="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
+
+                        <div id="toolTipPrmt"  class="ui flowing popup top left transition hidden">
+                            <div class="ui three column divided center aligned grid">
+                                <div class="column">
+                                    <h4 class="ui header">Basic Plan</h4>
+                                    <p><b>2</b> projects, $10 a month</p>
+                                    <div class="ui button">Choose</div>
+                                </div>
+                                <div class="column">
+                                    <h4 class="ui header">Business Plan</h4>
+                                    <p><b>5</b> projects, $20 a month</p>
+                                    <div class="ui button">Choose</div>
+                                </div>
+                                <div class="column">
+                                    <h4 class="ui header">Premium Plan</h4>
+                                    <p><b>8</b> projects, $25 a month</p>
+                                    <div class="ui button">Choose</div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
 
                 <div class="itemGroup m002" style="display: none;">
-                    <span class="title">생산기반율(%)</span>
+                    <span class="title">
+                        생산기반율(%)
+                        <i class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                    </span>
 
                     <div class="ui input">
                         <input id="min2" name="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
@@ -359,6 +385,8 @@
     <div class="modalTitleWrap">
         <span class="title">구획현황 검색결과</span>
         <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+        <div class="minimize"><i class="fa-solid fa-minus"></i></div>
+        <div class="maximize"><i class="fa-regular fa-window-maximize"></i></div>
     </div>
     <div class="modalBody">
         <div class="ui segment sisLoading">
@@ -383,6 +411,9 @@
                     <th>시군구</th>
                     <th>진흥구분</th>
                     <th>면적(ha)</th>
+                    <th>수원공 포함여부</th>
+                    <th>농지비율(%)</th>
+                    <th>비농지비율(%)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -461,6 +492,9 @@
                     <th>시군구</th>
                     <th>진흥구분</th>
                     <th>면적(ha)</th>
+                    <th>수원공 포함여부</th>
+                    <th>농지비율(%)</th>
+                    <th>비농지비율(%)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -504,52 +538,6 @@
             </table>
 
             <div id="m002PaginationWrap2" class="paginationWrap">
-                <div class="sisPagination"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 일반현황 모달 -->
-<div id="m003Modal" class="modalWrap">
-    <div class="modalTitleWrap">
-        <span class="title">일반현황 검색결과</span>
-        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
-    </div>
-    <div class="modalBody">
-        <div class="ui segment sisLoading">
-            <div class="ui active inverted dimmer">
-                <div class="ui text loader">Loading</div>
-            </div>
-        </div>
-
-        <div id="m003Ue101Wrap" style="max-height: 800px; overflow: auto;">
-            <button id="btnExcel" class="ui primary button" style="float: right; margin-bottom: 10px;">
-                엑셀저장
-            </button>
-
-            <table class="ui celled structured table">
-                <thead>
-                <tr>
-                    <th rowspan="2">시도</th>
-                    <th rowspan="2">구분</th>
-                    <th colspan="2">진흥지역</th>
-                    <th colspan="3">농지현황</th>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">권역수(개수)</th>
-                    <th>면적(ha)</th>
-                    <th>전</th>
-                    <th>답</th>
-                    <th>과</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-
-            <div id="m003PaginationWrap" class="paginationWrap">
                 <div class="sisPagination"></div>
             </div>
         </div>
