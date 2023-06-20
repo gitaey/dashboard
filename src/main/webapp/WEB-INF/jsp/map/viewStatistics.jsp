@@ -66,6 +66,11 @@
     <div style="padding:15px;">
         <div class="ui segment">
             <h3 class="ui left floated header">일반현황</h3>
+
+            <button id="m001" class="btnMenu ui primary button" style="float: right;margin-top:-6px;">
+                엑셀저장
+            </button>
+
             <div class="ui clearing divider"></div>
 
             <table id="tblUe101" class="ui grey celled table" style="text-align: center;">
