@@ -108,7 +108,7 @@
 </html>
 
 <script>
-    var mnum = "${params.mnum}";
+    var code = "${params.code}";
     var sido = "${params.sido}";
     var page = 1;
     var pagination;
@@ -117,108 +117,90 @@
         $.ajax({
             url: "/selectStatistics.do",
             type: "post",
-            data: {},
+            data: {
+                sido,
+                code
+            },
             beforeSend: () => {
                 $(`.sisLoading`).show();
             },
             success: (res) => {
                 var data = res.data;
+                var nData;
 
                 if(data) {
-                    var gData = _.chain(data)
-                        .groupBy("addr").value();
+                    nData = res.nData;
+                    var merge = $.merge(data, nData);
+
+                    var gData = json = _.chain(merge)
+                        .groupBy("jusoName")
+                        .map(function(v, i) {
+                            return {
+                                jusoName: i,
+                                data: _.chain(v)
+                                    .groupBy("ucode")
+                                    .map((v, i) => {
+                                        return {
+                                            ucode: i,
+                                            wideAreaCnt: _.get(_.find(v, 'wideAreaCnt'), 'wideAreaCnt') || '0',
+                                            wideAreaSum: _.get(_.find(v, 'wideAreaSum'), 'wideAreaSum') || '0',
+                                            dapArea: _.get(_.find(v, 'dapArea'), 'dapArea') || '0',
+                                            dapCnt: _.get(_.find(v, 'dapCnt'), 'dapCnt') || '0',
+                                            etcArea: _.get(_.find(v, 'etcArea'), 'etcArea') || '0',
+                                            etcCnt: _.get(_.find(v, 'etcCnt'), 'etcCnt') || '0',
+                                            gwaArea: _.get(_.find(v, 'gwaArea'), 'gwaArea') || '0',
+                                            gwaCnt: _.get(_.find(v, 'gwaCnt'), 'gwaCnt') || '0',
+                                            jeonArea: _.get(_.find(v, 'jeonArea'), 'jeonArea') || '0',
+                                            jeonCnt: _.get(_.find(v, 'jeonCnt'), 'jeonCnt') || '0',
+
+                                        }
+                                    }).value()
+                            }
+                        })
+                        .value();
 
                     var tbody = $(`tbody`);
                     tbody.html("");
 
                     var str = ``;
 
-                    $.each(gData, (key, v) => {
+                    $.each(gData, (i, v) => {
+                        var jusuName = v["jusoName"];
                         str = "";
 
-                        if(v.length == 2) {
-                            $.each(v, (idx, item) => {
-                                str += `<tr>`;
+                        $.each(v.data, (idx, item) => {
+                            str += `<tr>`;
 
-                                if (idx == 0) {
-                                    str += `<td rowspan="3">` + key + `</td>
-                                        <td style="text-align: center;">` + item.uname + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>`;
-                                }
-                                else {
-                                    str += `<td class='borderLeft'>` + item.uname + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>`;
-                                }
+                            if (idx == 0) {
+                                str += `<td rowspan="3">` + jusuName + `</td>
+                                    <td style="text-align: center;">` + item["ucode"] + `</td>
+                                    <td>` + numberWithCommas(item["wideAreaCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["wideAreaSum"]) + `</td>
+                                    <td>` + numberWithCommas(item["jeonCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["jeonArea"]) + `</td>
+                                    <td>` + numberWithCommas(item["dapCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["dapArea"]) + `</td>
+                                    <td>` + numberWithCommas(item["gwaCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["gwaArea"]) + `</td>
+                                    <td>` + numberWithCommas(item["etcCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["etcArea"]) + `</td>`;
+                            }
+                            else {
+                                str += `<td class='borderLeft'>` + item["ucode"] + `</td>
+                                    <td>` + numberWithCommas(item["wideAreaCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["wideAreaSum"]) + `</td>
+                                    <td>` + numberWithCommas(item["jeonCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["jeonArea"]) + `</td>
+                                    <td>` + numberWithCommas(item["dapCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["dapArea"]) + `</td>
+                                    <td>` + numberWithCommas(item["gwaCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["gwaArea"]) + `</td>
+                                    <td>` + numberWithCommas(item["etcCnt"]) + `</td>
+                                    <td>` + numberWithCommas(item["etcArea"]) + `</td>`;
+                            }
 
-                                str += `</tr>`;
-                            });
-                            str += `<tr>
-                                    <td class='borderLeft'>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>`
-                        }
-                        else {
-                            $.each(v, (idx, item) => {
-                                str += `<tr>`;
-
-                                if (idx == 0) {
-                                    str += `<td rowspan="3">` + key + `</td>
-                                        <td style="text-align: center;">` + item.uname + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>`;
-                                }
-                                else {
-                                    str += `<td class='borderLeft'>` + item.uname + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaCnt) + `</td>
-                                        <td>` + numberWithCommas(item.wideAreaSum) + `</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>`;
-                                }
-
-                                str += `</tr>`;
-                            });
-                        }
+                            str += `</tr>`;
+                        });
 
                         tbody.append(str);
                     });

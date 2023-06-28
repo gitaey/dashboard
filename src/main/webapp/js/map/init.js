@@ -87,6 +87,13 @@ $(window).on("load", function () {
         containment : 'parent'
     });
 
+    $(".wrapToggle").on("click", (evt) => {
+        $("#searchWrap, #posMoveWrap").toggleClass("close");
+        $("#searchWrap .wrapToggle").toggleClass("close");
+        $(".modalWrap").toggleClass("close");
+
+    });
+
     // 메뉴 선택 이벤트
     $(".btnMenu").on("click", (evt) => {
         var id = evt.target.id;
@@ -95,19 +102,19 @@ $(window).on("load", function () {
         $(evt.target).addClass("primary");
 
         if(id == "m001") {
-            $(".itemGroup.m002").hide();
+            $(".itemGroup.m002, .iconPopup.m002").hide();
             $(".itemGroup.m003").hide();
         }
         else if(id == "m002") {
-            $(".itemGroup.m002").show();
+            $(".itemGroup.m002, .iconPopup.m002").show();
             $(".itemGroup.m003").hide();
         }
         else if(id == "m003") {
             // $("#left_sido").val("-").change();
-            $(".itemGroup.m002").hide();
+            $(".itemGroup.m002, .iconPopup.m002").hide();
             $(".itemGroup.m003").show();
         } else {
-            $(".itemGroup.m002").hide();
+            $(".itemGroup.m002, .iconPopup.m002").hide();
             $(".itemGroup.m003").hide();
         }
     });
@@ -350,6 +357,28 @@ $(window).on("load", function () {
             $(e.target).closest(".btn").toggleClass("active");
             $("#tree").toggle();
         }
+    });
+
+    // 전체화면
+    $("#fullScreen").on("click", () => {
+        $("#searchWrap").hide();
+        $("#mapControlWrap").hide();
+        $("#mapControlWrap").hide();
+        $("#baseMapWrap, #lyrWrap, #fullScreen").hide();
+        $("#posMoveWrap").hide();
+
+        $("#originScreen").show();
+    });
+
+    // 전체화면 종료
+    $("#originScreen").on("click", () => {
+        $("#searchWrap").show();
+        $("#mapControlWrap").show();
+        $("#mapControlWrap").show();
+        $("#baseMapWrap, #lyrWrap, #fullScreen").show();
+        $("#posMoveWrap").show();
+
+        $("#originScreen").hide();
     });
 
     // 거리측정

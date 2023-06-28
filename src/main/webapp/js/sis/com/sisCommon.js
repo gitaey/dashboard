@@ -1,5 +1,7 @@
 // 천단위 콤마 (소수점포함)
 function numberWithCommas(num) {
+    if(num == null || num == undefined) return num
+
     var parts = num.toString().split(".");
     return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
 }

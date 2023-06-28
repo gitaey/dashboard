@@ -67,7 +67,7 @@
 
                 <tr>
                     <td class="th">국가지점번호</td>
-                    <td>-</td>
+                    <td id="grid">-</td>
                     <td class="th">진흥지역 면적(㎡)</td>
                     <td id="areaPrmt">-</td>
                 </tr>
@@ -98,26 +98,26 @@
                 <tr>
                     <td class="th">분류</td>
                     <td class="th">필지수</td>
-                    <td class="th">공부면적(ha)</td>
-                    <td class="th">편입면적(ha)</td>
+                    <td class="th">공부면적(㎡)</td>
+                    <td class="th">편입면적(㎡)</td>
                 </tr>
                 <tr>
                     <td class="th">농지</td>
-                    <td id="totalCount">-</td>
-                    <td>-</td>
-                    <td id="totalArea"></td>
+                    <td id="njCnt">-</td>
+                    <td id="njArea">-</td>
+                    <td id="njGarea"></td>
                 </tr>
                 <tr>
                     <td class="th">시설부지</td>
-                    <td>-</td>
-                    <td>공부면적(㎡)</td>
-                    <td>편입면적(㎡)</td>
+                    <td id="ssCnt">-</td>
+                    <td id="ssArea">-</td>
+                    <td id="ssGarea"></td>
                 </tr>
                 <tr>
                     <td class="th">비농지</td>
-                    <td>-</td>
-                    <td>공부면적(㎡)</td>
-                    <td>편입면적(㎡)</td>
+                    <td id="etcCnt">-</td>
+                    <td id="etcArea">-</td>
+                    <td id="etcGarea"></td>
                 </tr>
             </table>
 
@@ -189,13 +189,28 @@
 
                 if(item) {
                     $("#mapJoin").text(item["mapJoin"]); // 관리번호
-                    $("#mapJoin").text(item["mapJoin"]); // 기준년월
-                    $("#mapJoin").text(item["mapJoin"]); // 국가지점번호
-                    $("#areaPrmt").text(numberWithCommas(item["areaPrmt"])); // 진흥지역 면적(㎡)
+                    // $("#mapJoin").text(item["baseYear"]); // 기준년월
+                    $("#grid").text(item["grid"]); // 국가지점번호
+                    $("#areaPrmt").text(numberWithCommas(item["area"])); // 진흥지역 면적(㎡)
                     $("#prmtClsf").text(item["prmtClsf"]); // 진흥분류
                     $("#areaPrdct").text(numberWithCommas(item["areaPrdct"])); // 생산기반 면적(㎡)
-                    $("#prdctnCls").text(item["prdctnCls"]); // 생산분류
+                    $("#prdctnCls").text(item["prdctnCls"] || '-'); // 생산분류
                     $("#rtPrdctn").text(item["rtPrdctn"]); // 생산비율(%)
+
+                    // 농지면적 카운트
+                    $("#njCnt").text(numberWithCommas(item["njCnt"])); //
+                    $("#njArea").text(numberWithCommas(item["njArea"])); //
+                    $("#njGarea").text(numberWithCommas(item["njGarea"])); //
+
+                    // 시설면적 카운트
+                    $("#ssCnt").text(numberWithCommas(item["ssCnt"])); //
+                    $("#ssArea").text(numberWithCommas(item["ssArea"])); //
+                    $("#ssGarea").text(numberWithCommas(item["ssGarea"])); //
+
+                    // 비농지면적 카운트
+                    $("#etcCnt").text(numberWithCommas(item["etcCnt"])); //
+                    $("#etcArea").text(numberWithCommas(item["etcArea"])); //
+                    $("#etcGarea").text(numberWithCommas(item["etcGarea"])); //
 
                     var wkt = item.geom;
                     var feature = sisLyr.createFeatureByWKT(wkt);
@@ -210,10 +225,6 @@
                 if(data) {
                     if(data.length > 0) {
                         var totalCount = data[0]["totalCount"];
-                        var totalArea = data[0]["totalArea"];
-
-                        $(`#totalCount`).text(numberWithCommas(totalCount));
-                        $(`#totalArea`).text(numberWithCommas(totalArea));
 
                         createTable(data);
                         pagination.setDataCount(totalCount);
@@ -247,9 +258,9 @@
                     "<td>" + item.idx + "</td>" +
                     "<td>" + item.pnu + "</td>" +
                     "<td>" + addr + "</td>" +
-                    "<td>" + item.garea + "</td>" +
-                    "<td>" + item.garea + "</td>" +
-                    "<td>지목</td>" +
+                    "<td>" + numberWithCommas(item.parea) + "</td>" +
+                    "<td>" + numberWithCommas(item.garea) + "</td>" +
+                    "<td>" + item.jimok + "</td>" +
                     "</tr>");
             });
 

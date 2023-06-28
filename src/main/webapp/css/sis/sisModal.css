@@ -9,6 +9,10 @@
     display: none;
 }
 
+.modalWrap.close {
+    left: calc(287px - 272px);
+}
+
 .modalTransparent {
     position: fixed;
     top: 0;

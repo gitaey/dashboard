@@ -110,11 +110,13 @@ public class MapController {
     @RequestMapping("/selectMngCode.do")
     public String selectMngCode(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
+        Map<String, Object> total = mapService.selectUe101Total(params);
         List<Map<String, Object>> item = mapService.selectMngCode(params);
 
+        model.put("total", total);
         model.put("data", item);
 
-        return "viewJijukByMnum";
+        return "jsonView";
     }
 
     // 일반현황 조회
@@ -122,8 +124,10 @@ public class MapController {
     public String selectStatistics(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
         List<Map<String, Object>> item = mapService.selectStatistics(params);
+        List<Map<String, Object>> nj = mapService.selectStatisticsNj(params);
 
         model.put("data", item);
+        model.put("nData", nj);
 
         return "jsonView";
     }

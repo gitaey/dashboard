@@ -7,16 +7,18 @@ var arrPop = [];
 // 구획현황 조회
 var getDistrictStatus = (id) => {
     var formData = new FormData($("#frm")[0]);
-    formData.append("id", id);
-    formData.append("page", 1);
+    formData.set("id", id);
+    formData.set("page", 1);
 
-    if(check(formData)) {
+    formData = check(formData);
+
+    if(formData) {
         m001Pagination = new SisPagination({
             id: "m001PaginationWrap",
             viewCount: 10,
             totalCount: 0,
             onClick: function (p) {
-                formData.append("page", p);
+                formData.set("page", p);
                 selectUe101(formData);
             }
         });
@@ -34,38 +36,17 @@ var selectUe101 = (formData) => {
         tbody.html("");
 
         $.each(data, (idx, item) => {
-            item.sidoNm = item.sidoNm || "";
-            item.sggNm = item.sggNm || "";
-
-            var addr = item.sidoNm + " " + item.sggNm;
-            if(addr.trim() == "") addr = "-";
-
             if(id == "m001")
                 tbody.append(`
                             <tr id="${item.mnum}">
                                 <td>${item.idx}</td>
                                 <td>${item.mnum}</td>
-                                <td>${addr}</td>
+                                <td>${item.jusoName}</td>
                                 <td>${item.uname}</td>
-                                <td>${item.garea}</td>
-                                <td>-</td> 
-                                <td>-</td> 
-                                <td>-</td>  
-                            </tr>
-                        `);
-            else
-                tbody.append(`
-                            <tr id="${item.mnum}">
-                                <td>${item.idx}</td>
-                                <td>${item.mnum}</td>
-                                <td>${addr}</td>
-                                <td>${item.uname}</td>
-                                <td>${item.garea}</td>
-                                <td>-</td> 
-                                <td>-</td> 
-                                <td>-</td>  
-                                <td>-</td> 
-                                <td>-</td>  
+                                <td>${item.area}</td>
+                                <td>${item.swgYn}</td> 
+                                <td>${item.njPrdctn || '-'}</td> 
+                                <td>${item.etcPrdctn}</td>  
                             </tr>
                         `);
         });
@@ -149,36 +130,144 @@ var selectUe101 = (formData) => {
     });
 }
 
+var selectMngNo = (formData) => {
+    var id = formData.get("id");
+    var popIdx = 0;
+
+    var createTable = (data, tData) => {
+        var tbody = $(`#${id}Modal #${id}Ue101Wrap tbody`);
+        tbody.html("");
+
+        $.each(data, (idx, item) => {
+            tbody.append(`
+                        <tr id="${item.mnum}">
+                            <td>${item.idx}</td>
+                            <td>${item.mnum}</td>
+                            <td>${item.jusoName}</td>
+                            <td>${item.uname}</td>
+                            <td>${item.area}</td>
+                            <td>${item.swgYn}</td> 
+                            <td>${item.njPrdctn || '-'}</td> 
+                            <td>${item.etcPrdctn}</td>  
+                            <td>${item.rtPrdctn}</td>  
+                        </tr>
+                    `);
+        });
+
+        var tr = $(`#${id}Modal #${id}Ue101Wrap tbody tr`);
+        tr.off("click");
+        tr.on("click", (evt) => {
+            tr.removeClass("active");
+            $(evt.target).closest("tr").addClass("active");
+
+            var mnum = $(evt.target).closest("tr").attr("id");
+            var popId = "m001Pop" + popIdx;
+
+            var nWidth = "900";
+            var nHeight = "875";
+
+            var curX = window.screenLeft;
+            var curY = window.screenTop;
+            var curWidth = document.body.clientWidth;
+            var curHeight = document.body.clientHeight;
+
+            var nLeft = curX + (curWidth / 2) - (nWidth / 2);
+            var nTop = curY + (curHeight / 2) - (nHeight / 2);
+
+            var pop = window.open("", popId, "toolbar=no, menubar=no, location=no, status=no,scrollbars=no, resizable=no," +
+                "left=" + nLeft + ",top=" + nTop + ",width=" + nWidth + ",height=" + nHeight);
+
+            var frm = $("#frm")[0];
+            frm.mnum.value = mnum;
+            frm.page.value = 1;
+            frm.code.value = formData.get("code");
+            frm.action = "/viewUe101Ldreg.do";
+            frm.target = popId;
+            frm.submit();
+
+            arrPop.push(pop)
+
+            $(window).off("beforeunload");
+            $(window).on("beforeunload", () => {
+                $.each(arrPop, (idx, item) => {
+                    item.close();
+                });
+
+                arrPop = [];
+            });
+
+            popIdx++;
+        })
+    };
+
+    $.ajax({
+        url: "selectMngCode.do",
+        type: "post",
+        data: Object.fromEntries(formData),
+        beforeSend: () => {
+            $(`#${id}Modal .sisLoading`).show();
+        },
+        success: (res) => {
+            var data = res.data;
+            var tData = res.total;
+
+            if(data) {
+                if(data.length > 0) {
+                    var totalCount = tData["totalCount"];
+                    var totalArea = tData["totalArea"];
+
+                    $(`#${id}TotalCount`).text(numberWithCommas(totalCount));
+                    $(`#${id}TotalArea`).text(numberWithCommas(totalArea));
+                    $(`#${id}Modal`).show();
+
+                    createTable(data, tData);
+
+                    if(id == "m001") m001Pagination.setDataCount(totalCount);
+                    if(id == "m002") m002Pagination.setDataCount(totalCount);
+                    if(id == "m003") m003Pagination.setDataCount(totalCount);
+                }
+            }
+        },
+        complete: () => {
+            $(`#${id}Modal .sisLoading`).hide();
+        }
+    });
+}
+
 // 관리번호 조회
 var getMngNo = (id) => {
     var formData = new FormData($("#frm")[0]);
-    formData.append("id", id);
-    formData.append("page", 1);
+    formData.set("id", id);
+    formData.set("page", 1);
 
-    if(check(formData)) {
+    formData = check(formData);
+
+    if(formData) {
         m002Pagination = new SisPagination({
             id: "m002PaginationWrap",
             viewCount: 10,
             totalCount: 0,
             onClick: function (p) {
-                formData.append("page", p);
-                selectUe101(formData);
+                formData.set("page", p);
+                selectMngNo(formData);
             }
         });
 
-        selectUe101(formData);
+        selectMngNo(formData);
     }
 }
 
 // 일반현황 조회
 var getStatistics = (id) => {
     var formData = new FormData($("#frm")[0]);
-    formData.append("id", id);
-    formData.append("page", 1);
+    formData.set("id", id);
+    formData.set("page", 1);
+
+    formData = check(formData);
 
     var popIdx = 0;
 
-    if(check(formData)) {
+    if(formData) {
         var popId = "m002Pop" + popIdx;
 
         var nWidth = "1024";
@@ -197,6 +286,7 @@ var getStatistics = (id) => {
 
         var frm = $("#frm")[0];
         frm.page.value = 1;
+        frm.code.value = formData.get("code");
         frm.action = "/viewStatistics.do";
         frm.target = popId;
         frm.submit();
@@ -320,7 +410,7 @@ var check = function(formData) {
         if(formData.get("emd") != "-") code = formData.get("emd");
         if(formData.get("li") != "-") code = formData.get("li");
 
-        formData.append("code", code);
+        formData.set("code", code);
 
         var minArea = formData.get("minArea");
         var maxArea = formData.get("maxArea");
@@ -337,5 +427,5 @@ var check = function(formData) {
         }
     }
 
-    return true;
+    return formData;
 }

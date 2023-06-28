@@ -91,6 +91,8 @@
     </div>
 
     <div id="searchWrap">
+        <div class="wrapToggle"></div>
+
         <div id="nonScrollWrap">
             <h3>농업진흥지역 DB구축 현황판</h3>
 
@@ -115,6 +117,7 @@
             <form id="frm" method="post">
                 <input type="hidden" name="mnum">
                 <input type="hidden" name="page">
+                <input type="hidden" name="code">
 
                 <!-- ####### -->
                 <!-- 구획현황 -->
@@ -197,7 +200,39 @@
                 </div>
 
                 <div class="itemGroup">
-                    <span class="title">구획면적(ha)</span>
+                    <span class="title">
+                        구획면적(ha)
+                        <div class="iconPopup m002" style="display: none;" data-html='
+                            <table class="ui celled table" style="">
+                                <thead>
+                                <tr>
+                                    <th>분류</th>
+                                    <th>진흥면적</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>가급</td>
+                                    <td>100ha 초과</td>
+                                </tr>
+                                <tr>
+                                    <td>나급</td>
+                                    <td>30ha 초과 100ha 이하</td>
+                                </tr>
+                                <tr>
+                                    <td>다급</td>
+                                    <td>10ha 초과 30ha 이하</td>
+                                </tr>
+                                <tr>
+                                    <td>라급</td>
+                                    <td>10ha 이하</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        '>
+                            <i id="prmtRef" class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                        </div>
+                    </span>
 
                     <div class="ui input">
                         <input id="minArea" name="minArea" class="tm5 w106 numberOnly" type="text" placeholder="최소">
@@ -270,8 +305,8 @@
                 </div>
 
                 <div class="itemGroup m002" style="display: none;">
-                    <span class="title test">
-                        경지정리비율(%)
+                    <span class="title">
+                        생산기반율(%)
                         <div class="iconPopup" data-html='
                             <table class="ui celled table" style="">
                                 <thead>
@@ -296,60 +331,16 @@
                                 </tbody>
                             </table>
                         '>
-                            <i id="prmtRef" class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
-                        </div>
-                    </span>
-
-                    <div class="ui input">
-                        <input id="min1" name="min1" class="tm5 w106 numberOnly" type="text" placeholder="최소">
-                    </div>
-                    ~
-                    <div class="ui input">
-                        <input id="max1" name="max1" class="tm5 w106 numberOnly" type="text" placeholder="최대">
-                    </div>
-                </div>
-
-                <div class="itemGroup m002" style="display: none;">
-                    <span class="title">
-                        생산기반율(%)
-                        <div class="iconPopup" data-html='
-                            <table class="ui celled table" style="">
-                                <thead>
-                                <tr>
-                                    <th>분류</th>
-                                    <th>진흥면적</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>가급</td>
-                                    <td>100ha 초과</td>
-                                </tr>
-                                <tr>
-                                    <td>나급</td>
-                                    <td>30ha 초과 100ha 이하</td>
-                                </tr>
-                                <tr>
-                                    <td>다급</td>
-                                    <td>10ha 초과 30ha 이하</td>
-                                </tr>
-                                <tr>
-                                    <td>라급</td>
-                                    <td>10ha 이하</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        '>
                             <i class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
                         </div>
                     </span>
 
                     <div class="ui input">
-                        <input id="min2" name="min2" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                        <input id="minRtPrdctn" name="minRtPrdctn" class="tm5 w106 numberOnly" type="text" placeholder="최소">
                     </div>
                     ~
                     <div class="ui input">
-                        <input id="max2" name="max2" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                        <input id="maxRtPrdctn" name="maxRtPrdctn" class="tm5 w106 numberOnly" type="text" placeholder="최대">
                     </div>
                 </div>
             </form>
@@ -360,7 +351,18 @@
         </button>
     </div>
 
+
     <div id="mapMenuWrap">
+        <div id="originScreen" class="btn" style="display:none;">
+            <i class="icon fa-solid fa-circle-xmark"></i>
+            <span class="txt">전체화면 종료</span>
+        </div>
+
+        <div id="fullScreen" class="btn">
+            <i class="icon fa-solid fa-maximize"></i>
+            <span class="txt">전체화면</span>
+        </div>
+
         <div class="btn">
             <div id="baseMapWrap" class="ui blue three item menu">
                 <a id="baseMap" class="item">
@@ -544,7 +546,6 @@
                     <th>수원공 포함여부</th>
                     <th>농지비율(%)</th>
                     <th>비농지비율(%)</th>
-                    <th>경지정리비율(%)</th>
                     <th>생산기반율(%)</th>
                 </tr>
                 </thead>

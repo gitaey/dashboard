@@ -10,16 +10,19 @@
     <select id="selectSgg" resultType="egovMap">
         select sig_cd, sig_kor_nm from origin.lsmd_adm_sect_sgg
         where sig_cd like #{code} || '%'
+        order by sig_kor_nm asc
     </select>
 
     <select id="selectEmd" resultType="egovMap">
         select emd_cd, emd_kor_nm from origin.lsmd_adm_sect_emd
         where emd_cd like #{code} || '%'
+        order by emd_kor_nm asc
     </select>
 
     <select id="selectLi" resultType="egovMap">
         select li_cd, li_kor_nm from origin.lsmd_adm_sect_li
         where li_cd like #{code} || '%'
+        order by li_kor_nm asc
     </select>
 
     <select id="selectLayers" resultType="egovMap">
@@ -70,244 +73,483 @@
     </select>
 
     <select id="selectUe101Total" resultType="egovMap">
-        -- 시연용 임시 테이블임
+        -- 구획현황 : 총 카운트
         select
-            count(t0.mnum) as total_count,
-            round((sum(st_area(t0.geom)) / 10000)::numeric, 2) as total_area
+        count(*) as total_count,
+        round((sum(shape_area) / 10000)::numeric, 2) as total_area
+        from (
+        select
+        *
         from
-            tmp.lunch_repot_mnum t0
+        work.lsmd_cont_ue101_${sido}_mng
         where 1=1
-          and substring(mnum, 8, 5) like #{code} || '%'
+                and   mnum in (select
+                distinct mnum
+                from
+                    origin.lsmd_cont_ue101_rmdup_${sido}
+                where
+                substring(pnu, 1, 5) = substring(mnum, 8, 5)
+                and pnu like #{code} || '%' )-- 지역코드
+            ) a
+        where 1=1
+        -- 구획면적
         <if test="!maxArea.equals('') and maxArea > -1">
-            <![CDATA[
-                    and (ST_AREA(geom) / 10000) <= #{maxArea}::float
-                ]]>
+            <![CDATA[ and (shape_area / 10000) <= #{maxArea}::numeric ]]>
         </if>
         <if test="!minArea.equals('') and minArea > -1">
-            <![CDATA[
-                    and (ST_AREA(geom) / 10000) >= #{minArea}::float
-                ]]>
+            <![CDATA[ and (shape_area / 10000) >= #{minArea}::numeric]]>
+        </if>
+        -- 진흥구분
+        and (
+        ucode = '1'
+        <if test="uea110 != null">
+            or ucode != 'UEA120'
+        </if>
+        <if test="uea120 != null">
+            or ucode = 'UEA120'
+        </if>
+        )
+        -- 농지비율
+        <if test="!maxFarmVal.equals('') and maxFarmVal > -1">
+            <![CDATA[ and nj_prdctn <= #{maxFarmVal}::numeric ]]>
+        </if>
+        <if test="!minFarmVal.equals('') and minFarmVal > -1">
+            <![CDATA[ and nj_prdctn >= #{minFarmVal}::numeric ]]>
+        </if>
+
+        -- 비농지비율
+        <if test="!maxUnFarmVal.equals('') and maxUnFarmVal > -1">
+            <![CDATA[ and etc_prdctn <= #{maxUnFarmVal}::numeric ]]>
+        </if>
+        <if test="!minUnFarmVal.equals('') and minUnFarmVal > -1">
+            <![CDATA[ and etc_prdctn >= #{minUnFarmVal}::numeric ]]>
         </if>
     </select>
 
     <select id="selectUe101" resultType="egovMap">
-        -- 구획현황 > 진흥지역 조회
-        select z.* from (
+        -- 구획현황 : 진흥지역 리스트
         select
-            row_number() over() as idx,
-            mnum,
-            col_adm_se,
-            sido_nm,
-            sgg_nm,
-            ucode,
-            uname,
-            round(sum(garea) / 10000, 2) as garea
-        from (select
-                t0.mnum, -- 진흥지역 관리번호
-                substring(pnu, 1, 5) as col_adm_se, -- 관리기관 코드
-                js.sido_nm, -- 시도 이름
-                js.sgg_nm, -- 시군구 이름
-                t0.ucode, -- 진흥지역 구분코드
-                (case
-                when t0.ucode = 'UEA110' then '농업진흥구역'
-                when t0.ucode = 'UEA120' then '농업보호구역'
+            *
+        from (
+            select
+                row_number() over() as idx,
+                mnum,
+                (case length(#{sido}) -- 파라미터
+                    when 1 then substring(col_adm_se, 1, 2)
+                    when 2 then col_adm_se
+                 end) as col_adm_se,
+                 ucode,
+            (case
+                when ucode = 'UEA110' then '농업진흥구역'
+                when ucode = 'UEA120' then '농업보호구역'
                 else '농업진흥지역'
-                end) as uname, -- 진흥지역 구분명
-                (ST_AREA(t1.geom))::numeric as garea -- 진흥지역 면적(ha)
+            end) as uname,
+            round((shape_area / 10000)::numeric, 2) as area, -- 구획면적
+            '-' as swg_yn, -- 수원공 포함여부
+            round(nj_prdctn::numeric, 2) as nj_prdctn, -- 농지 비율
+            round(etc_prdctn::numeric, 2) as etc_prdctn -- 비농지 비율
         from
-        (select * from work.lsmd_cont_ue101_44_mng a
+            work.lsmd_cont_ue101_${sido}_mng t0
         where 1=1
-            and col_adm_se like #{code} || '%'
-          --test
+        -- 구획면적
         <if test="!maxArea.equals('') and maxArea > -1">
-            <![CDATA[
-                    and (ST_AREA(geom) / 10000) <= #{maxArea}::float
-                ]]>
+            <![CDATA[ and (shape_area / 10000) <= #{maxArea}::numeric ]]>
         </if>
-        <if test="minArea != '' and minArea > -1">
-            <![CDATA[
-                    and (ST_AREA(geom) / 10000) >= #{minArea}::float
-                ]]>
+        <if test="!minArea.equals('') and minArea > -1">
+            <![CDATA[ and (shape_area / 10000) >= #{minArea}::numeric ]]>
         </if>
-            ) t0
-            join (select * from origin.lsmd_cont_ue101_rmdup_44 where substring(pnu, 1, 5) = substring(mnum, 8, 5)) t1 on (t0.mnum = t1.mnum)
-            left outer join (select * from origin.tc_jscd_bupd where del_dttm is null and sgg_nm is not null and umd_nm is null) js on (substring(pnu, 1, 5) = substring(js.juso_code, 1, 5))
-        ) a
-        group by mnum, col_adm_se, sido_nm, sgg_nm, ucode, uname
-        order by mnum ) z
-        where 1=1
-        <![CDATA[ and idx > ((#{page}::integer - 1) * 10) and idx <= (#{page}::integer * 10) ]]>
+        -- 진흥구분
+        and (
+        ucode = '1'
+        <if test="uea110 != null">
+            or ucode != 'UEA120'
+        </if>
+        <if test="uea120 != null">
+            or ucode = 'UEA120'
+        </if>
+        )
+        -- 농지비율
+        <if test="!maxFarmVal.equals('') and maxFarmVal > -1">
+            <![CDATA[ and nj_prdctn <= #{maxFarmVal}::numeric ]]>
+        </if>
+        <if test="!minFarmVal.equals('') and minFarmVal > -1">
+            <![CDATA[ and nj_prdctn >= #{minFarmVal}::numeric ]]>
+        </if>
+
+        -- 비농지비율
+        <if test="!maxUnFarmVal.equals('') and maxUnFarmVal > -1">
+            <![CDATA[ and etc_prdctn <= #{maxUnFarmVal}::numeric ]]>
+        </if>
+        <if test="!minUnFarmVal.equals('') and minUnFarmVal > -1">
+            <![CDATA[ and etc_prdctn >= #{minUnFarmVal}::numeric ]]>
+        </if>
+        and mnum in (select
+            distinct mnum
+        from
+            origin.lsmd_cont_ue101_rmdup_${sido}
+        where
+            substring(pnu, 1, 5) = substring(mnum, 8, 5)
+            and pnu like #{code} || '%') -- 지역코드
+        ) z left outer join (select
+            distinct (case length(#{sido}) -- 파라미터
+                when 1 then substring(juso_code, 1, 2)
+                when 2 then substring(juso_code, 1, 5)
+            end) as juso_code,
+            (case length(#{sido}) -- 파라미터
+                when 1 then sido_nm
+                when 2 then sido_nm || ' ' || sgg_nm
+            end) as juso_name
+        from
+        origin.tc_jscd_bupd
+        where
+            del_dttm is null
+            and umd_nm is null) js on (z.col_adm_se = js.juso_code)
+        where
+            <![CDATA[ idx > (#{page}::numeric - 1) * 10 and idx <= #{page}::numeric * 10 ]]>
     </select>
 
     <select id="selectMngCode" resultType="egovMap">
-        -- 구획현황 > 진흥지역 조회
-        select * from (
-            select
-                row_number()over() idx,
-                count(*)over() total_count,
-                sum(garea)over() total_area,
-                *
-            from (
-                select
-                    t0.juso_code,                                            -- 지역코드
-                    t1.col_adm_se,                                           -- 관리기관 코드
-                    js.sido_nm,                                              -- 시도 이름
-                    js.sgg_nm,                                               -- 시군구 이름
-                    t0.mnum,                                                 -- 진흥지역 관리번호
-                    t0.ucode,                                                -- 진흥지역 구분코드
-                    (case
-                    when t0.ucode = 'UEA110' then '농업진흥구역'
-                    when t0.ucode = 'UEA120' then '농업보호구역'
-                    else '농업진흥지역'
-                    end)                                       as uname, -- 진흥지역 구분명
-                    round((ST_AREA(t1.geom)):: numeric / 10000, 2) as garea  -- 진흥지역 면적(ha)
-                from (select distinct substring(pnu, 1, 10) as juso_code, mnum, ucode
-            from origin.lsmd_cont_ue101_rmdup_${sido}) t0
-            left outer join work.lsmd_cont_ue101_${sido}_mng t1 on (t0.mnum = t1.mnum)
-            left outer join (select *
-                from origin.tc_jscd_bupd
-                where del_dttm is null
-                    and sgg_nm is not null
-                    and umd_nm is null) js
-            on (t1.col_adm_se = substring(js.juso_code, 1, 5))
-            where 1 = 1
-            and substring(t0.juso_code, 1, 10) like #{code} || '%'
-        ) a
-        where 1=1
-        <if test="maxArea > -1">
-            <![CDATA[
-                    a.garea <= #{maxArea}::float
-                ]]>
+        -- 관리번호 > 진흥지역 조회
+        select
+            *
+        from (
+                 select
+                     row_number() over() as idx,
+                         mnum,
+                     (case length(#{sido}) -- 파라미터
+                          when 1 then substring(col_adm_se, 1, 2)
+                          when 2 then col_adm_se
+                         end) as col_adm_se,
+                     ucode,
+                     (case
+                          when ucode = 'UEA110' then '농업진흥구역'
+                          when ucode = 'UEA120' then '농업보호구역'
+                          else '농업진흥지역'
+                         end) as uname,
+                     round((shape_area / 10000)::numeric, 2) as area, -- 구획면적
+                     '-' as swg_yn, -- 수원공 포함여부
+                     round(nj_prdctn::numeric, 2) as nj_prdctn, -- 농지 비율
+                        round(etc_prdctn::numeric, 2) as etc_prdctn, -- 비농지 비율
+                        round(rt_prdctn::numeric, 2) as rt_prdctn -- 생산기반율
+                 from
+                    work.lsmd_cont_ue101_44_mng t0
+                 where 1=1
+        -- 구획면적
+        <if test="!maxArea.equals('') and maxArea > -1">
+            <![CDATA[ and (shape_area / 10000) <= #{maxArea}::numeric ]]>
         </if>
-        <if test="minArea > -1">
-            <![CDATA[
-                    and a.garea >= #{minArea}::float
-                ]]>
+        <if test="!minArea.equals('') and minArea > -1">
+            <![CDATA[ and (shape_area / 10000) >= #{minArea}::numeric ]]>
         </if>
-        ) a
-        <![CDATA[ where idx > ((#{page}::integer - 1) * 10) and idx <= (#{page}::integer * 10) ]]>
+        -- 진흥구분
+        and (
+        ucode = '1'
+        <if test="uea110 != null">
+            or ucode != 'UEA120'
+        </if>
+        <if test="uea120 != null">
+            or ucode = 'UEA120'
+        </if>
+        )
+        -- 농지비율
+        <if test="!maxFarmVal.equals('') and maxFarmVal > -1">
+            <![CDATA[ and nj_prdctn <= #{maxFarmVal}::numeric ]]>
+        </if>
+        <if test="!minFarmVal.equals('') and minFarmVal > -1">
+            <![CDATA[ and nj_prdctn >= #{minFarmVal}::numeric ]]>
+        </if>
+
+        -- 비농지비율
+        <if test="!maxUnFarmVal.equals('') and maxUnFarmVal > -1">
+            <![CDATA[ and etc_prdctn <= #{maxUnFarmVal}::numeric ]]>
+        </if>
+        <if test="!minUnFarmVal.equals('') and minUnFarmVal > -1">
+            <![CDATA[ and etc_prdctn >= #{minUnFarmVal}::numeric ]]>
+        </if>
+
+        -- 생산비율
+        <if test="!maxRtPrdctn.equals('') and maxRtPrdctn > -1">
+            <![CDATA[ and rt_prdctn <= #{maxRtPrdctn}::numeric ]]>
+        </if>
+        <if test="!minRtPrdctn.equals('') and minRtPrdctn > -1">
+            <![CDATA[ and rt_prdctn >= #{minRtPrdctn}::numeric ]]>
+        </if>
+                and   mnum in (select
+                    distinct mnum
+                from
+                    origin.lsmd_cont_ue101_rmdup_${sido}
+                where
+                    substring(pnu, 1, 5) = substring(mnum, 8, 5)
+                    and pnu like #{code} || '%') -- 지역코드
+                    ) z left outer join (select
+                    distinct (case length(#{sido}) -- 파라미터
+                    when 1 then substring(juso_code, 1, 2)
+                    when 2 then substring(juso_code, 1, 5)
+                    end) as juso_code,
+                    (case length(#{sido}) -- 파라미터
+                    when 1 then sido_nm
+                    when 2 then sido_nm || ' ' || sgg_nm
+                    end) as juso_name
+                    from
+                        origin.tc_jscd_bupd
+                    where
+                    del_dttm is null
+                    and umd_nm is null) js on (z.col_adm_se = js.juso_code)
+        <![CDATA[ where idx > ((#{page}::numeric - 1) * 10) and idx <= (#{page}:: integer * 10) ]]>
     </select>
 
     <select id="selectStatistics" resultType="egovMap">
-        with perm as (select
-                          t0.mnum,
-                          t0.col_adm_se,
-                          t0.emd_cd,
-                          t0.ucode,
-                          t1.pnu,
-                          t2.jimok,
-                          t1.geom
-                      from
-                              (select * from work.lsmd_cont_ue101_44_mng a) t0
-                                  join (select * from origin.lsmd_cont_ue101_rmdup_44 where substring(pnu, 1, 5) = substring(mnum, 8, 5)) t1 on (t0.mnum = t1.mnum and substring(t0.emd_cd, 1, 5) = substring(t1.mnum, 8, 5))
-                                  left outer join (select * from origin.abpm_land_frst_ledg_44 where jimok in ('01', '02', '03')) t2 on (t1.pnu = t2.adm_sect_cd || t2.land_loc_cd || t2.ledg_gbn || t2.bobn || t2.bubn)
+        -- 진흥지역 지목별 현황(권역수)
+        with js as (
+        select
+        distinct (case length(#{sido}) -- 파라미터
+        when 1 then substring(juso_code, 1, 2)
+        when 2 then substring(juso_code, 1, 5)
+        end) as juso_code,
+        (case length(#{sido}) -- 파라미터
+        when 1 then sido_nm
+        when 2 then sido_nm || ' ' || sgg_nm
+        end) as juso_name
+        from
+        origin.tc_jscd_bupd
+        where
+        del_dttm is null
+        and sgg_nm is not null
+        and juso_code like #{code} || '%' -- 파라미터
+        ), gbn as (
+        select '00000' as juso_code, '합계' as juso_name, 'ATOTAL' as ucode from js
+        union
+        select '00000' as juso_code, '합계' as juso_name, 'UEA110' as ucode from js
+        union
+        select '00000' as juso_code, '합계' as juso_name, 'UEA120' as ucode from js
+        union
+        select *, 'ATOTAL' as ucode from js
+        union
+        select *, 'UEA110' as ucode from js
+        union
+        select *, 'UEA120' as ucode from js
         )
         select
-            (case
-                 when gg = '2' or gg = '3' then '합계'
-                 else a.juso_code
-                end) as juso_code,
-            sido_nm,
-            sgg_nm,
-            coalesce(sido_nm || ' ' || sgg_nm, '합계') as addr,
-            (case
-                 when ucode = 'UEA110' then '진흥구역'
-                 when ucode = 'UEA120' then '보호구역'
-                 when ucode = 'UEA100' then '진흥지역'
-                 else '계'
-                end) uname,
-               ucode,
-            wide_area_cnt,
-            round(wide_area_sum::numeric, 2) as wide_area_sum
-        from (select
---      grouping(substring(pnu, 1, 2), ucode) as gg, -- 전국(시도별)
-grouping(substring(pnu, 1, 5), ucode) as gg, -- 시도(시군구별)
---      grouping(substring(pnu, 1, 8), ucode) as gg, -- 시군구(읍면동별)
---      substring(pnu, 1, 2) as juso_code, -- 전국(시도별)
-substring(pnu, 1, 5) as juso_code, -- 시도(시군구별)
---      substring(pnu, 1, 8) as juso_code, -- 시군구(읍면동별)
-ucode,
-count(*) as wide_area_cnt,
-sum(st_area(geom)) / 10000 as wide_area_sum
-              from
-                  perm
-              where 1=1
---   and   pnu like '' || '%' -- 전국(시도별)
-                and   pnu like '44' || '%' -- 시도(시군구별)
-                --and   pnu like '44150' || '%' -- 시군구(읍면동별)
---   group by grouping sets ( (ucode), (substring(pnu, 1, 2)), (substring(pnu, 1, 2), ucode), () ) -- 전국(시도별)
-              group by grouping sets ( (ucode), (substring(pnu, 1, 5)), (substring(pnu, 1, 5), ucode), () ) -- 시도(시군구별)
---   group by grouping sets ( (ucode), (substring(pnu, 1, 8)), (substring(pnu, 1, 8), ucode), () ) -- 시군구(읍면동별)
-             ) a
-                 left outer join (
+        t0.juso_code,
+        t0.juso_name,
+        (case t0.ucode when 'ATOTAL' then '합계'
+        when 'UEA110' then '진흥구역'
+        when 'UEA120' then '보호구역'
+        else '-' end) as ucode,
+        coalesce(t1.wide_area_cnt, 0) as wide_area_cnt,
+        round(coalesce(t1.wide_area_sum, 0), 2) as wide_area_sum
+        from
+        gbn t0 left outer join (
+        select
+        (case when grouping(col_adm_se, ucode) = '2' then '00000'
+        when grouping(col_adm_se, ucode) = '3' then '00000'
+        else col_adm_se
+        end) as col_adm_se,
+        (case when grouping(ucode) = '1' then 'ATOTAL' else ucode end) as ucode,
+        count(*) as wide_area_cnt,
+        sum(shape_area) / 10000 as wide_area_sum
+        from (
+        select
+        (case length(#{sido}) -- 파라미터
+        when 1 then substring(col_adm_se, 1, 2)
+        when 2 then col_adm_se
+        end) as col_adm_se,
+        ucode,
+        mnum,
+        shape_area
+        from
+        work.lsmd_cont_ue101_44_mng
+        where 1=1
+        and   mnum in (select
+        distinct mnum
+        from
+        origin.lsmd_cont_ue101_rmdup_44
+        where
+        substring(pnu, 1, 5) = substring(mnum, 8, 5)
+        and pnu like #{code} || '%' ) -- 파라미터
+        ) a
+        group by cube (col_adm_se, ucode) ) t1 on (t0.juso_code = t1.col_adm_se and t0.ucode = t1.ucode)
+        order by t0.juso_code, t0.ucode
+    </select>
+
+    <select id="selectStatisticsNj" resultType="egovMap">
+        -- 진흥지역 지목별 현황(농지현황)
+        with js as (
             select
-                *
+                distinct (case length(#{sido}) -- 파라미터
+                              when 1 then substring(juso_code, 1, 2)
+                              when 2 then substring(juso_code, 1, 5)
+                end) as juso_code,
+                         (case length(#{sido}) -- 파라미터
+                              when 1 then sido_nm
+                              when 2 then sido_nm || ' ' || sgg_nm
+                             end) as juso_name
             from
                 origin.tc_jscd_bupd
             where
                 del_dttm is null
               and sgg_nm is not null
-              and umd_nm is null) js on
-            (a.juso_code = substring(js.juso_code, 1, 5))
-        order by juso_code, ucode
+              and juso_code like #{code} || '%' -- 파라미터
+        ), gbn as (
+            select '00000' as juso_code, '합계' as juso_name, 'ATOTAL' as ucode from js
+            union
+            select '00000' as juso_code, '합계' as juso_name, 'UEA110' as ucode from js
+            union
+            select '00000' as juso_code, '합계' as juso_name, 'UEA120' as ucode from js
+            union
+            select *, 'ATOTAL' as ucode from js
+            union
+            select *, 'UEA110' as ucode from js
+            union
+            select *, 'UEA120' as ucode from js
+        )
+        select
+            t0.juso_code,
+            t0.juso_name,
+            (case t0.ucode when 'ATOTAL' then '합계'
+                           when 'UEA110' then '진흥구역'
+                           when 'UEA120' then '보호구역'
+                           else '-' end) as ucode,
+            round(coalesce(jeon_cnt, 0)::numeric, 2) as jeon_cnt,
+            round(coalesce(jeon_area, 0)::numeric, 2) as jeon_area,
+            round(coalesce(dap_cnt, 0)::numeric, 2) as dap_cnt,
+            round(coalesce(dap_area, 0)::numeric, 2) as dap_area,
+            round(coalesce(gwa_cnt, 0)::numeric, 2) as gwa_cnt,
+            round(coalesce(gwa_area, 0)::numeric, 2) as gwa_area,
+            round(coalesce(etc_cnt, 0)::numeric, 2) as etc_cnt,
+            round(coalesce(etc_area, 0)::numeric, 2) as etc_area
+        from
+            gbn t0 left outer join (
+                select
+                    (case when grouping(juso_code, ucode) = '2' then '00000'
+                          when grouping(juso_code, ucode) = '3' then '00000'
+                          else juso_code
+                        end) as juso_code,
+                    (case when grouping(ucode) = '1' then 'ATOTAL' else ucode end) as ucode,
+                    sum(jeon_cnt) as jeon_cnt,
+                    sum(jeon_area) / 10000 as jeon_area,
+                    sum(dap_cnt) as dap_cnt,
+                    sum(dap_area) / 10000 as dap_area,
+                    sum(gwa_cnt) as gwa_cnt,
+                    sum(gwa_area) / 10000 as gwa_area,
+                    sum(etc_cnt) as etc_cnt,
+                    sum(etc_area) / 10000 as etc_area
+                from (
+                         select
+                             (case length(#{sido}) -- 파라미터
+                                  when 1 then substring(t1.pnu, 1, 2)
+                                  when 2 then substring(t1.pnu, 1, 5)
+                                 end) as juso_code,
+                             t1.ucode,
+                             st_area(t1.geom) as garea,
+                             t2.jimok,
+                             (case when jimok = '01' then 1 else 0 end) as jeon_cnt,
+                             (case when jimok = '01' then st_area(t1.geom) else 0 end) as jeon_area,
+                             (case when jimok = '02' then 1 else 0 end) as dap_cnt,
+                             (case when jimok = '02' then st_area(t1.geom) else 0 end) as dap_area,
+                             (case when jimok = '03' then 1 else 0 end) as gwa_cnt,
+                             (case when jimok = '03' then st_area(t1.geom) else 0 end) as gwa_area,
+                             (case when jimok = '01' or jimok = '02' or jimok = '03' then 0 else 1 end) as etc_cnt,
+                             (case when jimok = '01' or jimok = '02' or jimok = '03' then 0 else st_area(t1.geom) end) as etc_area
+                         from
+                             work.lsmd_cont_ue101_44_mng t0
+                                 join (select * from origin.lsmd_cont_ue101_rmdup_44
+                                       where 1=1
+                                         and pnu like #{code} || '%'
+                                         and substring(pnu, 1, 5) = substring(mnum, 8, 5)) t1 on (t0.mnum = t1.mnum)
+                                 left outer join origin.abpm_land_frst_ledg_44 t2 on (t1.pnu = t2.adm_sect_cd || t2.land_loc_cd || t2.ledg_gbn || t2.bobn || t2.bubn)
+                     ) a
+                group by cube (juso_code, ucode) ) t1 on (t0.juso_code = t1.juso_code and t0.ucode = t1.ucode)
+        order by t0.juso_code, t0.ucode
     </select>
 
     <select id="selectJijukByMnum" resultType="egovMap">
         -- MNUM 진흥지역 내 필지 조회
         select *
         from (
-                 select row_number() over() idx, sum(round(garea / 10000, 2))over() total_area, *
-                 from (
-                          select count(*)                                  over() total_count, t0.pnu, -- pnu
-                                 t0.mnum,                                                              -- 진흥지역 관리번호
-                                 t1.jimok,                                                             -- 지목
-                                 t1.parea,                                                             -- 공부면적(㎡)
-                                 t1.land_mov_ymd,                                                      -- 토지이동일
-                                 t1.land_mov_rsn_cd,                                                   -- 토지이동사유
-                                 round((ST_AREA(t0.geom)):: numeric, 2) as garea,                      -- 공간면적(㎡)
-                                 js.sido_nm,
-                                 js.sgg_nm,
-                                 js.umd_nm,
-                                 js.ri_nm
-                          from origin.lsmd_cont_ue101_rmdup_${sido} t0
-                                   left outer join origin.abpm_land_frst_ledg_${sido} t1 on (t0.pnu =
-                                                                                             t1.adm_sect_cd || t1.land_loc_cd || t1.ledg_gbn || t1.bobn || t1.bubn)
-                                   left outer join (select * from origin.tc_jscd_bupd where del_dttm is null) js
-                                                   on (substring(t0.pnu, 1, 10) = js.juso_code)
-                          where 1 = 1
-                            and t0.mnum = #{mnum}
-                          order by pnu
-                      ) a
-             ) a
-            <![CDATA[ where idx > ((#{page}::integer - 1) * #{viewCount}::integer) and idx <= (#{page}::integer * #{viewCount}::integer) ]]>
+                 select row_number() over() as idx,
+                        count(*)over() as total_count,
+                        pnu,
+                        sido_nm,
+                        sgg_nm,
+                        umd_nm,
+                        ri_nm,
+                        substring(pnu, 11, 1)      as land_loc_cd,
+                        substring(pnu, 12, 4)      as bobn,
+                        substring(pnu, 16, 4)      as bubn,
+                        round(parea::numeric, 2)   as parea,
+                        round(st_area(t1.geom)::numeric, 2)           as garea,
+                        (select code_name
+                         from origin.tc_code tc
+                         where gbn = 'jimok'
+                           and use_yn = 'Y'
+                           and tc.code = t2.jimok) as jimok
+                 from work.lsmd_cont_ue101_${sido}_mng t0
+                          left outer join origin.lsmd_cont_ue101_rmdup_${sido} t1 on (t0.mnum = t1.mnum)
+                          left outer join origin.abpm_land_frst_ledg_${sido} t2 on (t1.pnu =
+                                                                             t2.adm_sect_cd || t2.land_loc_cd || t2.ledg_gbn || t2.bobn || t2.bubn)
+                          left outer join (select * from origin.tc_jscd_bupd where del_dttm is null) js
+                                          on (substring(t1.pnu, 1, 10) = js.juso_code)
+                 where t0.mnum = #{mnum}
+            ) a
+            <![CDATA[ where idx > ((#{page}::numeric - 1) * #{viewCount}::numeric) and idx <= (#{page}:: integer * #{viewCount}:: integer) ]]>
     </select>
 
     <select id="selectUe101ByMnum" resultType="egovMap">
+        -- 구획현황 : 구획 정보 - 관리정보 + 필지정보
         select
-            mnum,
-            alias,
-            ntfdate,
-            grid_nm,
-            grid_nm_sn,
-            crtr_ymd,
-            prmt_clsf,
-            prdctn_cls,
-            ucode,
-            emd_cd,
-            round(area_prmt::numeric, 2) area_prmt,
-            round(area_prdct::numeric, 2) area_prdct,
-            round(rt_prdctn::numeric, 2) rt_prdctn,
-            area_frln,
-            area_fclt,
-            area_etc,
-            prmt_rmrk,
-            crt_ymd,
-            mdfcn_ymd,
-            del_ymd,
             map_join,
-            st_astext(geom) geom
-        from work.lsmd_cont_ue101_44_mng
-        where mnum = #{mnum}
+            base_year,
+            gosi_year,
+            gosi_num,
+            grid,
+            round(area::numeric, 2) as area,
+            prmt_clsf,
+            round(area_prdct::numeric, 2) as area_prdct,
+            prdctn_cls,
+            round(rt_prdctn::numeric, 2) as rt_prdctn,
+            sum(nj_cnt) as nj_cnt, -- 농지 필지수
+            round(sum(nj_area)::numeric, 2) as nj_area, -- 농지 공부면적
+            round(sum(nj_garea)::numeric, 2) as nj_garea, -- 농지 편입면적
+            sum(ss_cnt) as ss_cnt, -- 시설부지 필지수
+            round(sum(ss_area)::numeric, 2) as ss_area, -- 시설부지 공부면적
+            round(sum(ss_garea)::numeric, 2) as ss_garea, -- 시설부지 편입면적
+            sum(etc_cnt) as etc_cnt, -- 비농지 필지수
+            round(sum(etc_area)::numeric, 2) as etc_area, -- 비농지 공부면적
+            round(sum(etc_garea)::numeric, 2) as etc_garea, -- 비농지 편입면적
+            geom
+        from (
+                 select
+                     map_join, --
+                     '-' as base_year, -- 기준년월
+                     substring(t0.mnum, 13, 4) as gosi_year, -- 고시년도
+                     substring(t0.mnum, 17, 4) as gosi_num, -- 고시번호
+                     (select grid from work.mng_grid_1000 a where a.grid_nm = t0.grid_nm) as grid,
+                     t0.shape_area as area, -- 진흥지역 면적
+                     prmt_clsf, -- 진흥분류
+                     area_prdct, -- 생산기반 면적
+                     prdctn_cls, -- 생산기반 분류
+                     rt_prdctn, -- 생산비율
+                     pnu,
+                     t2.jimok,
+                     (case when jimok = '01' or jimok = '02' or jimok = '03' then 1 else 0 end) as nj_cnt, -- 전,답,과
+                     (case when jimok = '01' or jimok = '02' or jimok = '03' then parea::numeric else 0 end) as nj_area, -- 전,답,과
+                     (case when jimok = '01' or jimok = '02' or jimok = '03' then st_area(t1.geom) else 0 end) as nj_garea, -- 전,답,과
+                     (case when jimok = '14' or jimok = '16' or jimok = '18' or jimok = '19' then 1 else 0 end) as ss_cnt, -- (구)거-18,(도)로-14,(유)지-19,(제)방-16
+                     (case when jimok = '14' or jimok = '16' or jimok = '18' or jimok = '19' then parea::numeric else 0 end) as ss_area, -- (구)거-18,(도)로-14,(유)지-19,(제)방-16
+                     (case when jimok = '14' or jimok = '16' or jimok = '18' or jimok = '19' then st_area(t1.geom) else 0 end) as ss_garea, -- (구)거-18,(도)로-14,(유)지-19,(제)방-16
+                     (case when jimok = '01' or jimok = '02' or jimok = '03' or jimok = '14' or jimok = '16' or jimok = '18' or jimok = '19' then 0 else 1 end) as etc_cnt, -- 기타
+                     (case when jimok = '01' or jimok = '02' or jimok = '03' or jimok = '14' or jimok = '16' or jimok = '18' or jimok = '19' then 0 else parea::numeric end) as etc_area, -- 기타
+                     (case when jimok = '01' or jimok = '02' or jimok = '03' or jimok = '14' or jimok = '16' or jimok = '18' or jimok = '19' then 0 else st_area(t1.geom) end) as etc_garea, -- 기타
+                     t2.parea,
+                     st_area(t1.geom) as st_area,
+                     st_astext(t0.geom) as geom
+                 from
+                     work.lsmd_cont_ue101_${sido}_mng t0 left outer join origin.lsmd_cont_ue101_rmdup_${sido} t1 on (t0.mnum = t1.mnum)
+                                                    left outer join origin.abpm_land_frst_ledg_${sido} t2 on (t1.pnu = t2.adm_sect_cd || t2.land_loc_cd || t2.ledg_gbn || t2.bobn || t2.bubn)
+                 where t0.mnum = #{mnum}
+             ) z
+        group by map_join, base_year, gosi_year, gosi_num, grid, area, prmt_clsf, area_prdct, prdctn_cls, rt_prdctn, geom
     </select>
 
 

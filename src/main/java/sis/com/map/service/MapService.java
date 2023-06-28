@@ -31,4 +31,6 @@ public interface MapService {
     Map<String, Object> selectUe101Total(Map<String, Object> params) throws SQLException;
 
     Map<String, Object> selectUe101ByMnum(Map<String, Object> params) throws SQLException;
+
+    List<Map<String, Object>> selectStatisticsNj(Map<String, Object> params) throws SQLException;
 }
