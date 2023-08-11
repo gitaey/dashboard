@@ -162,4 +162,17 @@ public class MapController {
 
         return "jsonView";
     }
+
+    // 단절 조회
+    @RequestMapping("/selectDiscon.do")
+    public String selectDiscon(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        List<Map<String, Object>> item = mapService.selectStatistics(params);
+//        List<Map<String, Object>> nj = mapService.selectStatisticsNj(params);
+
+        model.put("data", item);
+//        model.put("nData", nj);
+
+        return "jsonView";
+    }
 }

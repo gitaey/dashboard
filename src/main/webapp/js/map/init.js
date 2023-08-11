@@ -180,14 +180,14 @@ $(window).on("load", function () {
         }
     });
 
-    var selectLi = new SisSelectbox(".selectLi", {
-        url: "/selectLi.do",
-        allField: true,
-        fields: {
-            text: "liKorNm",
-            value: "liCd"
-        }
-    });
+    // var selectLi = new SisSelectbox(".selectLi", {
+    //     url: "/selectLi.do",
+    //     allField: true,
+    //     fields: {
+    //         text: "liKorNm",
+    //         value: "liCd"
+    //     }
+    // });
 
     $.each($(".selectSido"), (idx, item) => {
         var id = item.getAttribute("parent");
@@ -217,19 +217,19 @@ $(window).on("load", function () {
         });
     });
 
-    $.each($(".selectEmd"), (idx, item) => {
-        var id = item.getAttribute("parent");
-
-        selectEmd.setConn({
-            id: id + "_emd",
-            onChange: function () {
-                var val = $(this).val();
-                var element = selectLi.getElementById(`${id}_li`);
-                selectLi.setUrlParams({code: val});
-                selectLi.getDataByUrl(element, true);
-            }
-        });
-    });
+    // $.each($(".selectEmd"), (idx, item) => {
+    //     var id = item.getAttribute("parent");
+    //
+    //     selectEmd.setConn({
+    //         id: id + "_emd",
+    //         onChange: function () {
+    //             var val = $(this).val();
+    //             var element = selectLi.getElementById(`${id}_li`);
+    //             selectLi.setUrlParams({code: val});
+    //             selectLi.getDataByUrl(element, true);
+    //         }
+    //     });
+    // });
 
     // 지번검색 버튼 클릭
     $("#btnShowJibun").on("click", (evt) => {
@@ -304,15 +304,15 @@ $(window).on("load", function () {
 
         var code = "";
 
-        var sidoCode = $("#m000_sido").val();
-        var sggCode = $("#m000_sgg").val();
-        var emdCode = $("#m000_emd").val();
-        var liCode = $("#m000_li").val();
+        var sidoCode = $("#left_sido").val();
+        var sggCode = $("#left_sgg").val();
+        var emdCode = $("#left_emd").val();
+        // var liCode = $("#m000_li").val();
 
         if(sidoCode != "-") code = sidoCode;
         if(sggCode != "-") code = sggCode;
         if(emdCode != "-") code = emdCode;
-        if(liCode != "-") code = liCode;
+        // if(liCode != "-") code = liCode;
 
         if(id == "m001") {
             getSect(code);
@@ -340,7 +340,9 @@ $(window).on("load", function () {
             getStatistics(id);
         }
         else if(id == "m004") {
+            getSect(code);
 
+            getDiscon(id);
         }
     });
 

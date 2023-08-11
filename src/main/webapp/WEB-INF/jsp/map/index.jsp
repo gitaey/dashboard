@@ -107,7 +107,7 @@
                     일반현황
                 </button>
                 <button id="m004" class="btnMenu ui button">
-                    추가
+                    단절
                 </button>
             </div>
         </div>
@@ -136,9 +136,9 @@
                         <select id="left_emd" name="emd" parent="left" class="selectEmd" style="display: none;"></select>
                     </div>
 
-                    <div class="selectWrap">
-                        <select id="left_li" name="li" parent="left" class="selectLi" style="display: none;"></select>
-                    </div>
+<%--                    <div class="selectWrap">--%>
+<%--                        <select id="left_li" name="li" parent="left" class="selectLi" style="display: none;"></select>--%>
+<%--                    </div>--%>
                 </div>
 
                 <div class="itemGroup m003" style="display: none;">
