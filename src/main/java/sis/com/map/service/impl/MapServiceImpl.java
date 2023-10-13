@@ -84,4 +84,39 @@ public class MapServiceImpl implements MapService {
     public List<Map<String, Object>> selectStatisticsNj(Map<String, Object> params) throws SQLException {
         return mapper.selectStatisticsNj(params);
     }
+
+    @Override
+    public Map<String, Object> selectDisconTotal(Map<String, Object> params) throws SQLException {
+        return mapper.selectDisconTotal(params);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectDiscon(Map<String, Object> params) throws SQLException {
+        return mapper.selectDiscon(params);
+    }
+
+    @Override
+    public Map<String, Object> selectDisconGeom(Map<String, Object> params) throws SQLException {
+        return mapper.selectDisconGeom(params);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectFarmland(Map<String, Object> params) throws SQLException {
+        return mapper.selectFarmland(params);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectJijukByMngNo(Map<String, Object> params) throws SQLException {
+        return mapper.selectJijukByMngNo(params);
+    }
+
+    @Override
+    public Map<String, Object> selectJijukByCoord(Map<String, Object> params) throws SQLException {
+        return mapper.selectJijukByCoord(params);
+    }
+
+    @Override
+    public Map<String, Object> selectProsByJijuk(Map<String, Object> params) throws SQLException {
+        return mapper.selectProsByJijuk(params);
+    }
 }

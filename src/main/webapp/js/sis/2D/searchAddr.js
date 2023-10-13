@@ -11,6 +11,7 @@
         this.pagination = new SisPagination({
             id: "addrSearchPagination",
             totalCount: 0,
+            viewCount: 15,
             onClick: function (evt) {
                 self.searchName(evt);
             }
@@ -38,59 +39,77 @@
                 page,
                 size,
                 query,
+                request: "search",
+                format: "json",
+                type: "place",
+                crs: "EPSG:4326",
             };
 
             // AJAX 주소 검색 요청
             $.ajax({
-                url: "https://dapi.kakao.com/v2/local/search/keyword.json", // 카카오 명칭검색
-                type: "post",
+                url: "/map/proxy/vSearch.do",
+                type: "get",
                 dataType: "json",
                 data: data, // 요청 변수 설정
-                async: true,
                 beforeSend: (xhr) => {
                     $("#jibunSearchLoading").show();
-                    xhr.setRequestHeader("Authorization", "KakaoAK baf884e4526f4f1d9f15d8b93b539c7d");
+                    // xhr.setRequestHeader("Authorization", "KakaoAK baf884e4526f4f1d9f15d8b93b539c7d");
                 },
-                success: function (data) {
-                    if (data.meta.total_count > 0) {
-                        const items = data.documents ? data.documents : [];
-                        if (data.meta.total_count > 45) data.meta.total_count = 45;
+                success: function (res) {
+                    var res = res.response;
 
-                        $("#" + self.countID).text(data.meta.total_count);
-                        self.createTable(items, data.meta.total_count);
+                    if (res.record.total > 0) {
+                        const items = res.result.items || [];
 
-                        self.pagination.setDataCount(data.meta.total_count);
+                        $("#" + self.countID).text(numberWithCommas(res.record.total));
+                        self.createTable(items, res.record.total);
+
+                        self.pagination.setDataCount(res.record.total);
                     } else {
-                        // 카카오 검색결과가 없을때
                         // 도로명주소 찾기
+                        data.type = "address";
+                        data.category = "road";
+
                         $.ajax({
-                            url: "https://www.juso.go.kr/addrlink/addrLinkApiJsonp.do", //인터넷망
-                            type: "post",
-                            data: {
-                                currentPage: 1,
-                                countPerPage: 999,
-                                resultType: "json",
-                                confmKey: "U01TX0FVVEgyMDIxMDgwMjE0NTIyMjExMTQ3Nzc=",
-                                keyword: query,
-                            },
-                            async: false,
-                            dataType: "jsonp",
-                            crossDomain: true,
-                            success: function (data) {
-                                var errCode = data.results.common.errorCode;
-                                var errDesc = data.results.common.errorMessage;
-                                if (errCode != "0") {
-                                    alert(errCode + "=" + errDesc);
+                            url: "/map/proxy/vSearch.do",
+                            type: "get",
+                            dataType: "json",
+                            data,
+                            success: function (res) {
+                                res = res.response;
+
+                                if (res.record.total > 0) {
+                                    const items = res.result.items || [];
+
+                                    $("#" + self.countID).text(numberWithCommas(res.record.total));
+                                    self.createTable(items, res.record.total, true);
+
+                                    self.pagination.setDataCount(res.record.total);
                                 } else {
-                                    if (data != null) {
-                                        const items = data.results.juso ? data.results.juso : [];
-                                        if (items.length > 45) items.length = 45;
+                                    data.type = "address";
+                                    data.category = "PARCEL";
 
-                                        $("#" + self.countID).text(items.length);
-                                        self.createTable(items, items.length, true);
+                                    $.ajax({
+                                        url: "/map/proxy/vSearch.do",
+                                        type: "get",
+                                        dataType: "json",
+                                        data,
+                                        success: function (res) {
+                                            res = res.response;
 
-                                        self.pagination.setDataCount(items.length);
-                                    }
+                                            if (res.record.total > 0) {
+                                                const items = res.result.items || [];
+
+                                                $("#" + self.countID).text(numberWithCommas(res.record.total));
+                                                self.createTable(items, res.record.total);
+
+                                                self.pagination.setDataCount(res.record.total);
+                                            } else {
+                                                $("#" + self.countID).text(0);
+                                                self.pagination.setDataCount(0);
+                                            }
+                                        },
+                                    });
                                 }
                             },
                         });
@@ -113,14 +132,22 @@
             $("#" + self.resultID).html("");
 
             items.map((row, idx) => {
-                if(!isRoadAddr) {
-                    //const addr = row.address.parcel;
-                    const addr = row.address_name;
+                if (!isRoadAddr) {
+                    var title = row.title || "-";
+                    row.address.bldnm = row.address.bldnm || "";
+                    row.address.bldnmdc = row.address.bldnmdc || "";
+
+                    var addr = row.address.parcel || "-";
+                    var road = row.address.road || "-";
+
+                    if (title == "-") title = (row.address.bldnm + " " + row.address.bldnmdc) != " " ? row.address.bldnm + " " + row.address.bldnmdc : "-";
+                    if (title == "-") title = addr || "-";
+                    if (title == "-") title = road || "-";
 
                     var str = '<div id=addrSearch' + idx + ' class="item">';
-                    str += '<span class="itemTitle">' + row["place_name"] + '</span>';
+                    str += '<span class="itemTitle">' + title + '</span>';
                     str += '<span class="itemRoadAddr">' + addr + '</span>';
-                    str += '<span class="itemAddr">' + row["road_address_name"] + '</span>';
+                    str += '<span class="itemAddr">' + road + '</span>';
                     str += '</div>';
 
                     $("#" + self.resultID).append(str);
@@ -129,27 +156,33 @@
                         self.movePoint(row);
                     });
                 } else {
-                    var roadAddr = row.roadAddrPart1;
-                    var bdNm = row.bdNm;
-                    var jibunAddr = row.jibunAddr.replace(bdNm, "");
-                    var pnu = row.admCd + (row.mtYn == 0 ? "1" : "2") + self.lpad(row.lnbrMnnm, 4, "0") + self.lpad(row.lnbrSlno, 4, "0");
+                    var title = row.title || "-";
+                    row.address.bldnm = row.address.bldnm || "";
+                    row.address.bldnmdc = row.address.bldnmdc || "";
+
+                    var addr = row.address.parcel || "-";
+                    var road = row.address.road || "-";
+
+                    if (title == "-") title = (row.address.bldnm + " " + row.address.bldnmdc) != " " ? row.address.bldnm + " " + row.address.bldnmdc : "-";
+                    if (title == "-") title = addr || "-";
+                    if (title == "-") title = road || "-";
 
                     var str = '<div id=addrSearch' + idx + ' class="item">';
-                    str += '<span class="itemTitle">' + (bdNm ? bdNm : "-") + '</span>';
-                    str += '<span class="itemRoadAddr">' + jibunAddr + '</span>';
-                    str += '<span class="itemAddr">' + roadAddr + '</span>';
+                    str += '<span class="itemTitle">' + title + '</span>';
+                    str += '<span class="itemRoadAddr">' + addr + '</span>';
+                    str += '<span class="itemAddr">' + road + '</span>';
                     str += '</div>';
 
                     $("#" + self.resultID).append(str);
 
                     $("#addrSearch" + idx).on("click", function () {
-                        self.movePointByPnu(pnu, jibunAddr, roadAddr);
+                        self.movePoint(row);
                     });
                 }
-            })
+            });
         },
 
-        lpad: function(str, padLen, padStr) {
+        lpad: function (str, padLen, padStr) {
             if (padStr.length > padLen) {
                 console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
                 return str;
@@ -163,14 +196,25 @@
 
         // 명칭검색 위치이동
         movePoint: function (data) {
-            const x = parseFloat(data.x);
-            const y = parseFloat(data.y);
+            var title = data.title || "-";
+            data.address.bldnm = data.address.bldnm || "";
+            data.address.bldnmdc = data.address.bldnmdc || "";
+
+            var addr = data.address.parcel || "-";
+            var road = data.address.road || "-";
+
+            if (title == "-") title = (data.address.bldnm + " " + data.address.bldnmdc) != " " ? data.address.bldnm + " " + data.address.bldnmdc : "-";
+            if (title == "-") title = addr || "-";
+            if (title == "-") title = road || "-";
+
+            const x = parseFloat(data.x || data.point.x);
+            const y = parseFloat(data.y || data.point.y);
             const coordinate = [x, y];
 
             if (this.overlay) sis.map.removeOverlay(this.overlay);
             const wrap = document.createElement("div");
             wrap.id = "searchOverlayWrap";
-            wrap.innerText = data["place_name"];
+            wrap.innerText = title;
             document.body.appendChild(wrap);
 
             $(wrap).prepend('<i class="fa-solid fa-location-dot"></i>');
@@ -190,7 +234,7 @@
         },
 
         // pnu로 위치이동
-        movePointByPnu: function(code, jibunAddr, roadAddr) {
+        movePointByPnu: function (code, jibunAddr, roadAddr) {
             const self = this;
             const lyr = sisLyr.wfs.selectLayer;
             const source = lyr.getSource();
@@ -249,7 +293,7 @@
 
         // 좌표로 지적도 찾기
         getJijukByCoord: function (coord) {
-            const feature = sisLyr.getPropByCoordinate(coord, "LYR0019");
+            const feature = sisLyr.getPropByCoordinate(coord, "LYR0017", false);
             // console.log(feature);
 
             if (feature) {

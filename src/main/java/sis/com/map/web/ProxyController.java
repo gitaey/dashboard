@@ -4,6 +4,7 @@ import egovframework.common.EgovProperties;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,10 +16,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.security.cert.X509Certificate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,6 +26,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map.Entry;
@@ -53,6 +52,8 @@ public class ProxyController {
 
     private String sldUrl = EgovProperties.getProperty("GeoServer.SLD");
 
+    private String searchUrl = EgovProperties.getProperty("VWorld.SEARCH");
+
     /**
      * Get 방식 WMS 프록시
      *
@@ -64,7 +65,7 @@ public class ProxyController {
     @RequestMapping(value = "/wms.do", method = RequestMethod.GET)
     public void proxyWMSGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String urlStr =  wmsUrl;
-        proxyGet(urlStr, request, response, false);
+        proxyGet(urlStr, request, response, false, false);
     }
 
     /**
@@ -78,7 +79,7 @@ public class ProxyController {
     @RequestMapping(value = "/vApi.do", method = RequestMethod.GET)
     public void proxyVWorldGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String urlStr =  apiUrl;
-        proxyGet(urlStr, request, response, true);
+        proxyGet(urlStr, request, response, true, false);
     }
 
     /**
@@ -92,7 +93,7 @@ public class ProxyController {
     @RequestMapping(value = "/vImg.do", method = RequestMethod.GET)
     public void proxyVWorldImgGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String urlStr =  imgUrl;
-        proxyGet(urlStr, request, response, true);
+        proxyGet(urlStr, request, response, true, false);
     }
 
     /**
@@ -106,8 +107,22 @@ public class ProxyController {
     @RequestMapping(value = "/img.do", method = RequestMethod.GET)
     public void proxyImgGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String urlStr =  apiUrl;
-        proxyGet(urlStr, request, response, true);
+        proxyGet(urlStr, request, response, true, false);
     }
+
+    /**
+    	 * Get 방식 브이월드 주소검색
+    	 *
+    	 * @param request  요청 객체
+    	 * @param response 응답 객체
+    	 * @throws Exception
+    	 */
+    	// @AuthExclude
+    	@RequestMapping(value = "/vSearch.do", method = RequestMethod.GET)
+    	public void proxyVWorldAddr(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    		final String urlStr =  searchUrl;
+    		proxyGet(urlStr, request, response, true, true);
+    	}
 
     /**
      * Get 방식 GWC 프록시
@@ -120,7 +135,7 @@ public class ProxyController {
     @RequestMapping(value = "/gwc.do")
     public void proxyGWCGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String urlStr = gwcUrl;
-        proxyGet(urlStr, request, response, false);
+        proxyGet(urlStr, request, response, false, false);
     }
 
     /**
@@ -148,7 +163,7 @@ public class ProxyController {
     @RequestMapping(value = "/wfs.do")
     public void proxyWFSGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String urlStr = wfsUrl;
-        proxyGet(urlStr, request, response, false);
+        proxyGet(urlStr, request, response, false, false);
     }
 
     /**
@@ -479,7 +494,7 @@ public class ProxyController {
      * @throws IOException
      */
     // @AuthExclude
-    public void proxyGet(final String urlStr, final HttpServletRequest request, final HttpServletResponse response, boolean isVApi)
+    public void proxyGet(final String urlStr, final HttpServletRequest request, final HttpServletResponse response, boolean isVApi, boolean isSearchApi)
             throws IOException {
         HttpURLConnection huc = null;
         OutputStream ios = null;
@@ -578,7 +593,21 @@ public class ProxyController {
             response.setContentType(huc.getContentType());
 
             ios = response.getOutputStream();
-            IOUtils.copy(huc.getInputStream(), ios);
+
+            if (isSearchApi) {
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(huc.getInputStream(), "UTF-8"));
+
+                StringBuilder sb = new StringBuilder();
+                String inputLine;
+
+                while ((inputLine = bReader.readLine()) != null) {
+                    sb.append(inputLine.replaceAll("\n", ""));
+                }
+
+                ios.write(sb.toString().getBytes(StandardCharsets.UTF_8));
+            } else {
+                org.apache.commons.io.IOUtils.copy(huc.getInputStream(), ios);
+            }
 
         } catch (final IOException e) {
             throw e;

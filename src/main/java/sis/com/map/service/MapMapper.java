@@ -37,4 +37,18 @@ public interface MapMapper {
     Map<String, Object> selectUe101ByMnum(Map<String, Object> params) throws SQLException;
 
     List<Map<String, Object>> selectStatisticsNj(Map<String, Object> params) throws SQLException;
+
+    Map<String, Object> selectDisconTotal(Map<String, Object> params) throws SQLException;
+
+    List<Map<String, Object>> selectDiscon(Map<String, Object> params) throws SQLException;
+
+    Map<String, Object> selectDisconGeom(Map<String, Object> params) throws SQLException;
+
+    List<Map<String, Object>> selectFarmland(Map<String, Object> params) throws SQLException;
+
+    List<Map<String, Object>> selectJijukByMngNo(Map<String, Object> params) throws SQLException;
+
+    Map<String, Object> selectJijukByCoord(Map<String, Object> params) throws SQLException;
+
+    Map<String, Object> selectProsByJijuk(Map<String, Object> params) throws SQLException;
 }

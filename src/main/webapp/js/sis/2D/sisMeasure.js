@@ -292,7 +292,7 @@
         },
 
         _calculateDistance: function (line) {
-            var length = ol.sphere.getLength(line);
+            var length = ol.Sphere.getLength(line);
 
             var output;
             if (length > 100) {
@@ -304,7 +304,7 @@
         },
 
         _calculateArea: function (polygon) {
-            var area = ol.sphere.getArea(polygon);
+            var area = ol.Sphere.getArea(polygon);
 
             var output;
             if (area > 10000) {

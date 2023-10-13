@@ -81,7 +81,7 @@
             proj4.defs("EPSG:5186", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs");
             proj4.defs("EPSG:5179", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
 
-            ol.proj.proj4.register(proj4);
+            // ol.proj.proj4.register(proj4);
         },
 
         /**
@@ -184,9 +184,9 @@
 
                     if (lyr instanceof ol.layer.Tile) {
                         if (source instanceof ol.source.XYZ) {
-                            if(lyr.get("id") == vMaps.vMap.get("id")) vMaps.vMap.setVisible(lyr.getVisible());
-                            else if(lyr.get("id") == vMaps.vHybrid.get("id")) vMaps.vHybrid.setVisible(lyr.getVisible());
-                            else if(lyr.get("id") == vMaps.vSatellite.get("id")) vMaps.vSatellite.setVisible(lyr.getVisible());
+                            if (lyr.get("id") == vMaps.vMap.get("id")) vMaps.vMap.setVisible(lyr.getVisible());
+                            else if (lyr.get("id") == vMaps.vHybrid.get("id")) vMaps.vHybrid.setVisible(lyr.getVisible());
+                            else if (lyr.get("id") == vMaps.vSatellite.get("id")) vMaps.vSatellite.setVisible(lyr.getVisible());
                         }
                     } else if (lyr instanceof ol.layer.Vector) {
                         var layer = new ol.layer.Vector(lyr.getProperties());
@@ -235,8 +235,8 @@
             });
 
             this.map.on("pointermove", function (evt) {
-                var hit = this.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-                    if(feature.getId() != "searchBoundary")
+                var hit = this.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+                    if (feature.getId() != "searchBoundary")
                         return true;
                     else
                         return false;
@@ -303,7 +303,7 @@
                 view = new ol.View({
                     projection: ol.proj.get(config.projection),
                 });
-            } else if(id == "vworld") {
+            } else if (id == "vworld") {
                 view = new ol.View({
                     projection: config.projection,
                     center: config.center,
@@ -345,7 +345,7 @@
          * @param visible 가시화여부
          * */
         _addVWorld: function (visible, map) {
-            if(!map) map = this.map;
+            if (!map) map = this.map;
 
             var vHybrid = new ol.layer.Tile({
                 id: "VWorldHybrid",
@@ -381,7 +381,7 @@
             map.addLayer(vSatellite);
             map.addLayer(vHybrid);
 
-            if(map.getTarget() == this.mapId) {
+            if (map.getTarget() == this.mapId) {
                 this.vMap = vMap;
                 this.vHybrid = vHybrid;
                 this.vSatellite = vSatellite;
@@ -545,11 +545,9 @@
                         var s = Math.floor(Math.random() * 4); // 0 ~ 3
                         var z = resolutions.length - tileCoord[0];
                         var x = tileCoord[1];
-                        var y = tileCoord[2];
+                        var y = tileCoord[2] + 1;
 
-                        console.log("http://map" + s + ".daumcdn.net/map_roadviewline/7.00/L" + z + "/" + y + "/" + x + ".png");
-
-                        return "http://map" + s + ".daumcdn.net/map_roadviewline/7.00/L" + z + "/" + y + "/" + x + ".png";
+                        return "http://map" + s + ".daumcdn.net/map_roadviewline/7.00/L" + z + "/" + -y + "/" + x + ".png";
                     }
                 })
             });
@@ -658,8 +656,8 @@
 
             this.map.on("click", this.roadViewClickEvent);
             this.map.on("pointermove", this._pointerMove);
-            $("#" + this.id).on("mouseleave", this.hideRoadViewPointer);
-            $("#" + this.id).on("mouseenter", this.showRoadViewPointer);
+            $("#" + this.mapId).on("mouseleave", this.hideRoadViewPointer);
+            $("#" + this.mapId).on("mouseenter", this.showRoadViewPointer);
         },
 
         hideRoadViewPointer: function () {
@@ -667,6 +665,7 @@
         },
 
         showRoadViewPointer: function () {
+            $()
             $(".roadViewPointer").show();
         },
 
@@ -750,7 +749,7 @@
                     alert("로드뷰가 존재하지 않는 위치입니다.");
 
                     if ($(".toggle").hasClass("close")) $(".toggle")[0].click();
-                    $(".btnRoadView").click();
+                    $("#roadView").click();
 
                     //self.closeRoadView(roadviewContainer, true);
 
@@ -797,11 +796,18 @@
         closeRoadView: function (target, isAllClear) {
             if (!isAllClear) return false;
             this.daumRoadView.setVisible(false);
-            if (this.sisRoadViewOverlay) this.map.removeOverlay(this.sisRoadViewOverlay);
+            // if (this.sisRoadViewOverlay) {
+            //     this.map.removeOverlay(this.sisRoadViewOverlay);
+            //     this.sisRoadViewOverlay = null;
+            // }
 
             $(".sisMapWalker").hide();
 
             $("#" + sis.mapId).removeAttr("style");
+
+            $(sis.roadViewTarget).hide();
+            $(sis.roadViewTarget).html("");
+            // sis.mapWalker = null;
 
             //
             $(sis.map.getTargetElement()).parent().css({right: "0"});
@@ -810,8 +816,8 @@
             sis.map.un("click", this.roadViewClickEvent);
             sis.map.un("pointermove", this._pointerMove);
 
-            $("#" + this.id).off("mouseleave", this.hideRoadViewPointer);
-            $("#" + this.id).off("mouseenter", this.showRoadViewPointer);
+            $("#" + this.mapId).off("mouseleave", this.hideRoadViewPointer);
+            $("#" + this.mapId).off("mouseenter", this.showRoadViewPointer);
 
             $(".roadViewPointer").hide();
 

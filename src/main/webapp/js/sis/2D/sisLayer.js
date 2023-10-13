@@ -89,9 +89,7 @@
                 zIndex: 999
             }),
 
-            userLayer: {
-
-            }
+            userLayer: {}
         },
 
         select: null,
@@ -102,7 +100,7 @@
             this.extendProps(props);
 
             $.each(this.wfs, function (id, lyr) {
-                if(id != "userLayer") {
+                if (id != "userLayer") {
                     if (!self.getLayerById(id))
                         self.map.addLayer(lyr);
                 }
@@ -120,7 +118,7 @@
 
         //ID로 레이어 검색
         getLayerById: function (id, map) {
-            if(!map) map = this.map;
+            if (!map) map = this.map;
 
             if (!id || !map)
                 return null;
@@ -147,7 +145,7 @@
         createFeatureByWKT: function (geom, projection) {
             let feature;
 
-            if(!projection) projection = sis.props.geoserverCrsCode;
+            if (!projection) projection = sis.props.geoserverCrsCode;
 
             let format = new ol.format.WKT();
             feature = format.readFeature(geom, {
@@ -188,18 +186,18 @@
 
         //WMS 레이어 추가
         addWmsLayer: function (layerName, params, map, isSld) {
-            if(!map) map = this.map;
+            if (!map) map = this.map;
 
             var visible, opacity, filter, id, sld;
 
-            if(isSld) sld = layerName + ".xml";
+            if (isSld) sld = layerName + ".xml";
 
             visible = params.visibility;
             opacity = params.opacity;
             filter = params.filter;
             id = params.id ? params.id : layerName;
 
-            if(!params.image) {
+            if (!params.image) {
                 this.wms[id] = new ol.layer.Tile({
                     id: id,
                     name: layerName,
@@ -218,8 +216,8 @@
                     }),
                     visible: visible,
                     zIndex: params.zIndex,
-                    // minResolution: this._getResolution(params.maxZoom),
-                    // maxResolution: this._getResolution(params.minZoom),
+                    minResolution: this._getResolution(params.maxZoom),
+                    maxResolution: this._getResolution(params.minZoom),
                     opacity: opacity
                 });
             } else {
@@ -241,6 +239,8 @@
                     }),
                     visible: visible,
                     zIndex: params.zIndex,
+                    minResolution: this._getResolution(params.maxZoom),
+                    maxResolution: this._getResolution(params.minZoom) + 1,
                     opacity: opacity
                 });
             }
@@ -472,7 +472,7 @@
             if (!lyr && lyr.getSource() instanceof ol.source.TileWMS)
                 return;
 
-            if(!lyr.getVisible()) return;
+            if (!lyr.getVisible()) return;
 
             var url = lyr.getSource().getGetFeatureInfoUrl(evt.coordinate, this.map.getView().getResolution(), this.map.getView().getProjection(), {
                 'INFO_FORMAT': 'application/json'
@@ -634,13 +634,11 @@
             return features;
         },
 
-        getPropByCoordinate: function (coord, id, ansy, callback) {
+        getPropByCoordinate: function (coord, id, ansy = false, callback) {
             var self = this;
 
-            if (!coord || !id)
-                return;
-            if (!ansy)
-                ansy = false;
+            if (!coord || !id) return;
+            if (!ansy) ansy = false;
 
             var map = this.map;
             var format = new ol.format.GeoJSON();
@@ -650,12 +648,37 @@
             if (!lyr || !(lyr instanceof ol.layer.Tile)) {
                 return;
             }
-            var url = lyr.getSource().getGetFeatureInfoUrl(coord, map.getView().getResolution(), map.getView().getProjection(), {
-                'INFO_FORMAT': 'application/json'
+            var lyrsName = lyr.get("name");
+            var url = lyr.getSource().getFeatureInfoUrl(coord, map.getView().getResolution(), map.getView().getProjection(), {
+                INFO_FORMAT: 'application/json'
             });
 
+            if (!url) return;
+
+            const arrParams = url.split("?")[1].split("&");
+            const jsonData = {};
+
+            arrParams.forEach((item, idx) => {
+                if (item.indexOf("QUERY_LAYERS") > -1) {
+                    arrParams[idx] = "QUERY_LAYERS=" + lyrsName.toString();
+                } else if (item.indexOf("LAYERS") > -1) {
+                    arrParams[idx] = "LAYERS=" + lyrsName.toString();
+                }
+
+                arrParams[idx] = arrParams[idx].replaceAll("%2C", ",").replaceAll("%3A", ":").replaceAll("%2F", "/");
+                let params = arrParams[idx].split("=");
+
+                jsonData[params[0]] = params[1];
+            });
+
+            jsonData["FEATURE_COUNT"] = 999;
+
             var ajax = $.ajax({
-                url: url,
+                url: "/map/proxy/wms.do",
+                type: "get",
+                dataType: "json",
+                crossDomain: true,
+                data: jsonData,
                 async: ansy,
                 success: function (response) {
                     if (!response)

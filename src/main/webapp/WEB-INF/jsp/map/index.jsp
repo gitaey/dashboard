@@ -37,7 +37,8 @@
 
     <!-- Openlayers -->
     <link href="${pageContext.request.contextPath}/js/plugins/ol-v6.12.0/ol.css" rel="stylesheet">
-    <script src="${pageContext.request.contextPath}/js/plugins/ol-v6.12.0/ol.js"></script>
+<%--    <script src="${pageContext.request.contextPath}/js/plugins/ol-v6.12.0/ol.js"></script>--%>
+    <script src="${pageContext.request.contextPath}/js/plugins/ol-v6.12.0/ol-4.6.5.js"></script>
     <script src="${pageContext.request.contextPath}/js/plugins/proj4/proj4.js"></script>
 
     <!-- Html2Canvas -->
@@ -66,6 +67,9 @@
     <script src="${pageContext.request.contextPath}/js/map/naju.js?ver=1"></script>
 
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+
+    <%-- 농어촌공사 OpenAPI --%>
+    <script type="text/javascript" src="https://espacek.ekr.or.kr/eOpenAPI/krcgis.js?api_key=bfb9c989fbdb84c265e33a625005e07b"></script>
 
     <script>
         var PATH = "${pageContext.request.contextPath}";
@@ -96,7 +100,7 @@
         <div id="nonScrollWrap">
             <h3>농업진흥지역 DB구축 현황판</h3>
 
-            <div id="selectMenu" class="itemGroup">
+            <div id="selectMenu" class="itemGroup pri">
                 <button id="m001" class="btnMenu ui primary button">
                     구획현황
                 </button>
@@ -109,6 +113,9 @@
                 <button id="m004" class="btnMenu ui button">
                     단절
                 </button>
+                <button id="m005" class="btnMenu ui button">
+                    우량농지
+                </button>
             </div>
         </div>
 
@@ -118,27 +125,31 @@
                 <input type="hidden" name="mnum">
                 <input type="hidden" name="page">
                 <input type="hidden" name="code">
+                <input type="hidden" name="wkt">
 
                 <!-- ####### -->
                 <!-- 구획현황 -->
                 <!-- ####### -->
-                <div class="itemGroup">
+                <div class="itemGroup pri">
                     <span class="title">행정구역</span>
                     <div class="selectWrap">
-                        <select id="left_sido" name="sido" parent="left" class="selectSido" style="display: none;"></select>
+                        <select id="left_sido" name="sido" parent="left" class="selectSido"
+                                style="display: none;"></select>
                     </div>
 
                     <div class="selectWrap">
-                        <select id="left_sgg" name="sgg" parent="left" class="selectSgg" style="display: none;"></select>
+                        <select id="left_sgg" name="sgg" parent="left" class="selectSgg"
+                                style="display: none;"></select>
                     </div>
 
                     <div class="selectWrap">
-                        <select id="left_emd" name="emd" parent="left" class="selectEmd" style="display: none;"></select>
+                        <select id="left_emd" name="emd" parent="left" class="selectEmd"
+                                style="display: none;"></select>
                     </div>
 
-<%--                    <div class="selectWrap">--%>
-<%--                        <select id="left_li" name="li" parent="left" class="selectLi" style="display: none;"></select>--%>
-<%--                    </div>--%>
+                    <%--                    <div class="selectWrap">--%>
+                    <%--                        <select id="left_li" name="li" parent="left" class="selectLi" style="display: none;"></select>--%>
+                    <%--                    </div>--%>
                 </div>
 
                 <div class="itemGroup m003" style="display: none;">
@@ -199,7 +210,7 @@
                     </div>
                 </div>
 
-                <div class="itemGroup">
+                <div class="itemGroup pri">
                     <span class="title">
                         구획면적(ha)
                         <div class="iconPopup m002" style="display: none;" data-html='
@@ -230,7 +241,8 @@
                                 </tbody>
                             </table>
                         '>
-                            <i id="prmtRef" class="reference fa-solid fa-asterisk" style="color: red; cursor: pointer;"></i>
+                            <i id="prmtRef" class="reference fa-solid fa-asterisk"
+                               style="color: red; cursor: pointer;"></i>
                         </div>
                     </span>
 
@@ -240,6 +252,17 @@
                     ~
                     <div class="ui input">
                         <input id="maxArea" name="maxArea" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                    </div>
+                </div>
+
+                <div class="itemGroup pri m005" style="display: none;">
+                    <span class="title">
+                        버퍼설정(m)
+                    </span>
+
+                    <div class="ui input" style="width:100%">
+                        <input id="bufferDis" name="bufferDis" class="tm5 w100p numberOnly" type="text"
+                               placeholder="범위설정(기본값 300)">
                     </div>
                 </div>
 
@@ -284,11 +307,13 @@
                     <span class="title">농지비율(%)</span>
 
                     <div class="ui input">
-                        <input id="minFarmVal" name="minFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                        <input id="minFarmVal" name="minFarmVal" class="tm5 w106 numberOnly" type="text"
+                               placeholder="최소">
                     </div>
                     ~
                     <div class="ui input">
-                        <input id="maxFarmVal" name="maxFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                        <input id="maxFarmVal" name="maxFarmVal" class="tm5 w106 numberOnly" type="text"
+                               placeholder="최대">
                     </div>
                 </div>
 
@@ -296,11 +321,13 @@
                     <span class="title">비농지비율(%)</span>
 
                     <div class="ui input">
-                        <input id="minUnFarmVal" name="minUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                        <input id="minUnFarmVal" name="minUnFarmVal" class="tm5 w106 numberOnly" type="text"
+                               placeholder="최소">
                     </div>
                     ~
                     <div class="ui input">
-                        <input id="maxUnFarmVal" name="maxUnFarmVal" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                        <input id="maxUnFarmVal" name="maxUnFarmVal" class="tm5 w106 numberOnly" type="text"
+                               placeholder="최대">
                     </div>
                 </div>
 
@@ -336,11 +363,13 @@
                     </span>
 
                     <div class="ui input">
-                        <input id="minRtPrdctn" name="minRtPrdctn" class="tm5 w106 numberOnly" type="text" placeholder="최소">
+                        <input id="minRtPrdctn" name="minRtPrdctn" class="tm5 w106 numberOnly" type="text"
+                               placeholder="최소">
                     </div>
                     ~
                     <div class="ui input">
-                        <input id="maxRtPrdctn" name="maxRtPrdctn" class="tm5 w106 numberOnly" type="text" placeholder="최대">
+                        <input id="maxRtPrdctn" name="maxRtPrdctn" class="tm5 w106 numberOnly" type="text"
+                               placeholder="최대">
                     </div>
                 </div>
             </form>
@@ -361,6 +390,11 @@
         <div id="fullScreen" class="btn">
             <i class="icon fa-solid fa-maximize"></i>
             <span class="txt">전체화면</span>
+        </div>
+
+        <div id="roadView" class="btn">
+            <i class="icon fa-solid fa-street-view"></i>
+            <span class="txt">로드뷰</span>
         </div>
 
         <div class="btn">
@@ -386,6 +420,11 @@
     <div id="tree"></div>
 
     <div id="mapControlWrap">
+        <div class="iconWrap" id="information">
+            <span>필지정보</span>
+            <i class="fa-solid fa-circle-info icon"></i>
+        </div>
+
         <span class="split"></span>
 
         <div class="iconWrap" id="calDis">
@@ -426,6 +465,14 @@
 
     </div>
     <div id="map" class=""></div>
+    <div id="daumMap" style="display: none"></div>
+
+    <div id="roadViewWrap"></div>
+    <div class="sisMapWalker">
+        <div class="angleBack"></div>
+        <div class="figure"></div>
+    </div>
+
     <div id="centerPos"></div>
 </div>
 
@@ -471,41 +518,6 @@
             </table>
 
             <div id="m001PaginationWrap" class="paginationWrap">
-                <div class="sisPagination"></div>
-            </div>
-        </div>
-
-        <div id="m001LdregWrap" style="display: none;">
-            <div style="text-align: right">
-                <div style="float:left; cursor: pointer; padding-left: 1px; margin-top:-8px;">
-                    <button class="ui primary button" style="padding: 3px 10px;"
-                            onclick="javascript: $('#m001LdregWrap').hide(); $('#m001Ue101Wrap').show();">
-                        <i class="fa-solid fa-arrow-left fa-2xl"></i>
-                    </button>
-                </div>
-                <div style="text-align: right">
-                    검색결과 <span id="m001TotalCount2" style="color:red; font-weight:bold;">-</span>건 /
-                    총 면적 <span id="m001TotalArea2" style="color:red; font-weight:bold;">-</span>ha
-                </div>
-            </div>
-
-            <table class="ui celled table" style="">
-                <thead>
-                <tr>
-                    <th>순번</th>
-                    <th>PNU</th>
-                    <th>주소</th>
-                    <%--                    <th>진흥구분</th>--%>
-                    <th>면적(㎡)</th>
-                    <%--                    <th>지목</th>--%>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-
-            <div id="m001PaginationWrap2" class="paginationWrap">
                 <div class="sisPagination"></div>
             </div>
         </div>
@@ -596,6 +608,94 @@
     </div>
 </div>
 
+<!-- 단절 모달 -->
+<div id="m004Modal" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">단절 검색결과</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+        <div class="minimize"><i class="fa-solid fa-minus"></i></div>
+        <div class="maximize"><i class="fa-regular fa-window-maximize"></i></div>
+    </div>
+    <div class="modalBody">
+        <div class="ui segment sisLoading">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
+
+        <div id="m004Ue101Wrap">
+            <div style="text-align: right">
+                <div style="text-align: right">
+                    검색결과 <span id="m004TotalCount" style="color:red; font-weight:bold;">-</span>건 /
+                    총 면적 <span id="m004TotalArea" style="color:red; font-weight:bold;">-</span>ha
+                </div>
+            </div>
+
+            <table class="ui celled table" style="">
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>진흥지역코드(mnum)</th>
+                    <th>시군구</th>
+                    <th>진흥구분</th>
+                    <th>면적(ha)</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div id="m004PaginationWrap" class="paginationWrap">
+                <div class="sisPagination"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 우량농지 모달 -->
+<div id="m005Modal" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">우량농지 검색결과</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+        <div class="minimize"><i class="fa-solid fa-minus"></i></div>
+        <div class="maximize"><i class="fa-regular fa-window-maximize"></i></div>
+    </div>
+    <div class="modalBody">
+        <div class="ui segment sisLoading">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
+
+        <div id="m005Ue101Wrap">
+            <div style="text-align: right">
+                <div style="text-align: right">
+                    검색결과 <span id="m005TotalCount" style="color:red; font-weight:bold;">-</span>건 /
+                    총 면적 <span id="m005TotalArea" style="color:red; font-weight:bold;">-</span>ha
+                </div>
+            </div>
+
+            <table class="ui celled table" style="">
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>관리번호</th>
+                    <th>면적(ha)</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div id="m005PaginationWrap" class="paginationWrap">
+                <div class="sisPagination"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 위치이동 모달 -->
 <div id="searchPosModal" class="modalWrap">
     <div class="modalTitleWrap">
@@ -605,7 +705,7 @@
     <div class="modalBody" style="overflow: visible;">
         <!-- 명청검색 -->
         <div id="searchPlaceWrap">
-            <div class="itemGroup">
+            <div class="itemGroup pri">
                 <span class="title">명칭검색</span>
 
                 <div class="selectWrap">
@@ -618,7 +718,7 @@
                 </div>
             </div>
 
-            <div id="placeResultWrap" class="itemGroup" style="margin-top: 10px;">
+            <div id="placeResultWrap" class="itemGroup pri" style="margin-top: 10px;">
                 <span class="title" style="text-align: right; margin-bottom: 5px;">
                     검색결과
                     <span id="count" class="count">45</span>건
@@ -641,7 +741,7 @@
 
         <!-- 지번검색 -->
         <div id="searchJibunWrap">
-            <div class="itemGroup">
+            <div class="itemGroup pri">
                 <span class="title">행정구역</span>
                 <div class="selectWrap">
                     <select id="m000_sido" class="selectSido" parent="m000" style="display: none;"></select>
@@ -684,6 +784,53 @@
             <div class="ui active inverted dimmer">
                 <div class="ui text loader">Loading</div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- 필지정보 모달 -->
+<div id="inforModal" class="modalWrap">
+    <div class="modalTitleWrap">
+        <span class="title">필지정보</span>
+        <div class="close"><i class="fa-solid fa-xmark fa-lg"></i></div>
+        <div class="minimize"><i class="fa-solid fa-minus"></i></div>
+        <div class="maximize"><i class="fa-regular fa-window-maximize"></i></div>
+    </div>
+    <div class="modalBody">
+        <div class="ui segment sisLoading">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
+
+        <div id="m009Ue101Wrap">
+            <table class="ui celled table" style="">
+                <thead>
+                <tr>
+                    <th rowspan="2">행정구역</th>
+                    <th rowspan="2">산</th>
+                    <th rowspan="2">지번</th>
+                    <th rowspan="2">지목</th>
+                    <th colspan="2">면적</th>
+                    <th rowspan="2">소유구분</th>
+                </tr>
+                <tr>
+                    <th style="border-left:1px solid rgba(34,36,38,.1)">공부면적(㎡)</th>
+                    <th>공간면적(㎡)</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="inforAddr"></td>
+                        <td id="inforSan"></td>
+                        <td id="inforJibun"></td>
+                        <td id="inforJimok"></td>
+                        <td id="inforParea"></td>
+                        <td id="inforGarea"></td>
+                        <td id="inforOwnGbn"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

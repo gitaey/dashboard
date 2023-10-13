@@ -1,4 +1,5 @@
 var lyrList = null;
+var mapPropsOverlay = null;
 
 (function ($) {
     $.each(['show', 'hide'], function (i, ev) {
@@ -36,9 +37,12 @@ $(window).on("load", function () {
     $('.ui.dropdown').dropdown();
 
     $('.iconPopup').popup({
-        position : 'right center',
+        position: 'right center',
         hoverable: true,
+        closable: false,
+        on: 'click'
     });
+
     // input 숫자만 입력가능하게 설정
     $(".numberOnly").numberOnly();
 
@@ -84,7 +88,7 @@ $(window).on("load", function () {
     // 모달 드래그
     $(".modalWrap").draggable({
         handle: ".modalTitleWrap",
-        containment : 'parent'
+        containment: 'parent'
     });
 
     $(".wrapToggle").on("click", (evt) => {
@@ -101,21 +105,24 @@ $(window).on("load", function () {
         $(".btnMenu").removeClass("primary");
         $(evt.target).addClass("primary");
 
-        if(id == "m001") {
+        $(".itemGroup:not(.pri)").show();
+
+        if (id == "m001") {
             $(".itemGroup.m002, .iconPopup.m002").hide();
-            $(".itemGroup.m003").hide();
-        }
-        else if(id == "m002") {
+            $(".itemGroup.m003, .itemGroup.m005").hide();
+        } else if (id == "m002") {
             $(".itemGroup.m002, .iconPopup.m002").show();
-            $(".itemGroup.m003").hide();
-        }
-        else if(id == "m003") {
+            $(".itemGroup.m003, .itemGroup.m005").hide();
+        } else if (id == "m003") {
             // $("#left_sido").val("-").change();
-            $(".itemGroup.m002, .iconPopup.m002").hide();
+            $(".itemGroup.m002, .iconPopup.m002, .itemGroup.m005").hide();
             $(".itemGroup.m003").show();
+        } else if (id == "m005") {
+            $(".itemGroup.m005").show();
+            $(".itemGroup:not(.pri)").hide();
         } else {
             $(".itemGroup.m002, .iconPopup.m002").hide();
-            $(".itemGroup.m003").hide();
+            $(".itemGroup.m003, .itemGroup.m005").hide();
         }
     });
 
@@ -123,7 +130,7 @@ $(window).on("load", function () {
     $("#uea120").on("change", (evt) => {
         var checked = evt.target.checked;
 
-        if(checked) {
+        if (checked) {
             $("[name=includeWater]").attr("disabled", false);
         } else {
             $("[name=includeWater]").attr("disabled", true);
@@ -134,7 +141,7 @@ $(window).on("load", function () {
     $("[name=includeWater]").on("change", (evt) => {
         var id = evt.target.id;
 
-        if(id == "nonIncludeWater") {
+        if (id == "nonIncludeWater") {
             $("#waterBufferWrap").removeClass("disabled");
         } else {
             $("#waterBufferWrap").addClass("disabled");
@@ -154,7 +161,7 @@ $(window).on("load", function () {
 
     var selectSido = new SisSelectbox(".selectSido", {
         url: "/selectSido.do",
-        defaultValue: "44",
+        defaultValue: "-",
         allField: false,
         fields: {
             text: "ctpKorNm",
@@ -180,14 +187,14 @@ $(window).on("load", function () {
         }
     });
 
-    // var selectLi = new SisSelectbox(".selectLi", {
-    //     url: "/selectLi.do",
-    //     allField: true,
-    //     fields: {
-    //         text: "liKorNm",
-    //         value: "liCd"
-    //     }
-    // });
+    var selectLi = new SisSelectbox(".selectLi", {
+        url: "/selectLi.do",
+        allField: true,
+        fields: {
+            text: "liKorNm",
+            value: "liCd"
+        }
+    });
 
     $.each($(".selectSido"), (idx, item) => {
         var id = item.getAttribute("parent");
@@ -217,19 +224,19 @@ $(window).on("load", function () {
         });
     });
 
-    // $.each($(".selectEmd"), (idx, item) => {
-    //     var id = item.getAttribute("parent");
-    //
-    //     selectEmd.setConn({
-    //         id: id + "_emd",
-    //         onChange: function () {
-    //             var val = $(this).val();
-    //             var element = selectLi.getElementById(`${id}_li`);
-    //             selectLi.setUrlParams({code: val});
-    //             selectLi.getDataByUrl(element, true);
-    //         }
-    //     });
-    // });
+    $.each($(".selectEmd"), (idx, item) => {
+        var id = item.getAttribute("parent");
+
+        selectEmd.setConn({
+            id: id + "_emd",
+            onChange: function () {
+                var val = $(this).val();
+                var element = selectLi.getElementById(`${id}_li`);
+                selectLi.setUrlParams({code: val});
+                selectLi.getDataByUrl(element, true);
+            }
+        });
+    });
 
     // 지번검색 버튼 클릭
     $("#btnShowJibun").on("click", (evt) => {
@@ -247,7 +254,7 @@ $(window).on("load", function () {
 
     // 명칭검색 조회하기
     $("#keyword").on("keypress", (evt) => {
-        if(evt.key == "Enter") {
+        if (evt.key == "Enter") {
             addressSearch(1);
         }
     })
@@ -256,7 +263,7 @@ $(window).on("load", function () {
     $("#btnPlaceRefresh").on("click", () => {
         $("#keyword").val("");
         $("#placeResultWrap").hide();
-        if(searchAddr.overlay) sis.map.removeOverlay(searchAddr.overlay);
+        if (searchAddr.overlay) sis.map.removeOverlay(searchAddr.overlay);
     });
 
     var addressSearch = function (page) {
@@ -271,25 +278,25 @@ $(window).on("load", function () {
         var sggCode = $("#m000_sgg").val();
         var emdCode = $("#m000_emd").val();
         var liCode = $("#m000_li").val();
-        var isSan =  $("#san").is(":checked") ? "2" : "1";
+        var isSan = $("#san").is(":checked") ? "2" : "1";
         var bon = $("#bon").val().lpad(4, "0");
         var bu = $("#bu").val().lpad(4, "0");
 
-        if(sidoCode == "-") {
+        if (sidoCode == "-") {
             alert("행정구역을 선택해주세요");
 
             return;
         }
 
-        if(sidoCode != "-") code = sidoCode;
-        if(sggCode != "-") code = sggCode;
-        if(emdCode != "-") code = emdCode;
-        if(liCode != "-") code = liCode;
+        if (sidoCode != "-") code = sidoCode;
+        if (sggCode != "-") code = sggCode;
+        if (emdCode != "-") code = emdCode;
+        if (liCode != "-") code = liCode;
 
-        if(bon == "0000" && bu == "0000") {
+        if (bon == "0000" && bu == "0000") {
             getSect(code);
 
-            return ;
+            return;
         }
 
         code = code.rpad(10, "0");
@@ -309,12 +316,12 @@ $(window).on("load", function () {
         var emdCode = $("#left_emd").val();
         // var liCode = $("#m000_li").val();
 
-        if(sidoCode != "-") code = sidoCode;
-        if(sggCode != "-") code = sggCode;
-        if(emdCode != "-") code = emdCode;
+        if (sidoCode != "-") code = sidoCode;
+        if (sggCode != "-") code = sggCode;
+        if (emdCode != "-") code = emdCode;
         // if(liCode != "-") code = liCode;
 
-        if(id == "m001") {
+        if (id == "m001") {
             getSect(code);
 
             $(`#${id}Modal`).find(".maximize").hide();
@@ -325,8 +332,7 @@ $(window).on("load", function () {
             $(`#${id}Ue101Wrap`).show();
             $(`#${id}LdregWrap`).hide();
             getDistrictStatus(id);
-        }
-        else if(id == "m002") {
+        } else if (id == "m002") {
             getSect(code);
 
             $(`#${id}Modal`).find(".maximize").hide();
@@ -335,14 +341,22 @@ $(window).on("load", function () {
             $(`#${id}Modal`).show();
 
             getMngNo(id);
-        }
-        else if(id == "m003") {
+        } else if (id == "m003") {
             getStatistics(id);
-        }
-        else if(id == "m004") {
+        } else if (id == "m004") {
             getSect(code);
-
+            $(`#${id}Modal`).find(".maximize").hide();
+            $(`#${id}Modal`).find(".minimize").show();
+            $(`#${id}Modal`).find(".modalBody").show();
+            $(`#${id}Modal`).show();
             getDiscon(id);
+        } else if (id == "m005") {
+            getSect(code);
+            $(`#${id}Modal`).find(".maximize").hide();
+            $(`#${id}Modal`).find(".minimize").show();
+            $(`#${id}Modal`).find(".modalBody").show();
+            $(`#${id}Modal`).show();
+            getFarmland(id);
         }
     });
 
@@ -368,6 +382,7 @@ $(window).on("load", function () {
         $("#mapControlWrap").hide();
         $("#baseMapWrap, #lyrWrap, #fullScreen").hide();
         $("#posMoveWrap").hide();
+        $("#roadView").hide();
 
         $("#originScreen").show();
     });
@@ -379,39 +394,127 @@ $(window).on("load", function () {
         $("#mapControlWrap").show();
         $("#baseMapWrap, #lyrWrap, #fullScreen").show();
         $("#posMoveWrap").show();
+        $("#roadView").show();
 
         $("#originScreen").hide();
     });
 
+    $("#roadView").on("click", (evt) => {
+        sis.map.un("click", _getLayerInformation);
+        
+        $("#roadView").toggleClass("active");
+
+        var visible = $("#roadView").hasClass("active");
+
+        if (visible) {
+            sis.daumRoadView.setVisible(true);
+
+            var roadviewContainer = document.getElementById("roadViewWrap"); //로드뷰를 표시할 div
+            sis.roadViewInit(roadviewContainer);
+        } else {
+            sis.daumRoadView.setVisible(false);
+            sis.closeRoadView(roadviewContainer, true);
+        }
+    });
+
+    // 필지정보
+    $("#information").on("click", function (e) {
+        if (!$("#information .icon").hasClass("active")) {
+            $("#information .icon").addClass("active");
+
+            sis.map.un("click", _getLayerInformation);
+            sis.map.getViewport().removeEventListener("contextmenu", _stopLayerInformation);
+
+            sis.map.on("click", _getLayerInformation);
+            sis.map.getViewport().addEventListener("contextmenu", _stopLayerInformation);
+        } else {
+            $("#information .icon").removeClass("active");
+            sis.map.getViewport().removeEventListener("contextmenu", _stopLayerInformation);
+
+            sis.map.un("click", _getLayerInformation);
+        }
+    });
+
+    var _stopLayerInformation = () => {
+        $("#information .icon").removeClass("active");
+        sis.map.un("click", _getLayerInformation);
+    }
+
+    var _getLayerInformation = (evt) => {
+        var oriCoord = evt.coordinate;
+        var coordinate = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:5186");
+
+        var x = coordinate[0];
+        var y = coordinate[1];
+
+        $.ajax({
+            url: "selectJijukByCoord.do",
+            type: "post",
+            data: {
+                x,
+                y
+            },
+            beforeSend: () => {
+                $("#mapLoading").show();
+            },
+            success: (res) => {
+                var item = res.item;
+                var data = res.data;
+
+                var wkt = item.geom;
+                var feature = sisLyr.createFeatureByWKT(wkt);
+
+                sisLyr.wfs.selectLayer.getSource().clear();
+                sisLyr.wfs.selectLayer.getSource().addFeature(feature);
+
+                sis.view.fit(feature.getGeometry().getExtent());
+
+                sis.view.setZoom(sis.view.getZoom() - 2);
+
+                $("#inforModal").show();
+
+                var bobn = data.bobn ? parseInt(data.bobn) : "";
+                var bubn = data.bubn > 0 ? "-" + parseInt(data.bubn) : "";
+                var jibun = bobn + bubn;
+
+                $("#inforAddr").text(data.addr || "-");
+                $("#inforSan").text(data.san || "-");
+                $("#inforJibun").text(jibun || "-");
+                $("#inforJimok").text(data.jimok || "-");
+                $("#inforParea").text(numberWithCommas(data.parea) || "-");
+                $("#inforGarea").text(numberWithCommas(item.area) || "-");
+                $("#inforOwnGbn").text(data.ownGbn || "-");
+
+                $("#mapLoading").hide();
+            },
+            error: () => {
+                $("#mapLoading").hide();
+            }
+        });
+    }
+
     // 거리측정
     $("#calDis").on("click", function (e) {
-        if ($("#calHeight").hasClass("active")) {
-            sisMeasure.stopMeasure();
-        } else {
-            sisMeasure.stopMeasure();
-            sisMeasure.startMeasure("LineString")
+        sis.map.un("click", _getLayerInformation);
 
-            $("#calHeight").addClass("active");
-        }
+        sisMeasure.stopMeasure();
+        sisMeasure.startMeasure("LineString")
     });
 
     // 면적측정
     $("#calArea").on("click", function () {
-        if ($("#calHeight").hasClass("active")) {
-            sisMeasure.stopMeasure();
-        } else {
-            sisMeasure.stopMeasure();
-            sisMeasure.startMeasure("Polygon")
+        sis.map.un("click", _getLayerInformation);
 
-            $("#calHeight").addClass("active");
-        }
+        sisMeasure.stopMeasure();
+        sisMeasure.startMeasure("Polygon")
     });
 
     // 맵 초기화
     $("#clearMap").on("click", function () {
+        sis.map.un("click", _getLayerInformation);
         sisMeasure._allClear();
         sisLyr.wfs.selectLayer.getSource().clear();
-        if(searchAddr.overlay) sis.map.removeOverlay(searchAddr.overlay);
+        if (searchAddr.overlay) sis.map.removeOverlay(searchAddr.overlay);
     });
 
     // 배경지도 변경
@@ -421,11 +524,11 @@ $(window).on("load", function () {
         $("#baseMapWrap a").removeClass("active");
         $(e.target).addClass("active");
 
-        if(id == "hybridMap") {
+        if (id == "hybridMap") {
             sis.vMap.setVisible(false);
             sis.vHybrid.setVisible(true);
             sis.vSatellite.setVisible(true);
-        } else if(id == "baseMap") {
+        } else if (id == "baseMap") {
             sis.vMap.setVisible(true);
             sis.vHybrid.setVisible(false);
             sis.vSatellite.setVisible(false);
@@ -458,6 +561,8 @@ $(window).on("load", function () {
 
     // 화면 저장
     $("#saveScreen").on("click", function (e) {
+        sis.map.un("click", _getLayerInformation);
+
         // sis3d.viewer.render();
         html2canvas(document.querySelector("#map"), {
             allowTaint: false,
@@ -470,6 +575,8 @@ $(window).on("load", function () {
 
     // 화면 공유
     $("#shareScreen").on("click", function (e) {
+        sis.map.un("click", _getLayerInformation);
+
         prompt("Ctrl + C 버튼을 눌러 복사하세요.",
             'http://localhost:8081/mapMain.do?share=Y'
             + '&x=' + sis.view.getCenter()[0]
@@ -479,12 +586,12 @@ $(window).on("load", function () {
     });
 
     // Zoom In
-    $("#zoomIn").on("click", function() {
+    $("#zoomIn").on("click", function () {
         var zoom = sis.view.getZoom();
         sis.view.setZoom(zoom + 1);
     });
 
-    $("#zoomOut").on("click", function() {
+    $("#zoomOut").on("click", function () {
         var zoom = sis.view.getZoom();
         sis.view.setZoom(zoom - 1);
     });
@@ -498,14 +605,15 @@ var getJijuk = (code) => {
         data: {
             code
         },
+        async:false,
         type: "post",
         beforeSend: () => {
             $("#jibunSearchLoading").show();
             $("#mapLoading").show();
         },
         success: (res) => {
-            if(res.data) {
-                if(res.data.geom) {
+            if (res.data) {
+                if (res.data.geom) {
                     var wkt = res.data.geom;
                     var format = new ol.format.WKT();
                     var feature = format.readFeature(wkt, {
@@ -543,8 +651,8 @@ var getSect = (code) => {
             $("#mapLoading").show();
         },
         success: (res) => {
-            if(res.data) {
-                if(res.data.geom) {
+            if (res.data) {
+                if (res.data.geom) {
                     var wkt = res.data.geom;
                     var format = new ol.format.WKT();
                     var feature = format.readFeature(wkt, {
